@@ -1,0 +1,21 @@
+# buf.gen.yaml — Python codegen for the Transcodely Python SDK.
+# Uses Buf's remote plugins; no local protoc install required.
+version: v2
+
+plugins:
+  # Generated proto modules import each other as `from transcodely.v1 import …`,
+  # so they must land inside the top-level `transcodely` package — alongside the
+  # hand-written facade modules. The generated files live at
+  # transcodely/v1/{name}_pb2.py and never collide with hand-written modules.
+  # `include_imports: true` also generates the buf/validate/validate_pb2 module
+  # the descriptors need — we ship it as a top-level `buf` package alongside
+  # `transcodely`, sidestepping the circular protovalidate-python dep.
+  - remote: buf.build/protocolbuffers/python:v28.3
+    out: src
+    include_imports: true
+  - remote: buf.build/protocolbuffers/pyi:v28.3
+    out: src
+    include_imports: true
+
+inputs:
+  - directory: proto
