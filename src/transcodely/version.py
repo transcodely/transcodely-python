@@ -1,7 +1,7 @@
 """Version constants exposed at the top of the package."""
 
 #: SDK package version. Bumped by release-please from pyproject.toml.
-SDK_VERSION = "0.1.0"
+SDK_VERSION = "0.1.0"  # x-release-please-version
 
 #: Calendar-versioned API this release pins. Sent on every request as
 #: `Transcodely-Version`. Override per-client via ``api_version=``.
