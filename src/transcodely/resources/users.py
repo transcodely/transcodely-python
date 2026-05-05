@@ -39,6 +39,8 @@ class Users:
             req = user_pb2.ListUsersRequest()
             assign_pagination(req.pagination, limit=limit, cursor=cursor)
             res = self._t.unary(_SERVICE, "List", req, user_pb2.ListUsersResponse(), opts)
-            return PageContents(items=list(res.users), next_cursor=res.pagination.next_cursor or None)
+            return PageContents(
+                items=list(res.users), next_cursor=res.pagination.next_cursor or None
+            )
 
         return Page(fetch)

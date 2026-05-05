@@ -16,7 +16,9 @@ class Organizations:
     def __init__(self, transport: Transport) -> None:
         self._t = transport
 
-    def check_slug(self, slug: str, opts: Optional[CallOptions] = None) -> organization_pb2.CheckSlugResponse:
+    def check_slug(
+        self, slug: str, opts: Optional[CallOptions] = None
+    ) -> organization_pb2.CheckSlugResponse:
         req = organization_pb2.CheckSlugRequest(slug=slug)
         return self._t.unary(_SERVICE, "CheckSlug", req, organization_pb2.CheckSlugResponse(), opts)
 
@@ -29,7 +31,9 @@ class Organizations:
             organization_pb2.CreateOrganizationResponse(),
         ).organization
 
-    def get(self, id_or_slug: str, opts: Optional[CallOptions] = None) -> organization_pb2.Organization:
+    def get(
+        self, id_or_slug: str, opts: Optional[CallOptions] = None
+    ) -> organization_pb2.Organization:
         """Look up by ID (``org_*``) or slug."""
         req = organization_pb2.GetOrganizationRequest(id_or_slug=id_or_slug)
         return self._t.unary(
@@ -58,7 +62,9 @@ class Organizations:
         def fetch(cursor: Optional[str]) -> PageContents[organization_pb2.Organization]:
             req = organization_pb2.ListOrganizationsRequest()
             assign_pagination(req.pagination, limit=limit, cursor=cursor)
-            res = self._t.unary(_SERVICE, "List", req, organization_pb2.ListOrganizationsResponse(), opts)
+            res = self._t.unary(
+                _SERVICE, "List", req, organization_pb2.ListOrganizationsResponse(), opts
+            )
             return PageContents(
                 items=list(res.organizations),
                 next_cursor=res.pagination.next_cursor or None,

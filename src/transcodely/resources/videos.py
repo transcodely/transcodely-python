@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Generator, Mapping, Optional
+from typing import Any, Generator, Optional
 
 from .._transport.transport import CallOptions, Transport
 from ..pagination import Page, PageContents
@@ -36,7 +36,9 @@ class Videos:
 
     def get_upload_part_urls(self, **kwargs: Any) -> video_pb2.GetUploadPartUrlsResponse:
         req = fill_from_dict(video_pb2.GetUploadPartUrlsRequest(), kwargs)
-        return self._t.unary(_SERVICE, "GetUploadPartUrls", req, video_pb2.GetUploadPartUrlsResponse())
+        return self._t.unary(
+            _SERVICE, "GetUploadPartUrls", req, video_pb2.GetUploadPartUrlsResponse()
+        )
 
     def complete_multipart_upload(self, **kwargs: Any) -> video_pb2.CompleteMultipartUploadResponse:
         req = fill_from_dict(video_pb2.CompleteMultipartUploadRequest(), kwargs)

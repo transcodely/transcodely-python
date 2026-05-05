@@ -26,7 +26,9 @@ class Presets:
 
     def get_by_slug(self, slug: str, opts: Optional[CallOptions] = None) -> preset_pb2.Preset:
         req = preset_pb2.GetPresetBySlugRequest(slug=slug)
-        return self._t.unary(_SERVICE, "GetBySlug", req, preset_pb2.GetPresetBySlugResponse(), opts).preset
+        return self._t.unary(
+            _SERVICE, "GetBySlug", req, preset_pb2.GetPresetBySlugResponse(), opts
+        ).preset
 
     def list(
         self,
@@ -38,7 +40,9 @@ class Presets:
             req = preset_pb2.ListPresetsRequest()
             assign_pagination(req.pagination, limit=limit, cursor=cursor)
             res = self._t.unary(_SERVICE, "List", req, preset_pb2.ListPresetsResponse(), opts)
-            return PageContents(items=list(res.presets), next_cursor=res.pagination.next_cursor or None)
+            return PageContents(
+                items=list(res.presets), next_cursor=res.pagination.next_cursor or None
+            )
 
         return Page(fetch)
 
@@ -48,8 +52,12 @@ class Presets:
 
     def duplicate(self, **kwargs: Any) -> preset_pb2.Preset:
         req = fill_from_dict(preset_pb2.DuplicatePresetRequest(), kwargs)
-        return self._t.unary(_SERVICE, "Duplicate", req, preset_pb2.DuplicatePresetResponse()).preset
+        return self._t.unary(
+            _SERVICE, "Duplicate", req, preset_pb2.DuplicatePresetResponse()
+        ).preset
 
     def archive(self, id: str, opts: Optional[CallOptions] = None) -> preset_pb2.Preset:
         req = preset_pb2.ArchivePresetRequest(id=id)
-        return self._t.unary(_SERVICE, "Archive", req, preset_pb2.ArchivePresetResponse(), opts).preset
+        return self._t.unary(
+            _SERVICE, "Archive", req, preset_pb2.ArchivePresetResponse(), opts
+        ).preset

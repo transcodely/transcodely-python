@@ -35,10 +35,14 @@ class ApiKeys:
             req = api_key_pb2.ListAPIKeysRequest()
             assign_pagination(req.pagination, limit=limit, cursor=cursor)
             res = self._t.unary(_SERVICE, "List", req, api_key_pb2.ListAPIKeysResponse(), opts)
-            return PageContents(items=list(res.api_keys), next_cursor=res.pagination.next_cursor or None)
+            return PageContents(
+                items=list(res.api_keys), next_cursor=res.pagination.next_cursor or None
+            )
 
         return Page(fetch)
 
     def revoke(self, id: str, opts: Optional[CallOptions] = None) -> api_key_pb2.APIKey:
         req = api_key_pb2.RevokeAPIKeyRequest(id=id)
-        return self._t.unary(_SERVICE, "Revoke", req, api_key_pb2.RevokeAPIKeyResponse(), opts).api_key
+        return self._t.unary(
+            _SERVICE, "Revoke", req, api_key_pb2.RevokeAPIKeyResponse(), opts
+        ).api_key

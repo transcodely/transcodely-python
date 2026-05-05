@@ -36,7 +36,7 @@ class Jobs:
             if outputs:
                 from google.protobuf import json_format
 
-                from .._codec.json_codec import expand_enum_value, transform_enums_in_dict
+                from .._codec.json_codec import transform_enums_in_dict
 
                 # Outputs are nested messages — round-trip through JSON so callers can
                 # pass plain dicts with simplified-enum strings.

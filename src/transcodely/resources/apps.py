@@ -38,7 +38,9 @@ class Apps:
             req = app_pb2.ListAppsRequest()
             assign_pagination(req.pagination, limit=limit, cursor=cursor)
             res = self._t.unary(_SERVICE, "List", req, app_pb2.ListAppsResponse(), opts)
-            return PageContents(items=list(res.apps), next_cursor=res.pagination.next_cursor or None)
+            return PageContents(
+                items=list(res.apps), next_cursor=res.pagination.next_cursor or None
+            )
 
         return Page(fetch)
 
@@ -52,4 +54,6 @@ class Apps:
 
     def update_hosting_config(self, **kwargs: Any) -> app_pb2.UpdateHostingConfigResponse:
         req = fill_from_dict(app_pb2.UpdateHostingConfigRequest(), kwargs)
-        return self._t.unary(_SERVICE, "UpdateHostingConfig", req, app_pb2.UpdateHostingConfigResponse())
+        return self._t.unary(
+            _SERVICE, "UpdateHostingConfig", req, app_pb2.UpdateHostingConfigResponse()
+        )

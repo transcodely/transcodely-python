@@ -25,14 +25,20 @@ class Memberships:
         def fetch(cursor: Optional[str]) -> PageContents[membership_pb2.MembershipWithUser]:
             req = membership_pb2.ListMembershipsRequest()
             assign_pagination(req.pagination, limit=limit, cursor=cursor)
-            res = self._t.unary(_SERVICE, "List", req, membership_pb2.ListMembershipsResponse(), opts)
-            return PageContents(items=list(res.memberships), next_cursor=res.pagination.next_cursor or None)
+            res = self._t.unary(
+                _SERVICE, "List", req, membership_pb2.ListMembershipsResponse(), opts
+            )
+            return PageContents(
+                items=list(res.memberships), next_cursor=res.pagination.next_cursor or None
+            )
 
         return Page(fetch)
 
     def get(self, id: str, opts: Optional[CallOptions] = None) -> membership_pb2.MembershipWithUser:
         req = membership_pb2.GetMembershipRequest(id=id)
-        return self._t.unary(_SERVICE, "Get", req, membership_pb2.GetMembershipResponse(), opts).membership
+        return self._t.unary(
+            _SERVICE, "Get", req, membership_pb2.GetMembershipResponse(), opts
+        ).membership
 
     def update_role(self, **kwargs: Any) -> membership_pb2.Membership:
         req = fill_from_dict(membership_pb2.UpdateMembershipRoleRequest(), kwargs)

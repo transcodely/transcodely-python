@@ -163,9 +163,7 @@ class TestDeserialize:
         assert resp.job.priority == job_pb2.JOB_PRIORITY_PREMIUM
 
     def test_accepts_canonical_form_for_backward_compatibility(self) -> None:
-        payload = json.dumps(
-            {"job": {"id": "job_a", "status": "JOB_STATUS_PROCESSING"}}
-        ).encode()
+        payload = json.dumps({"job": {"id": "job_a", "status": "JOB_STATUS_PROCESSING"}}).encode()
         resp = deserialize(payload, job_pb2.GetJobResponse())
         assert resp.job.status == job_pb2.JOB_STATUS_PROCESSING
 

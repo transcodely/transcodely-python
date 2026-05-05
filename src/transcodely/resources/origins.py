@@ -34,7 +34,9 @@ class Origins:
             req = origin_pb2.ListOriginsRequest()
             assign_pagination(req.pagination, limit=limit, cursor=cursor)
             res = self._t.unary(_SERVICE, "List", req, origin_pb2.ListOriginsResponse(), opts)
-            return PageContents(items=list(res.origins), next_cursor=res.pagination.next_cursor or None)
+            return PageContents(
+                items=list(res.origins), next_cursor=res.pagination.next_cursor or None
+            )
 
         return Page(fetch)
 
@@ -48,4 +50,6 @@ class Origins:
 
     def archive(self, id: str, opts: Optional[CallOptions] = None) -> origin_pb2.Origin:
         req = origin_pb2.ArchiveOriginRequest(id=id)
-        return self._t.unary(_SERVICE, "Archive", req, origin_pb2.ArchiveOriginResponse(), opts).origin
+        return self._t.unary(
+            _SERVICE, "Archive", req, origin_pb2.ArchiveOriginResponse(), opts
+        ).origin
