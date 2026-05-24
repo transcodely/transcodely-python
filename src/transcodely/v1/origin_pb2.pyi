@@ -16,6 +16,14 @@ class OriginProvider(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     ORIGIN_PROVIDER_S3: _ClassVar[OriginProvider]
     ORIGIN_PROVIDER_HTTP: _ClassVar[OriginProvider]
     ORIGIN_PROVIDER_TRANSCODELY: _ClassVar[OriginProvider]
+    ORIGIN_PROVIDER_R2: _ClassVar[OriginProvider]
+
+class R2Jurisdiction(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    R2_JURISDICTION_UNSPECIFIED: _ClassVar[R2Jurisdiction]
+    R2_JURISDICTION_DEFAULT: _ClassVar[R2Jurisdiction]
+    R2_JURISDICTION_EU: _ClassVar[R2Jurisdiction]
+    R2_JURISDICTION_FEDRAMP: _ClassVar[R2Jurisdiction]
 
 class OriginPermission(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
@@ -34,6 +42,11 @@ ORIGIN_PROVIDER_GCS: OriginProvider
 ORIGIN_PROVIDER_S3: OriginProvider
 ORIGIN_PROVIDER_HTTP: OriginProvider
 ORIGIN_PROVIDER_TRANSCODELY: OriginProvider
+ORIGIN_PROVIDER_R2: OriginProvider
+R2_JURISDICTION_UNSPECIFIED: R2Jurisdiction
+R2_JURISDICTION_DEFAULT: R2Jurisdiction
+R2_JURISDICTION_EU: R2Jurisdiction
+R2_JURISDICTION_FEDRAMP: R2Jurisdiction
 ORIGIN_PERMISSION_UNSPECIFIED: OriginPermission
 ORIGIN_PERMISSION_READ: OriginPermission
 ORIGIN_PERMISSION_WRITE: OriginPermission
@@ -97,6 +110,20 @@ class HttpOriginConfig(_message.Message):
     credentials: HttpCredentials
     def __init__(self, base_url: _Optional[str] = ..., credentials: _Optional[_Union[HttpCredentials, _Mapping]] = ...) -> None: ...
 
+class R2OriginConfig(_message.Message):
+    __slots__ = ("bucket", "credentials", "account_id", "jurisdiction", "endpoint")
+    BUCKET_FIELD_NUMBER: _ClassVar[int]
+    CREDENTIALS_FIELD_NUMBER: _ClassVar[int]
+    ACCOUNT_ID_FIELD_NUMBER: _ClassVar[int]
+    JURISDICTION_FIELD_NUMBER: _ClassVar[int]
+    ENDPOINT_FIELD_NUMBER: _ClassVar[int]
+    bucket: str
+    credentials: S3Credentials
+    account_id: str
+    jurisdiction: R2Jurisdiction
+    endpoint: str
+    def __init__(self, bucket: _Optional[str] = ..., credentials: _Optional[_Union[S3Credentials, _Mapping]] = ..., account_id: _Optional[str] = ..., jurisdiction: _Optional[_Union[R2Jurisdiction, str]] = ..., endpoint: _Optional[str] = ...) -> None: ...
+
 class OriginRef(_message.Message):
     __slots__ = ("id", "name", "provider", "path", "bucket", "base_url")
     ID_FIELD_NUMBER: _ClassVar[int]
@@ -114,7 +141,7 @@ class OriginRef(_message.Message):
     def __init__(self, id: _Optional[str] = ..., name: _Optional[str] = ..., provider: _Optional[_Union[OriginProvider, str]] = ..., path: _Optional[str] = ..., bucket: _Optional[str] = ..., base_url: _Optional[str] = ...) -> None: ...
 
 class Origin(_message.Message):
-    __slots__ = ("id", "name", "description", "provider", "permissions", "status", "base_path", "path_template", "gcs", "s3", "http", "last_validated_at", "validation_error", "created_at", "updated_at", "archived_at", "is_managed")
+    __slots__ = ("id", "name", "description", "provider", "permissions", "status", "base_path", "path_template", "gcs", "s3", "http", "last_validated_at", "validation_error", "created_at", "updated_at", "archived_at", "is_managed", "r2")
     ID_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
     DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
@@ -132,6 +159,7 @@ class Origin(_message.Message):
     UPDATED_AT_FIELD_NUMBER: _ClassVar[int]
     ARCHIVED_AT_FIELD_NUMBER: _ClassVar[int]
     IS_MANAGED_FIELD_NUMBER: _ClassVar[int]
+    R2_FIELD_NUMBER: _ClassVar[int]
     id: str
     name: str
     description: str
@@ -149,10 +177,11 @@ class Origin(_message.Message):
     updated_at: _timestamp_pb2.Timestamp
     archived_at: _timestamp_pb2.Timestamp
     is_managed: bool
-    def __init__(self, id: _Optional[str] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., provider: _Optional[_Union[OriginProvider, str]] = ..., permissions: _Optional[_Iterable[_Union[OriginPermission, str]]] = ..., status: _Optional[_Union[OriginStatus, str]] = ..., base_path: _Optional[str] = ..., path_template: _Optional[str] = ..., gcs: _Optional[_Union[GcsOriginConfig, _Mapping]] = ..., s3: _Optional[_Union[S3OriginConfig, _Mapping]] = ..., http: _Optional[_Union[HttpOriginConfig, _Mapping]] = ..., last_validated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., validation_error: _Optional[str] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., archived_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., is_managed: bool = ...) -> None: ...
+    r2: R2OriginConfig
+    def __init__(self, id: _Optional[str] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., provider: _Optional[_Union[OriginProvider, str]] = ..., permissions: _Optional[_Iterable[_Union[OriginPermission, str]]] = ..., status: _Optional[_Union[OriginStatus, str]] = ..., base_path: _Optional[str] = ..., path_template: _Optional[str] = ..., gcs: _Optional[_Union[GcsOriginConfig, _Mapping]] = ..., s3: _Optional[_Union[S3OriginConfig, _Mapping]] = ..., http: _Optional[_Union[HttpOriginConfig, _Mapping]] = ..., last_validated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., validation_error: _Optional[str] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., archived_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., is_managed: bool = ..., r2: _Optional[_Union[R2OriginConfig, _Mapping]] = ...) -> None: ...
 
 class CreateOriginRequest(_message.Message):
-    __slots__ = ("name", "description", "permissions", "base_path", "path_template", "gcs", "s3", "http")
+    __slots__ = ("name", "description", "permissions", "base_path", "path_template", "gcs", "s3", "http", "r2")
     NAME_FIELD_NUMBER: _ClassVar[int]
     DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
     PERMISSIONS_FIELD_NUMBER: _ClassVar[int]
@@ -161,6 +190,7 @@ class CreateOriginRequest(_message.Message):
     GCS_FIELD_NUMBER: _ClassVar[int]
     S3_FIELD_NUMBER: _ClassVar[int]
     HTTP_FIELD_NUMBER: _ClassVar[int]
+    R2_FIELD_NUMBER: _ClassVar[int]
     name: str
     description: str
     permissions: _containers.RepeatedScalarFieldContainer[OriginPermission]
@@ -169,7 +199,8 @@ class CreateOriginRequest(_message.Message):
     gcs: GcsOriginConfig
     s3: S3OriginConfig
     http: HttpOriginConfig
-    def __init__(self, name: _Optional[str] = ..., description: _Optional[str] = ..., permissions: _Optional[_Iterable[_Union[OriginPermission, str]]] = ..., base_path: _Optional[str] = ..., path_template: _Optional[str] = ..., gcs: _Optional[_Union[GcsOriginConfig, _Mapping]] = ..., s3: _Optional[_Union[S3OriginConfig, _Mapping]] = ..., http: _Optional[_Union[HttpOriginConfig, _Mapping]] = ...) -> None: ...
+    r2: R2OriginConfig
+    def __init__(self, name: _Optional[str] = ..., description: _Optional[str] = ..., permissions: _Optional[_Iterable[_Union[OriginPermission, str]]] = ..., base_path: _Optional[str] = ..., path_template: _Optional[str] = ..., gcs: _Optional[_Union[GcsOriginConfig, _Mapping]] = ..., s3: _Optional[_Union[S3OriginConfig, _Mapping]] = ..., http: _Optional[_Union[HttpOriginConfig, _Mapping]] = ..., r2: _Optional[_Union[R2OriginConfig, _Mapping]] = ...) -> None: ...
 
 class CreateOriginResponse(_message.Message):
     __slots__ = ("origin", "validation")
@@ -230,7 +261,7 @@ class ListOriginsResponse(_message.Message):
     def __init__(self, origins: _Optional[_Iterable[_Union[Origin, _Mapping]]] = ..., pagination: _Optional[_Union[_common_pb2.PaginationResponse, _Mapping]] = ...) -> None: ...
 
 class UpdateOriginRequest(_message.Message):
-    __slots__ = ("id", "name", "description", "base_path", "path_template", "gcs_credentials", "s3_credentials", "http_credentials")
+    __slots__ = ("id", "name", "description", "base_path", "path_template", "gcs_credentials", "s3_credentials", "http_credentials", "r2_credentials")
     ID_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
     DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
@@ -239,6 +270,7 @@ class UpdateOriginRequest(_message.Message):
     GCS_CREDENTIALS_FIELD_NUMBER: _ClassVar[int]
     S3_CREDENTIALS_FIELD_NUMBER: _ClassVar[int]
     HTTP_CREDENTIALS_FIELD_NUMBER: _ClassVar[int]
+    R2_CREDENTIALS_FIELD_NUMBER: _ClassVar[int]
     id: str
     name: str
     description: str
@@ -247,7 +279,8 @@ class UpdateOriginRequest(_message.Message):
     gcs_credentials: GcsCredentials
     s3_credentials: S3Credentials
     http_credentials: HttpCredentials
-    def __init__(self, id: _Optional[str] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., base_path: _Optional[str] = ..., path_template: _Optional[str] = ..., gcs_credentials: _Optional[_Union[GcsCredentials, _Mapping]] = ..., s3_credentials: _Optional[_Union[S3Credentials, _Mapping]] = ..., http_credentials: _Optional[_Union[HttpCredentials, _Mapping]] = ...) -> None: ...
+    r2_credentials: S3Credentials
+    def __init__(self, id: _Optional[str] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., base_path: _Optional[str] = ..., path_template: _Optional[str] = ..., gcs_credentials: _Optional[_Union[GcsCredentials, _Mapping]] = ..., s3_credentials: _Optional[_Union[S3Credentials, _Mapping]] = ..., http_credentials: _Optional[_Union[HttpCredentials, _Mapping]] = ..., r2_credentials: _Optional[_Union[S3Credentials, _Mapping]] = ...) -> None: ...
 
 class UpdateOriginResponse(_message.Message):
     __slots__ = ("origin", "validation")

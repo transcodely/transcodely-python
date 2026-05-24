@@ -56,6 +56,93 @@ client.users           # get_me / get / list / update_me
 client.health          # check
 ```
 
+## Origins
+
+An origin tells Transcodely where to read source media from and where to write outputs. Every origin belongs to a single provider; pass exactly one provider-config field (`s3`, `gcs`, `http`, or `r2`) on create.
+
+### Create an S3 origin
+
+```python
+origin = client.origins.create(
+    name="Production S3",
+    permissions=["read", "write"],
+    s3={
+        "bucket": "my-bucket",
+        "region": "us-east-1",
+        "credentials": {
+            "access_key_id": os.environ["S3_ACCESS_KEY"],
+            "secret_access_key": os.environ["S3_SECRET_KEY"],
+        },
+        # "endpoint": "https://s3.custom.example.com",  # for MinIO, Wasabi, etc.
+    },
+)
+```
+
+### Create a GCS origin
+
+```python
+origin = client.origins.create(
+    name="Production GCS",
+    permissions=["read", "write"],
+    gcs={
+        "bucket": "my-gcs-bucket",
+        "credentials": {
+            "service_account_json": os.environ["GCS_SERVICE_ACCOUNT_JSON"],
+        },
+    },
+)
+```
+
+### Create an HTTP origin
+
+```python
+origin = client.origins.create(
+    name="Public CDN",
+    permissions=["read"],  # HTTP origins are read-only
+    http={
+        "base_url": "https://media.example.com",
+        "credentials": {
+            "headers": {"Authorization": f"Bearer {os.environ['MEDIA_TOKEN']}"},
+        },
+    },
+)
+```
+
+### Create an R2 origin
+
+R2 supports two forms. With `account_id` (32-char hex) the endpoint is derived for you, optionally with a data-residency jurisdiction:
+
+```python
+origin = client.origins.create(
+    name="Production R2",
+    permissions=["read", "write"],
+    r2={
+        "bucket": "media",
+        "account_id": os.environ["R2_ACCOUNT_ID"],
+        "jurisdiction": "default",  # or "eu", "fedramp"
+        "credentials": {
+            "access_key_id": os.environ["R2_ACCESS_KEY"],
+            "secret_access_key": os.environ["R2_SECRET_KEY"],
+        },
+    },
+)
+```
+
+Or, with an explicit `endpoint` (custom domain bound to a bucket, or a jurisdiction not yet enumerated):
+
+```python
+r2 = {
+    "bucket": "media",
+    "endpoint": "https://media.example.com",
+    "credentials": {
+        "access_key_id": os.environ["R2_ACCESS_KEY"],
+        "secret_access_key": os.environ["R2_SECRET_KEY"],
+    },
+}
+```
+
+Provide either `account_id` or `endpoint`, never both. `jurisdiction` only applies when `account_id` is set.
+
 ## Errors
 
 All exceptions inherit from `TranscodelyError`:
