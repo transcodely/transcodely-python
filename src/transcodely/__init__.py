@@ -41,9 +41,24 @@ from .errors import (
     PreconditionError,
     RateLimitError,
     TranscodelyError,
+    WebhookError,
+    WebhookPayloadError,
+    WebhookSignatureError,
+    WebhookTimestampError,
 )
 from .pagination import Page, PageContents
 from .version import API_VERSION, DEFAULT_BASE_URL, SDK_VERSION
+from .webhooks import (
+    DEFAULT_TOLERANCE_SECONDS,
+    SIGNATURE_HEADER,
+    Event,
+    EventRequest,
+    EventType,
+    WebhookEvent,
+    Webhooks,
+    construct_event,
+    verify_signature,
+)
 
 # Headline message classes — most callers reach for these. Everything else lives
 # in :mod:`transcodely.types`.
@@ -82,6 +97,8 @@ from .types import (
     WatchEventType,
     WatchJobResponse,
     WatchVideoResponse,
+    WebhookDelivery,
+    WebhookEndpoint,
 )
 
 __all__ = [
@@ -94,10 +111,15 @@ __all__ = [
     "AuthenticationError",
     "AutoABRConfig",
     "ConflictError",
+    "construct_event",
     "ContentAwareConfig",
     "DASHConfig",
     "DEFAULT_BASE_URL",
+    "DEFAULT_TOLERANCE_SECONDS",
     "DRMConfig",
+    "Event",
+    "EventRequest",
+    "EventType",
     "FieldViolation",
     "HDRConfig",
     "HLSConfig",
@@ -122,6 +144,7 @@ __all__ = [
     "RateLimitError",
     "Resolution",
     "SDK_VERSION",
+    "SIGNATURE_HEADER",
     "StreamingConfig",
     "SubtitleTrack",
     "ThumbnailSpec",
@@ -129,6 +152,7 @@ __all__ = [
     "TranscodelyError",
     "User",
     "UserWithOrganizations",
+    "verify_signature",
     "Video",
     "VideoCodec",
     "VideoRendition",
@@ -136,4 +160,12 @@ __all__ = [
     "WatchEventType",
     "WatchJobResponse",
     "WatchVideoResponse",
+    "WebhookDelivery",
+    "WebhookEndpoint",
+    "WebhookError",
+    "WebhookEvent",
+    "WebhookPayloadError",
+    "Webhooks",
+    "WebhookSignatureError",
+    "WebhookTimestampError",
 ]
