@@ -19,7 +19,7 @@ APP_STATUS_ACTIVE: AppStatus
 APP_STATUS_ARCHIVED: AppStatus
 
 class App(_message.Message):
-    __slots__ = ("id", "org_id", "name", "description", "webhook", "status", "created_at", "updated_at", "archived_at", "hosting_enabled", "hosting_status", "cdn_hostname", "hosting_config")
+    __slots__ = ("id", "org_id", "name", "description", "webhook", "status", "created_at", "updated_at", "archived_at", "hosting_enabled", "hosting_status", "cdn_hostname", "hosting_config", "object")
     ID_FIELD_NUMBER: _ClassVar[int]
     ORG_ID_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
@@ -33,6 +33,7 @@ class App(_message.Message):
     HOSTING_STATUS_FIELD_NUMBER: _ClassVar[int]
     CDN_HOSTNAME_FIELD_NUMBER: _ClassVar[int]
     HOSTING_CONFIG_FIELD_NUMBER: _ClassVar[int]
+    OBJECT_FIELD_NUMBER: _ClassVar[int]
     id: str
     org_id: str
     name: str
@@ -46,7 +47,8 @@ class App(_message.Message):
     hosting_status: str
     cdn_hostname: str
     hosting_config: HostingConfig
-    def __init__(self, id: _Optional[str] = ..., org_id: _Optional[str] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., webhook: _Optional[_Union[WebhookConfig, _Mapping]] = ..., status: _Optional[_Union[AppStatus, str]] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., archived_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., hosting_enabled: bool = ..., hosting_status: _Optional[str] = ..., cdn_hostname: _Optional[str] = ..., hosting_config: _Optional[_Union[HostingConfig, _Mapping]] = ...) -> None: ...
+    object: str
+    def __init__(self, id: _Optional[str] = ..., org_id: _Optional[str] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., webhook: _Optional[_Union[WebhookConfig, _Mapping]] = ..., status: _Optional[_Union[AppStatus, str]] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., archived_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., hosting_enabled: bool = ..., hosting_status: _Optional[str] = ..., cdn_hostname: _Optional[str] = ..., hosting_config: _Optional[_Union[HostingConfig, _Mapping]] = ..., object: _Optional[str] = ...) -> None: ...
 
 class WebhookConfig(_message.Message):
     __slots__ = ("url", "secret_hint", "has_secret", "events")

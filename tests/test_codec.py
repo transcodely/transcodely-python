@@ -20,7 +20,7 @@ from transcodely._codec.json_codec import (
     simplify_enum_value,
     transform_enums_in_dict,
 )
-from transcodely.v1 import common_pb2, job_pb2
+from transcodely.v1 import common_pb2, job_pb2, origin_pb2
 
 
 # ---- Helper enum descriptors -------------------------------------------------
@@ -30,6 +30,8 @@ JOB_PRIORITY = job_pb2.JobPriority.DESCRIPTOR
 VIDEO_CODEC = common_pb2.VideoCodec.DESCRIPTOR
 RESOLUTION = common_pb2.Resolution.DESCRIPTOR
 OUTPUT_FORMAT = common_pb2.OutputFormat.DESCRIPTOR
+ORIGIN_PROVIDER = origin_pb2.OriginProvider.DESCRIPTOR
+R2_JURISDICTION = origin_pb2.R2Jurisdiction.DESCRIPTOR
 
 
 # ---- camel_to_screaming_snake -----------------------------------------------
@@ -44,6 +46,11 @@ class TestCamelToScreamingSnake:
         assert camel_to_screaming_snake("APIKeyEnvironment") == "API_KEY_ENVIRONMENT"
         assert camel_to_screaming_snake("HTTPCredentials") == "HTTP_CREDENTIALS"
 
+    def test_treats_digit_uppercase_lowercase_as_a_single_token(self) -> None:
+        # Pins R2 enum prefix derivation. The digit-letter boundary inserts no
+        # underscore; the letter-letter boundary (2J before lowercase 'u') does.
+        assert camel_to_screaming_snake("R2Jurisdiction") == "R2_JURISDICTION"
+
 
 # ---- enum_prefix -------------------------------------------------------------
 
@@ -53,6 +60,8 @@ class TestEnumPrefix:
         assert enum_prefix(JOB_STATUS) == "JOB_STATUS_"
         assert enum_prefix(VIDEO_CODEC) == "VIDEO_CODEC_"
         assert enum_prefix(OUTPUT_FORMAT) == "OUTPUT_FORMAT_"
+        assert enum_prefix(ORIGIN_PROVIDER) == "ORIGIN_PROVIDER_"
+        assert enum_prefix(R2_JURISDICTION) == "R2_JURISDICTION_"
 
 
 # ---- simplify_enum_value -----------------------------------------------------
@@ -163,7 +172,9 @@ class TestDeserialize:
         assert resp.job.priority == job_pb2.JOB_PRIORITY_PREMIUM
 
     def test_accepts_canonical_form_for_backward_compatibility(self) -> None:
-        payload = json.dumps({"job": {"id": "job_a", "status": "JOB_STATUS_PROCESSING"}}).encode()
+        payload = json.dumps(
+            {"job": {"id": "job_a", "status": "JOB_STATUS_PROCESSING"}}
+        ).encode()
         resp = deserialize(payload, job_pb2.GetJobResponse())
         assert resp.job.status == job_pb2.JOB_STATUS_PROCESSING
 
@@ -222,8 +233,95 @@ class TestRoundTrip:
         ("RESOLUTION_2160P", RESOLUTION, "2160p"),
         ("OUTPUT_FORMAT_HLS", OUTPUT_FORMAT, "hls"),
         ("OUTPUT_FORMAT_DASH", OUTPUT_FORMAT, "dash"),
+        ("ORIGIN_PROVIDER_GCS", ORIGIN_PROVIDER, "gcs"),
+        ("ORIGIN_PROVIDER_S3", ORIGIN_PROVIDER, "s3"),
+        ("ORIGIN_PROVIDER_HTTP", ORIGIN_PROVIDER, "http"),
+        ("ORIGIN_PROVIDER_R2", ORIGIN_PROVIDER, "r2"),
+        ("R2_JURISDICTION_DEFAULT", R2_JURISDICTION, "default"),
+        ("R2_JURISDICTION_EU", R2_JURISDICTION, "eu"),
+        ("R2_JURISDICTION_FEDRAMP", R2_JURISDICTION, "fedramp"),
     ],
 )
 def test_canonical_to_simplified_round_trip(value: str, enum_desc, wire: str) -> None:  # type: ignore[no-untyped-def]
     assert simplify_enum_value(value, enum_desc) == wire
     assert expand_enum_value(wire, enum_desc) == value
+
+
+# ---- R2 origin JSON wire format ---------------------------------------------
+
+
+class TestR2OriginJsonWireFormat:
+    ACCOUNT_ID = "0123456789abcdef0123456789abcdef"
+
+    def _account_id_form(
+        self, jurisdiction: origin_pb2.R2Jurisdiction = origin_pb2.R2_JURISDICTION_EU
+    ) -> origin_pb2.CreateOriginRequest:
+        return origin_pb2.CreateOriginRequest(
+            name="my-r2",
+            permissions=[origin_pb2.ORIGIN_PERMISSION_READ, origin_pb2.ORIGIN_PERMISSION_WRITE],
+            r2=origin_pb2.R2OriginConfig(
+                bucket="media",
+                account_id=self.ACCOUNT_ID,
+                jurisdiction=jurisdiction,
+                credentials=origin_pb2.S3Credentials(
+                    access_key_id="AKIAEXAMPLE",
+                    secret_access_key="shhh",
+                ),
+            ),
+        )
+
+    def _endpoint_form(self) -> origin_pb2.CreateOriginRequest:
+        return origin_pb2.CreateOriginRequest(
+            name="my-r2-custom",
+            permissions=[origin_pb2.ORIGIN_PERMISSION_READ],
+            r2=origin_pb2.R2OriginConfig(
+                bucket="media",
+                endpoint="https://media.example.com",
+                credentials=origin_pb2.S3Credentials(
+                    access_key_id="AKIAEXAMPLE",
+                    secret_access_key="shhh",
+                ),
+            ),
+        )
+
+    def test_serializes_account_id_form_with_snake_case_and_simplified_enums(self) -> None:
+        obj = json.loads(serialize(self._account_id_form()).decode())
+        assert obj["permissions"] == ["read", "write"]
+        r2 = obj["r2"]
+        assert r2["bucket"] == "media"
+        assert r2["account_id"] == self.ACCOUNT_ID
+        assert r2["jurisdiction"] == "eu"
+        assert "accountId" not in r2
+        creds = r2["credentials"]
+        assert creds["access_key_id"] == "AKIAEXAMPLE"
+        assert creds["secret_access_key"] == "shhh"
+        assert "accessKeyId" not in creds
+
+    def test_serializes_endpoint_form_without_account_id_or_jurisdiction(self) -> None:
+        obj = json.loads(serialize(self._endpoint_form()).decode())
+        r2 = obj["r2"]
+        assert r2["endpoint"] == "https://media.example.com"
+        # Unset string scalars are omitted by protojson; unset enums round-trip
+        # as the simplified zero-value form (the codec strips the
+        # R2_JURISDICTION_ prefix unconditionally).
+        assert r2.get("account_id", "") == ""
+
+    def test_round_trips_account_id_form(self) -> None:
+        original = self._account_id_form(jurisdiction=origin_pb2.R2_JURISDICTION_FEDRAMP)
+        decoded = deserialize(serialize(original), origin_pb2.CreateOriginRequest())
+        assert decoded.name == "my-r2"
+        assert list(decoded.permissions) == [
+            origin_pb2.ORIGIN_PERMISSION_READ,
+            origin_pb2.ORIGIN_PERMISSION_WRITE,
+        ]
+        assert decoded.r2.bucket == "media"
+        assert decoded.r2.account_id == self.ACCOUNT_ID
+        assert decoded.r2.jurisdiction == origin_pb2.R2_JURISDICTION_FEDRAMP
+        assert decoded.r2.credentials.access_key_id == "AKIAEXAMPLE"
+        assert decoded.r2.credentials.secret_access_key == "shhh"
+
+    def test_round_trips_endpoint_form_preserving_optional_endpoint(self) -> None:
+        decoded = deserialize(serialize(self._endpoint_form()), origin_pb2.CreateOriginRequest())
+        assert decoded.r2.endpoint == "https://media.example.com"
+        assert decoded.r2.account_id == ""
+        assert decoded.r2.jurisdiction == origin_pb2.R2_JURISDICTION_UNSPECIFIED
