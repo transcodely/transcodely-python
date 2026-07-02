@@ -268,6 +268,7 @@ from transcodely.v1.subtitles_pb2 import (
 from transcodely.v1.thumbnails_pb2 import (
     ThumbnailFormat,
     ThumbnailMode,
+    ThumbnailResult,
     ThumbnailSpec,
 )
 
@@ -452,6 +453,7 @@ __all__ = [
     "SubtitleTrack",
     "ThumbnailFormat",
     "ThumbnailMode",
+    "ThumbnailResult",
     "ThumbnailSpec",
     "ToneMapping",
     "UpdateAppRequest",

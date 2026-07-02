@@ -96,7 +96,7 @@ class PresetVariant(_message.Message):
     def __init__(self, resolution: _Optional[_Union[_common_pb2.Resolution, str]] = ..., width: _Optional[int] = ..., height: _Optional[int] = ..., bitrate_kbps: _Optional[int] = ..., max_bitrate_kbps: _Optional[int] = ..., buffer_size_kbps: _Optional[int] = ..., crf: _Optional[int] = ..., quality: _Optional[_Union[_common_pb2.QualityTier, str]] = ..., framerate: _Optional[int] = ...) -> None: ...
 
 class Preset(_message.Message):
-    __slots__ = ("id", "slug", "name", "description", "content_type", "container", "faststart", "delivery_format", "streaming", "segment_duration", "video", "audio", "quality_tier", "estimated_cost_per_minute", "system_preset", "created_at", "updated_at", "variants")
+    __slots__ = ("id", "slug", "name", "description", "content_type", "container", "faststart", "delivery_format", "segment_duration", "video", "audio", "quality_tier", "estimated_cost_per_minute", "system_preset", "created_at", "updated_at", "variants", "disable_audio")
     ID_FIELD_NUMBER: _ClassVar[int]
     SLUG_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
@@ -105,7 +105,6 @@ class Preset(_message.Message):
     CONTAINER_FIELD_NUMBER: _ClassVar[int]
     FASTSTART_FIELD_NUMBER: _ClassVar[int]
     DELIVERY_FORMAT_FIELD_NUMBER: _ClassVar[int]
-    STREAMING_FIELD_NUMBER: _ClassVar[int]
     SEGMENT_DURATION_FIELD_NUMBER: _ClassVar[int]
     VIDEO_FIELD_NUMBER: _ClassVar[int]
     AUDIO_FIELD_NUMBER: _ClassVar[int]
@@ -115,6 +114,7 @@ class Preset(_message.Message):
     CREATED_AT_FIELD_NUMBER: _ClassVar[int]
     UPDATED_AT_FIELD_NUMBER: _ClassVar[int]
     VARIANTS_FIELD_NUMBER: _ClassVar[int]
+    DISABLE_AUDIO_FIELD_NUMBER: _ClassVar[int]
     id: str
     slug: str
     name: str
@@ -123,7 +123,6 @@ class Preset(_message.Message):
     container: _common_pb2.Container
     faststart: bool
     delivery_format: _common_pb2.DeliveryFormat
-    streaming: _streaming_pb2.StreamingConfig
     segment_duration: int
     video: VideoSettings
     audio: AudioSettings
@@ -133,10 +132,11 @@ class Preset(_message.Message):
     created_at: _timestamp_pb2.Timestamp
     updated_at: _timestamp_pb2.Timestamp
     variants: _containers.RepeatedCompositeFieldContainer[PresetVariant]
-    def __init__(self, id: _Optional[str] = ..., slug: _Optional[str] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., content_type: _Optional[_Union[_common_pb2.ContentType, str]] = ..., container: _Optional[_Union[_common_pb2.Container, str]] = ..., faststart: bool = ..., delivery_format: _Optional[_Union[_common_pb2.DeliveryFormat, str]] = ..., streaming: _Optional[_Union[_streaming_pb2.StreamingConfig, _Mapping]] = ..., segment_duration: _Optional[int] = ..., video: _Optional[_Union[VideoSettings, _Mapping]] = ..., audio: _Optional[_Union[AudioSettings, _Mapping]] = ..., quality_tier: _Optional[_Union[_common_pb2.QualityTier, str]] = ..., estimated_cost_per_minute: _Optional[float] = ..., system_preset: bool = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., variants: _Optional[_Iterable[_Union[PresetVariant, _Mapping]]] = ...) -> None: ...
+    disable_audio: bool
+    def __init__(self, id: _Optional[str] = ..., slug: _Optional[str] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., content_type: _Optional[_Union[_common_pb2.ContentType, str]] = ..., container: _Optional[_Union[_common_pb2.Container, str]] = ..., faststart: bool = ..., delivery_format: _Optional[_Union[_common_pb2.DeliveryFormat, str]] = ..., segment_duration: _Optional[int] = ..., video: _Optional[_Union[VideoSettings, _Mapping]] = ..., audio: _Optional[_Union[AudioSettings, _Mapping]] = ..., quality_tier: _Optional[_Union[_common_pb2.QualityTier, str]] = ..., estimated_cost_per_minute: _Optional[float] = ..., system_preset: bool = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., variants: _Optional[_Iterable[_Union[PresetVariant, _Mapping]]] = ..., disable_audio: bool = ...) -> None: ...
 
 class CreatePresetRequest(_message.Message):
-    __slots__ = ("slug", "name", "description", "content_type", "container", "faststart", "delivery_format", "streaming", "segment_duration", "video", "audio", "quality_tier", "variants")
+    __slots__ = ("slug", "name", "description", "content_type", "container", "faststart", "delivery_format", "streaming", "segment_duration", "video", "audio", "quality_tier", "variants", "disable_audio")
     SLUG_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
     DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
@@ -150,6 +150,7 @@ class CreatePresetRequest(_message.Message):
     AUDIO_FIELD_NUMBER: _ClassVar[int]
     QUALITY_TIER_FIELD_NUMBER: _ClassVar[int]
     VARIANTS_FIELD_NUMBER: _ClassVar[int]
+    DISABLE_AUDIO_FIELD_NUMBER: _ClassVar[int]
     slug: str
     name: str
     description: str
@@ -163,7 +164,8 @@ class CreatePresetRequest(_message.Message):
     audio: AudioSettings
     quality_tier: _common_pb2.QualityTier
     variants: _containers.RepeatedCompositeFieldContainer[PresetVariant]
-    def __init__(self, slug: _Optional[str] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., content_type: _Optional[_Union[_common_pb2.ContentType, str]] = ..., container: _Optional[_Union[_common_pb2.Container, str]] = ..., faststart: bool = ..., delivery_format: _Optional[_Union[_common_pb2.DeliveryFormat, str]] = ..., streaming: _Optional[_Union[_streaming_pb2.StreamingConfig, _Mapping]] = ..., segment_duration: _Optional[int] = ..., video: _Optional[_Union[VideoSettings, _Mapping]] = ..., audio: _Optional[_Union[AudioSettings, _Mapping]] = ..., quality_tier: _Optional[_Union[_common_pb2.QualityTier, str]] = ..., variants: _Optional[_Iterable[_Union[PresetVariant, _Mapping]]] = ...) -> None: ...
+    disable_audio: bool
+    def __init__(self, slug: _Optional[str] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., content_type: _Optional[_Union[_common_pb2.ContentType, str]] = ..., container: _Optional[_Union[_common_pb2.Container, str]] = ..., faststart: bool = ..., delivery_format: _Optional[_Union[_common_pb2.DeliveryFormat, str]] = ..., streaming: _Optional[_Union[_streaming_pb2.StreamingConfig, _Mapping]] = ..., segment_duration: _Optional[int] = ..., video: _Optional[_Union[VideoSettings, _Mapping]] = ..., audio: _Optional[_Union[AudioSettings, _Mapping]] = ..., quality_tier: _Optional[_Union[_common_pb2.QualityTier, str]] = ..., variants: _Optional[_Iterable[_Union[PresetVariant, _Mapping]]] = ..., disable_audio: bool = ...) -> None: ...
 
 class CreatePresetResponse(_message.Message):
     __slots__ = ("preset",)
@@ -220,7 +222,7 @@ class ListPresetsResponse(_message.Message):
     def __init__(self, presets: _Optional[_Iterable[_Union[Preset, _Mapping]]] = ..., pagination: _Optional[_Union[_common_pb2.PaginationResponse, _Mapping]] = ...) -> None: ...
 
 class UpdatePresetRequest(_message.Message):
-    __slots__ = ("id", "slug", "name", "description", "content_type", "container", "faststart", "delivery_format", "streaming", "segment_duration", "video", "audio", "quality_tier", "variants")
+    __slots__ = ("id", "slug", "name", "description", "content_type", "container", "faststart", "delivery_format", "streaming", "segment_duration", "video", "audio", "quality_tier", "variants", "disable_audio")
     ID_FIELD_NUMBER: _ClassVar[int]
     SLUG_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
@@ -235,6 +237,7 @@ class UpdatePresetRequest(_message.Message):
     AUDIO_FIELD_NUMBER: _ClassVar[int]
     QUALITY_TIER_FIELD_NUMBER: _ClassVar[int]
     VARIANTS_FIELD_NUMBER: _ClassVar[int]
+    DISABLE_AUDIO_FIELD_NUMBER: _ClassVar[int]
     id: str
     slug: str
     name: str
@@ -249,7 +252,8 @@ class UpdatePresetRequest(_message.Message):
     audio: AudioSettings
     quality_tier: _common_pb2.QualityTier
     variants: _containers.RepeatedCompositeFieldContainer[PresetVariant]
-    def __init__(self, id: _Optional[str] = ..., slug: _Optional[str] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., content_type: _Optional[_Union[_common_pb2.ContentType, str]] = ..., container: _Optional[_Union[_common_pb2.Container, str]] = ..., faststart: bool = ..., delivery_format: _Optional[_Union[_common_pb2.DeliveryFormat, str]] = ..., streaming: _Optional[_Union[_streaming_pb2.StreamingConfig, _Mapping]] = ..., segment_duration: _Optional[int] = ..., video: _Optional[_Union[VideoSettings, _Mapping]] = ..., audio: _Optional[_Union[AudioSettings, _Mapping]] = ..., quality_tier: _Optional[_Union[_common_pb2.QualityTier, str]] = ..., variants: _Optional[_Iterable[_Union[PresetVariant, _Mapping]]] = ...) -> None: ...
+    disable_audio: bool
+    def __init__(self, id: _Optional[str] = ..., slug: _Optional[str] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., content_type: _Optional[_Union[_common_pb2.ContentType, str]] = ..., container: _Optional[_Union[_common_pb2.Container, str]] = ..., faststart: bool = ..., delivery_format: _Optional[_Union[_common_pb2.DeliveryFormat, str]] = ..., streaming: _Optional[_Union[_streaming_pb2.StreamingConfig, _Mapping]] = ..., segment_duration: _Optional[int] = ..., video: _Optional[_Union[VideoSettings, _Mapping]] = ..., audio: _Optional[_Union[AudioSettings, _Mapping]] = ..., quality_tier: _Optional[_Union[_common_pb2.QualityTier, str]] = ..., variants: _Optional[_Iterable[_Union[PresetVariant, _Mapping]]] = ..., disable_audio: bool = ...) -> None: ...
 
 class UpdatePresetResponse(_message.Message):
     __slots__ = ("preset",)

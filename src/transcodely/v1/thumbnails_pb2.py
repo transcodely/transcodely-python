@@ -25,14 +25,13 @@ _sym_db = _symbol_database.Default()
 from buf.validate import validate_pb2 as buf_dot_validate_dot_validate__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1ftranscodely/v1/thumbnails.proto\x12\x0etranscodely.v1\x1a\x1b\x62uf/validate/validate.proto\"\xb6\x04\n\rThumbnailSpec\x12>\n\x04mode\x18\x01 \x01(\x0e\x32\x1d.transcodely.v1.ThumbnailModeB\x0b\xbaH\x08\x82\x01\x02\x10\x01\xc8\x01\x01R\x04mode\x12\x41\n\x06\x66ormat\x18\x02 \x01(\x0e\x32\x1f.transcodely.v1.ThumbnailFormatB\x08\xbaH\x05\x82\x01\x02\x10\x01R\x06\x66ormat\x12%\n\x05width\x18\x03 \x01(\x05\x42\n\xbaH\x07\x1a\x05\x18\x80\x1e(\x10H\x00R\x05width\x88\x01\x01\x12\'\n\x06height\x18\x04 \x01(\x05\x42\n\xbaH\x07\x1a\x05\x18\xf0\x10(\x10H\x01R\x06height\x88\x01\x01\x12(\n\x07quality\x18\x05 \x01(\x05\x42\t\xbaH\x06\x1a\x04\x18\x64(\x01H\x02R\x07quality\x88\x01\x01\x12\x31\n\ttimestamp\x18\x06 \x01(\x01\x42\x0e\xbaH\x0b\x12\t)\x00\x00\x00\x00\x00\x00\x00\x00H\x03R\ttimestamp\x88\x01\x01\x12G\n\x10interval_seconds\x18\x07 \x01(\x01\x42\x17\xbaH\x14\x12\x12\x19\x00\x00\x00\x00\x00\xc0r@)\x00\x00\x00\x00\x00\x00\xe0?H\x04R\x0fintervalSeconds\x88\x01\x01\x12\x1e\n\ntimestamps\x18\x08 \x03(\x01R\ntimestamps\x12\x35\n\x0esprite_columns\x18\t \x01(\x05\x42\t\xbaH\x06\x1a\x04\x18\x14(\x01H\x05R\rspriteColumns\x88\x01\x01\x42\x08\n\x06_widthB\t\n\x07_heightB\n\n\x08_qualityB\x0c\n\n_timestampB\x13\n\x11_interval_secondsB\x11\n\x0f_sprite_columns*\xa1\x01\n\rThumbnailMode\x12\x1e\n\x1aTHUMBNAIL_MODE_UNSPECIFIED\x10\x00\x12\x19\n\x15THUMBNAIL_MODE_SINGLE\x10\x01\x12\x1b\n\x17THUMBNAIL_MODE_INTERVAL\x10\x02\x12\x19\n\x15THUMBNAIL_MODE_SPRITE\x10\x03\x12\x1d\n\x19THUMBNAIL_MODE_TIMESTAMPS\x10\x04*\x83\x01\n\x0fThumbnailFormat\x12 \n\x1cTHUMBNAIL_FORMAT_UNSPECIFIED\x10\x00\x12\x19\n\x15THUMBNAIL_FORMAT_JPEG\x10\x01\x12\x18\n\x14THUMBNAIL_FORMAT_PNG\x10\x02\x12\x19\n\x15THUMBNAIL_FORMAT_WEBP\x10\x03\x42\xcf\x01\n\x12\x63om.transcodely.v1B\x0fThumbnailsProtoP\x01ZOgithub.com/transcodely/transcodely-go/internal/gen/transcodely/v1;transcodelyv1\xa2\x02\x03TXX\xaa\x02\x0eTranscodely.V1\xca\x02\x0eTranscodely\\V1\xe2\x02\x1aTranscodely\\V1\\GPBMetadata\xea\x02\x0fTranscodely::V1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1ftranscodely/v1/thumbnails.proto\x12\x0etranscodely.v1\x1a\x1b\x62uf/validate/validate.proto\"\x9c\x06\n\rThumbnailSpec\x12>\n\x04mode\x18\x01 \x01(\x0e\x32\x1d.transcodely.v1.ThumbnailModeB\x0b\xbaH\x08\x82\x01\x02\x10\x01\xc8\x01\x01R\x04mode\x12\x41\n\x06\x66ormat\x18\x02 \x01(\x0e\x32\x1f.transcodely.v1.ThumbnailFormatB\x08\xbaH\x05\x82\x01\x02\x10\x01R\x06\x66ormat\x12%\n\x05width\x18\x03 \x01(\x05\x42\n\xbaH\x07\x1a\x05\x18\x80\x1e(\x10H\x00R\x05width\x88\x01\x01\x12\'\n\x06height\x18\x04 \x01(\x05\x42\n\xbaH\x07\x1a\x05\x18\xf0\x10(\x10H\x01R\x06height\x88\x01\x01\x12(\n\x07quality\x18\x05 \x01(\x05\x42\t\xbaH\x06\x1a\x04\x18\x64(\x01H\x02R\x07quality\x88\x01\x01\x12\x31\n\ttimestamp\x18\x06 \x01(\x01\x42\x0e\xbaH\x0b\x12\t)\x00\x00\x00\x00\x00\x00\x00\x00H\x03R\ttimestamp\x88\x01\x01\x12G\n\x10interval_seconds\x18\x07 \x01(\x01\x42\x17\xbaH\x14\x12\x12\x19\x00\x00\x00\x00\x00\xc0r@)\x00\x00\x00\x00\x00\x00\xe0?H\x04R\x0fintervalSeconds\x88\x01\x01\x12\x1e\n\ntimestamps\x18\x08 \x03(\x01R\ntimestamps\x12\x35\n\x0esprite_columns\x18\t \x01(\x05\x42\t\xbaH\x06\x1a\x04\x18\x14(\x01H\x05R\rspriteColumns\x88\x01\x01\x12\xd1\x01\n\rpath_template\x18\n \x01(\tB\xa6\x01\xbaH\xa2\x01r\x03\x18\x80\x04\xba\x01\x99\x01\n!thumbnail_spec.path_template_safe\x12\x35path_template must not start with `/` or contain `..`\x1a=this == \'\' || (!this.startsWith(\'/\') && !this.contains(\'..\'))H\x06R\x0cpathTemplate\x88\x01\x01\x42\x08\n\x06_widthB\t\n\x07_heightB\n\n\x08_qualityB\x0c\n\n_timestampB\x13\n\x11_interval_secondsB\x11\n\x0f_sprite_columnsB\x10\n\x0e_path_template\"\xbc\x01\n\x0fThumbnailResult\x12\'\n\x0bstorage_key\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\nstorageKey\x12\x10\n\x03url\x18\x02 \x01(\tR\x03url\x12\x12\n\x04mode\x18\x03 \x01(\tR\x04mode\x12\x16\n\x06\x66ormat\x18\x04 \x01(\tR\x06\x66ormat\x12\x14\n\x05width\x18\x05 \x01(\x05R\x05width\x12\x16\n\x06height\x18\x06 \x01(\x05R\x06height\x12\x14\n\x05index\x18\x07 \x01(\x05R\x05index*\xa1\x01\n\rThumbnailMode\x12\x1e\n\x1aTHUMBNAIL_MODE_UNSPECIFIED\x10\x00\x12\x19\n\x15THUMBNAIL_MODE_SINGLE\x10\x01\x12\x1b\n\x17THUMBNAIL_MODE_INTERVAL\x10\x02\x12\x19\n\x15THUMBNAIL_MODE_SPRITE\x10\x03\x12\x1d\n\x19THUMBNAIL_MODE_TIMESTAMPS\x10\x04*\x83\x01\n\x0fThumbnailFormat\x12 \n\x1cTHUMBNAIL_FORMAT_UNSPECIFIED\x10\x00\x12\x19\n\x15THUMBNAIL_FORMAT_JPEG\x10\x01\x12\x18\n\x14THUMBNAIL_FORMAT_PNG\x10\x02\x12\x19\n\x15THUMBNAIL_FORMAT_WEBP\x10\x03\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'transcodely.v1.thumbnails_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
-  _globals['DESCRIPTOR']._loaded_options = None
-  _globals['DESCRIPTOR']._serialized_options = b'\n\022com.transcodely.v1B\017ThumbnailsProtoP\001ZOgithub.com/transcodely/transcodely-go/internal/gen/transcodely/v1;transcodelyv1\242\002\003TXX\252\002\016Transcodely.V1\312\002\016Transcodely\\V1\342\002\032Transcodely\\V1\\GPBMetadata\352\002\017Transcodely::V1'
+  DESCRIPTOR._loaded_options = None
   _globals['_THUMBNAILSPEC'].fields_by_name['mode']._loaded_options = None
   _globals['_THUMBNAILSPEC'].fields_by_name['mode']._serialized_options = b'\272H\010\202\001\002\020\001\310\001\001'
   _globals['_THUMBNAILSPEC'].fields_by_name['format']._loaded_options = None
@@ -49,10 +48,16 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_THUMBNAILSPEC'].fields_by_name['interval_seconds']._serialized_options = b'\272H\024\022\022\031\000\000\000\000\000\300r@)\000\000\000\000\000\000\340?'
   _globals['_THUMBNAILSPEC'].fields_by_name['sprite_columns']._loaded_options = None
   _globals['_THUMBNAILSPEC'].fields_by_name['sprite_columns']._serialized_options = b'\272H\006\032\004\030\024(\001'
-  _globals['_THUMBNAILMODE']._serialized_start=650
-  _globals['_THUMBNAILMODE']._serialized_end=811
-  _globals['_THUMBNAILFORMAT']._serialized_start=814
-  _globals['_THUMBNAILFORMAT']._serialized_end=945
+  _globals['_THUMBNAILSPEC'].fields_by_name['path_template']._loaded_options = None
+  _globals['_THUMBNAILSPEC'].fields_by_name['path_template']._serialized_options = b'\272H\242\001r\003\030\200\004\272\001\231\001\n!thumbnail_spec.path_template_safe\0225path_template must not start with `/` or contain `..`\032=this == \'\' || (!this.startsWith(\'/\') && !this.contains(\'..\'))'
+  _globals['_THUMBNAILRESULT'].fields_by_name['storage_key']._loaded_options = None
+  _globals['_THUMBNAILRESULT'].fields_by_name['storage_key']._serialized_options = b'\272H\003\310\001\001'
+  _globals['_THUMBNAILMODE']._serialized_start=1071
+  _globals['_THUMBNAILMODE']._serialized_end=1232
+  _globals['_THUMBNAILFORMAT']._serialized_start=1235
+  _globals['_THUMBNAILFORMAT']._serialized_end=1366
   _globals['_THUMBNAILSPEC']._serialized_start=81
-  _globals['_THUMBNAILSPEC']._serialized_end=647
+  _globals['_THUMBNAILSPEC']._serialized_end=877
+  _globals['_THUMBNAILRESULT']._serialized_start=880
+  _globals['_THUMBNAILRESULT']._serialized_end=1068
 # @@protoc_insertion_point(module_scope)

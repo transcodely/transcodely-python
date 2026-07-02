@@ -37,7 +37,7 @@ VIDEO_VISIBILITY_UNLISTED: VideoVisibility
 VIDEO_VISIBILITY_PRIVATE: VideoVisibility
 
 class Video(_message.Message):
-    __slots__ = ("id", "app_id", "source", "status", "visibility", "title", "description", "tags", "input_size_bytes", "input_content_type", "job_id", "preset", "playback_url", "embed_url", "embed_code", "poster_url", "duration_seconds", "renditions", "output_size_bytes", "encoding_cost", "storage_cost_monthly", "egress_total", "created_at", "updated_at", "ready_at", "object")
+    __slots__ = ("id", "app_id", "source", "status", "visibility", "title", "description", "tags", "input_size_bytes", "input_content_type", "job_id", "preset", "playback_url", "embed_url", "embed_code", "poster_url", "duration_seconds", "renditions", "output_size_bytes", "encoding_cost", "created_at", "updated_at", "ready_at", "object")
     ID_FIELD_NUMBER: _ClassVar[int]
     APP_ID_FIELD_NUMBER: _ClassVar[int]
     SOURCE_FIELD_NUMBER: _ClassVar[int]
@@ -58,8 +58,6 @@ class Video(_message.Message):
     RENDITIONS_FIELD_NUMBER: _ClassVar[int]
     OUTPUT_SIZE_BYTES_FIELD_NUMBER: _ClassVar[int]
     ENCODING_COST_FIELD_NUMBER: _ClassVar[int]
-    STORAGE_COST_MONTHLY_FIELD_NUMBER: _ClassVar[int]
-    EGRESS_TOTAL_FIELD_NUMBER: _ClassVar[int]
     CREATED_AT_FIELD_NUMBER: _ClassVar[int]
     UPDATED_AT_FIELD_NUMBER: _ClassVar[int]
     READY_AT_FIELD_NUMBER: _ClassVar[int]
@@ -84,13 +82,11 @@ class Video(_message.Message):
     renditions: _containers.RepeatedCompositeFieldContainer[VideoRendition]
     output_size_bytes: int
     encoding_cost: float
-    storage_cost_monthly: float
-    egress_total: float
     created_at: _timestamp_pb2.Timestamp
     updated_at: _timestamp_pb2.Timestamp
     ready_at: _timestamp_pb2.Timestamp
     object: str
-    def __init__(self, id: _Optional[str] = ..., app_id: _Optional[str] = ..., source: _Optional[str] = ..., status: _Optional[str] = ..., visibility: _Optional[str] = ..., title: _Optional[str] = ..., description: _Optional[str] = ..., tags: _Optional[_Iterable[str]] = ..., input_size_bytes: _Optional[int] = ..., input_content_type: _Optional[str] = ..., job_id: _Optional[str] = ..., preset: _Optional[str] = ..., playback_url: _Optional[str] = ..., embed_url: _Optional[str] = ..., embed_code: _Optional[str] = ..., poster_url: _Optional[str] = ..., duration_seconds: _Optional[float] = ..., renditions: _Optional[_Iterable[_Union[VideoRendition, _Mapping]]] = ..., output_size_bytes: _Optional[int] = ..., encoding_cost: _Optional[float] = ..., storage_cost_monthly: _Optional[float] = ..., egress_total: _Optional[float] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., ready_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., object: _Optional[str] = ...) -> None: ...
+    def __init__(self, id: _Optional[str] = ..., app_id: _Optional[str] = ..., source: _Optional[str] = ..., status: _Optional[str] = ..., visibility: _Optional[str] = ..., title: _Optional[str] = ..., description: _Optional[str] = ..., tags: _Optional[_Iterable[str]] = ..., input_size_bytes: _Optional[int] = ..., input_content_type: _Optional[str] = ..., job_id: _Optional[str] = ..., preset: _Optional[str] = ..., playback_url: _Optional[str] = ..., embed_url: _Optional[str] = ..., embed_code: _Optional[str] = ..., poster_url: _Optional[str] = ..., duration_seconds: _Optional[float] = ..., renditions: _Optional[_Iterable[_Union[VideoRendition, _Mapping]]] = ..., output_size_bytes: _Optional[int] = ..., encoding_cost: _Optional[float] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., ready_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., object: _Optional[str] = ...) -> None: ...
 
 class VideoRendition(_message.Message):
     __slots__ = ("id", "resolution", "codec", "bitrate_kbps", "width", "height", "size_bytes")
@@ -343,7 +339,7 @@ class GetUsageResponse(_message.Message):
     def __init__(self, usage: _Optional[_Union[UsageSummary, _Mapping]] = ...) -> None: ...
 
 class UsageSummary(_message.Message):
-    __slots__ = ("billing_month", "videos_encoded", "encoding_minutes", "encoding_cost", "storage_gb_avg", "storage_cost", "videos_hosted", "egress_gb", "egress_cost", "total_requests", "total_cost")
+    __slots__ = ("billing_month", "videos_encoded", "encoding_minutes", "encoding_cost", "storage_gb_avg", "storage_cost", "videos_hosted", "egress_gb", "egress_cost", "total_requests", "total_cost", "currency")
     BILLING_MONTH_FIELD_NUMBER: _ClassVar[int]
     VIDEOS_ENCODED_FIELD_NUMBER: _ClassVar[int]
     ENCODING_MINUTES_FIELD_NUMBER: _ClassVar[int]
@@ -355,6 +351,7 @@ class UsageSummary(_message.Message):
     EGRESS_COST_FIELD_NUMBER: _ClassVar[int]
     TOTAL_REQUESTS_FIELD_NUMBER: _ClassVar[int]
     TOTAL_COST_FIELD_NUMBER: _ClassVar[int]
+    CURRENCY_FIELD_NUMBER: _ClassVar[int]
     billing_month: str
     videos_encoded: int
     encoding_minutes: float
@@ -366,4 +363,5 @@ class UsageSummary(_message.Message):
     egress_cost: float
     total_requests: int
     total_cost: float
-    def __init__(self, billing_month: _Optional[str] = ..., videos_encoded: _Optional[int] = ..., encoding_minutes: _Optional[float] = ..., encoding_cost: _Optional[float] = ..., storage_gb_avg: _Optional[float] = ..., storage_cost: _Optional[float] = ..., videos_hosted: _Optional[int] = ..., egress_gb: _Optional[float] = ..., egress_cost: _Optional[float] = ..., total_requests: _Optional[int] = ..., total_cost: _Optional[float] = ...) -> None: ...
+    currency: str
+    def __init__(self, billing_month: _Optional[str] = ..., videos_encoded: _Optional[int] = ..., encoding_minutes: _Optional[float] = ..., encoding_cost: _Optional[float] = ..., storage_gb_avg: _Optional[float] = ..., storage_cost: _Optional[float] = ..., videos_hosted: _Optional[int] = ..., egress_gb: _Optional[float] = ..., egress_cost: _Optional[float] = ..., total_requests: _Optional[int] = ..., total_cost: _Optional[float] = ..., currency: _Optional[str] = ...) -> None: ...
