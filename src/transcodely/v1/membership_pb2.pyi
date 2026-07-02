@@ -108,8 +108,8 @@ class UpdateMembershipRoleRequest(_message.Message):
 class UpdateMembershipRoleResponse(_message.Message):
     __slots__ = ("membership",)
     MEMBERSHIP_FIELD_NUMBER: _ClassVar[int]
-    membership: Membership
-    def __init__(self, membership: _Optional[_Union[Membership, _Mapping]] = ...) -> None: ...
+    membership: MembershipWithUser
+    def __init__(self, membership: _Optional[_Union[MembershipWithUser, _Mapping]] = ...) -> None: ...
 
 class RemoveMembershipRequest(_message.Message):
     __slots__ = ("id",)

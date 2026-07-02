@@ -32,7 +32,7 @@ THUMBNAIL_FORMAT_PNG: ThumbnailFormat
 THUMBNAIL_FORMAT_WEBP: ThumbnailFormat
 
 class ThumbnailSpec(_message.Message):
-    __slots__ = ("mode", "format", "width", "height", "quality", "timestamp", "interval_seconds", "timestamps", "sprite_columns")
+    __slots__ = ("mode", "format", "width", "height", "quality", "timestamp", "interval_seconds", "timestamps", "sprite_columns", "path_template")
     MODE_FIELD_NUMBER: _ClassVar[int]
     FORMAT_FIELD_NUMBER: _ClassVar[int]
     WIDTH_FIELD_NUMBER: _ClassVar[int]
@@ -42,6 +42,7 @@ class ThumbnailSpec(_message.Message):
     INTERVAL_SECONDS_FIELD_NUMBER: _ClassVar[int]
     TIMESTAMPS_FIELD_NUMBER: _ClassVar[int]
     SPRITE_COLUMNS_FIELD_NUMBER: _ClassVar[int]
+    PATH_TEMPLATE_FIELD_NUMBER: _ClassVar[int]
     mode: ThumbnailMode
     format: ThumbnailFormat
     width: int
@@ -51,4 +52,23 @@ class ThumbnailSpec(_message.Message):
     interval_seconds: float
     timestamps: _containers.RepeatedScalarFieldContainer[float]
     sprite_columns: int
-    def __init__(self, mode: _Optional[_Union[ThumbnailMode, str]] = ..., format: _Optional[_Union[ThumbnailFormat, str]] = ..., width: _Optional[int] = ..., height: _Optional[int] = ..., quality: _Optional[int] = ..., timestamp: _Optional[float] = ..., interval_seconds: _Optional[float] = ..., timestamps: _Optional[_Iterable[float]] = ..., sprite_columns: _Optional[int] = ...) -> None: ...
+    path_template: str
+    def __init__(self, mode: _Optional[_Union[ThumbnailMode, str]] = ..., format: _Optional[_Union[ThumbnailFormat, str]] = ..., width: _Optional[int] = ..., height: _Optional[int] = ..., quality: _Optional[int] = ..., timestamp: _Optional[float] = ..., interval_seconds: _Optional[float] = ..., timestamps: _Optional[_Iterable[float]] = ..., sprite_columns: _Optional[int] = ..., path_template: _Optional[str] = ...) -> None: ...
+
+class ThumbnailResult(_message.Message):
+    __slots__ = ("storage_key", "url", "mode", "format", "width", "height", "index")
+    STORAGE_KEY_FIELD_NUMBER: _ClassVar[int]
+    URL_FIELD_NUMBER: _ClassVar[int]
+    MODE_FIELD_NUMBER: _ClassVar[int]
+    FORMAT_FIELD_NUMBER: _ClassVar[int]
+    WIDTH_FIELD_NUMBER: _ClassVar[int]
+    HEIGHT_FIELD_NUMBER: _ClassVar[int]
+    INDEX_FIELD_NUMBER: _ClassVar[int]
+    storage_key: str
+    url: str
+    mode: str
+    format: str
+    width: int
+    height: int
+    index: int
+    def __init__(self, storage_key: _Optional[str] = ..., url: _Optional[str] = ..., mode: _Optional[str] = ..., format: _Optional[str] = ..., width: _Optional[int] = ..., height: _Optional[int] = ..., index: _Optional[int] = ...) -> None: ...
