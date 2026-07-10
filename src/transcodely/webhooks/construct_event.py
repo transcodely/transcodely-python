@@ -86,12 +86,15 @@ def _build_event(parsed: Any) -> Event:
     request_raw = parsed.get("request")
     if not isinstance(request_raw, dict):
         raise WebhookPayloadError("Webhook envelope field `request` must be a JSON object")
-    # `request.id` may be an empty string: the API emits "" for events not
-    # produced in request scope (worker callbacks like job.succeeded/output.ready
-    # and every SendTestWebhook delivery). Require a string, but allow "".
+    # `request.id` is null for events emitted outside a request scope — every
+    # worker-callback event (job.succeeded/failed/canceled/progress, output.*,
+    # video.uploaded) and every SendTestWebhook delivery. Accept null or a
+    # non-empty string; reject "" and non-strings (mirrors the JS SDK).
     request_id = request_raw.get("id")
-    if not isinstance(request_id, str):
-        raise WebhookPayloadError("Webhook envelope field `request.id` must be a string")
+    if request_id is not None and (not isinstance(request_id, str) or request_id == ""):
+        raise WebhookPayloadError(
+            "Webhook envelope field `request.id` must be a non-empty string or null"
+        )
     idempotency_key = request_raw.get("idempotency_key")
     if idempotency_key is not None and not isinstance(idempotency_key, str):
         raise WebhookPayloadError(

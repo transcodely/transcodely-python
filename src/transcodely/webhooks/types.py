@@ -45,8 +45,9 @@ EventType = Literal[
 class EventRequest:
     """The originating API request that triggered an event, if known."""
 
-    #: Request ID (``req_*``), or ``""`` when unknown.
-    id: str
+    #: Request ID (``req_*``), or ``None`` for events emitted outside a request
+    #: scope (worker-callback events like ``job.succeeded`` and every test send).
+    id: Optional[str]
     #: Idempotency key the original request carried, or ``None``.
     idempotency_key: Optional[str]
 

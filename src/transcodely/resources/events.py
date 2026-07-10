@@ -112,6 +112,8 @@ def proto_event_to_sdk(proto: webhook_pb2.Event) -> Event:
         livemode=proto.livemode,
         pending_webhooks=proto.pending_webhooks,
         # proto Event carries only request_id; idempotency_key is always None
-        # until JobService.Create propagates it.
-        request=EventRequest(id=proto.request_id or "", idempotency_key=None),
+        # until JobService.Create propagates it. An unset request_id maps to
+        # None so this path matches the webhook envelope path (both use None for
+        # events emitted outside a request scope).
+        request=EventRequest(id=proto.request_id or None, idempotency_key=None),
     )

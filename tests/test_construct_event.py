@@ -93,12 +93,20 @@ def test_preserves_idempotency_key() -> None:
     assert ev.request.idempotency_key == "key_abc"
 
 
-def test_accepts_empty_request_id() -> None:
-    # The API sends request.id == "" for worker-emitted events (job.succeeded,
+def test_accepts_null_request_id() -> None:
+    # The API sends request.id == null for worker-emitted events (job.succeeded,
     # output.ready, ...) and for every SendTestWebhook delivery — must not reject.
-    env = envelope("job.succeeded", {"id": "job_1"}, request={"id": "", "idempotency_key": None})
+    env = envelope("job.succeeded", {"id": "job_1"}, request={"id": None, "idempotency_key": None})
     ev = construct(env)
-    assert ev.request.id == ""
+    assert ev.request.id is None
+
+
+def test_rejects_empty_request_id() -> None:
+    # "" is not a valid request id — the API sends null (not "") when there is no
+    # originating request scope. Empty string must raise, not slip through.
+    env = envelope("job.succeeded", {"id": "job_1"}, request={"id": "", "idempotency_key": None})
+    with pytest.raises(WebhookPayloadError):
+        construct(env)
 
 
 def test_request_id_non_string_raises_payload_error() -> None:
