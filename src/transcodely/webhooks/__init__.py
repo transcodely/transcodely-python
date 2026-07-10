@@ -9,7 +9,12 @@ facade mirrors the TypeScript SDK so customer code can also read
 from __future__ import annotations
 
 from .construct_event import construct_event
-from .signature import DEFAULT_TOLERANCE_SECONDS, SIGNATURE_HEADER, verify_signature
+from .signature import (
+    DEFAULT_TOLERANCE_SECONDS,
+    EVENT_ID_HEADER,
+    SIGNATURE_HEADER,
+    verify_signature,
+)
 from .types import Event, EventRequest, EventType, WebhookEvent
 
 
@@ -27,6 +32,7 @@ class Webhooks:
 
 __all__ = [
     "DEFAULT_TOLERANCE_SECONDS",
+    "EVENT_ID_HEADER",
     "SIGNATURE_HEADER",
     "Event",
     "EventRequest",

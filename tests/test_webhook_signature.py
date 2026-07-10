@@ -10,6 +10,7 @@ import pytest
 from transcodely.errors import WebhookSignatureError, WebhookTimestampError
 from transcodely.webhooks.signature import (
     DEFAULT_TOLERANCE_SECONDS,
+    EVENT_ID_HEADER,
     SIGNATURE_HEADER,
     verify_signature,
 )
@@ -34,6 +35,14 @@ def at(ts: int):  # type: ignore[no-untyped-def]
 def test_constants() -> None:
     assert DEFAULT_TOLERANCE_SECONDS == 300
     assert SIGNATURE_HEADER == "transcodely-signature"
+    assert EVENT_ID_HEADER == "webhook-id"
+
+
+def test_accepts_uppercase_hex_signature() -> None:
+    # Signatures are lowercase hex in practice, but an upper/mixed-case hex
+    # digest must still verify — the JS SDK compares decoded bytes (parity).
+    h = f"t={TS},v1={sign(SECRET, TS, BODY).upper()}"
+    verify_signature(BODY, h, SECRET, now=at(TS))  # no raise
 
 
 def test_accepts_well_formed_single_v1() -> None:

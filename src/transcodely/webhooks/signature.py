@@ -21,6 +21,11 @@ DEFAULT_TOLERANCE_SECONDS = 300
 #: HTTP header name carrying the signature (lower-cased for case-insensitive lookup).
 SIGNATURE_HEADER = "transcodely-signature"
 
+#: HTTP header name carrying the event ID (``evt_*``). Useful as an idempotency
+#: key for handlers that dedupe redeliveries — the same event ID rides every
+#: retry of a given event.
+EVENT_ID_HEADER = "webhook-id"
+
 
 def _parse_header(header: str) -> tuple[int, list[str]]:
     """Parse the ``Transcodely-Signature`` header.
@@ -42,6 +47,10 @@ def _parse_header(header: str) -> tuple[int, list[str]]:
             try:
                 timestamp = int(value)
             except ValueError:
+                # Divergence from the JS SDK (which parses with Number() and an
+                # isInteger check, so it would accept "123.0"/"1e3"): int() is
+                # stricter and rejects those. Harmless — the API always emits a
+                # plain integer timestamp.
                 continue
         elif key == "v1":
             signatures.append(value)
@@ -84,7 +93,10 @@ def verify_signature(
     for s in secrets:
         expected = hmac.new(s.encode("utf-8"), payload, hashlib.sha256).hexdigest()
         for candidate in signatures:
-            if hmac.compare_digest(expected, candidate):
+            # `expected` is lowercase hex (hexdigest); normalize the candidate so
+            # an upper/mixed-case hex digest still matches — the JS SDK compares
+            # decoded bytes, which is inherently case-insensitive.
+            if hmac.compare_digest(expected, candidate.lower()):
                 return
 
     raise WebhookSignatureError("No signatures matched the expected value")
@@ -92,6 +104,7 @@ def verify_signature(
 
 __all__ = [
     "DEFAULT_TOLERANCE_SECONDS",
+    "EVENT_ID_HEADER",
     "SIGNATURE_HEADER",
     "verify_signature",
 ]

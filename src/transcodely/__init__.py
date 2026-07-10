@@ -50,6 +50,7 @@ from .pagination import Page, PageContents
 from .version import API_VERSION, DEFAULT_BASE_URL, SDK_VERSION
 from .webhooks import (
     DEFAULT_TOLERANCE_SECONDS,
+    EVENT_ID_HEADER,
     SIGNATURE_HEADER,
     Event,
     EventRequest,
@@ -119,6 +120,7 @@ __all__ = [
     "DEFAULT_TOLERANCE_SECONDS",
     "DRMConfig",
     "Event",
+    "EVENT_ID_HEADER",
     "EventRequest",
     "EventType",
     "FieldViolation",
