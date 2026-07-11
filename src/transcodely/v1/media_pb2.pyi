@@ -24,7 +24,7 @@ class InputMetadata(_message.Message):
     def __init__(self, format: _Optional[str] = ..., duration_ms: _Optional[int] = ..., size_bytes: _Optional[int] = ..., bit_rate: _Optional[int] = ..., video: _Optional[_Union[VideoStreamInfo, _Mapping]] = ..., audio: _Optional[_Union[AudioStreamInfo, _Mapping]] = ..., probed_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
 class VideoStreamInfo(_message.Message):
-    __slots__ = ("codec", "width", "height", "frame_rate", "bit_rate", "pixel_format", "color_space", "color_transfer", "duration_ms", "color_primaries", "chroma_location", "bit_depth", "interlaced", "frame_count", "display_aspect_ratio", "sample_aspect_ratio")
+    __slots__ = ("codec", "width", "height", "frame_rate", "bit_rate", "pixel_format", "color_space", "color_transfer", "duration_ms", "color_primaries", "chroma_location", "bit_depth", "interlaced", "frame_count", "display_aspect_ratio", "sample_aspect_ratio", "rotation")
     CODEC_FIELD_NUMBER: _ClassVar[int]
     WIDTH_FIELD_NUMBER: _ClassVar[int]
     HEIGHT_FIELD_NUMBER: _ClassVar[int]
@@ -41,6 +41,7 @@ class VideoStreamInfo(_message.Message):
     FRAME_COUNT_FIELD_NUMBER: _ClassVar[int]
     DISPLAY_ASPECT_RATIO_FIELD_NUMBER: _ClassVar[int]
     SAMPLE_ASPECT_RATIO_FIELD_NUMBER: _ClassVar[int]
+    ROTATION_FIELD_NUMBER: _ClassVar[int]
     codec: str
     width: int
     height: int
@@ -57,7 +58,8 @@ class VideoStreamInfo(_message.Message):
     frame_count: int
     display_aspect_ratio: str
     sample_aspect_ratio: str
-    def __init__(self, codec: _Optional[str] = ..., width: _Optional[int] = ..., height: _Optional[int] = ..., frame_rate: _Optional[float] = ..., bit_rate: _Optional[int] = ..., pixel_format: _Optional[str] = ..., color_space: _Optional[str] = ..., color_transfer: _Optional[str] = ..., duration_ms: _Optional[int] = ..., color_primaries: _Optional[str] = ..., chroma_location: _Optional[str] = ..., bit_depth: _Optional[int] = ..., interlaced: bool = ..., frame_count: _Optional[int] = ..., display_aspect_ratio: _Optional[str] = ..., sample_aspect_ratio: _Optional[str] = ...) -> None: ...
+    rotation: int
+    def __init__(self, codec: _Optional[str] = ..., width: _Optional[int] = ..., height: _Optional[int] = ..., frame_rate: _Optional[float] = ..., bit_rate: _Optional[int] = ..., pixel_format: _Optional[str] = ..., color_space: _Optional[str] = ..., color_transfer: _Optional[str] = ..., duration_ms: _Optional[int] = ..., color_primaries: _Optional[str] = ..., chroma_location: _Optional[str] = ..., bit_depth: _Optional[int] = ..., interlaced: bool = ..., frame_count: _Optional[int] = ..., display_aspect_ratio: _Optional[str] = ..., sample_aspect_ratio: _Optional[str] = ..., rotation: _Optional[int] = ...) -> None: ...
 
 class AudioStreamInfo(_message.Message):
     __slots__ = ("codec", "sample_rate", "channels", "channel_layout", "bit_rate", "duration_ms", "bits_per_sample", "language", "is_default")
