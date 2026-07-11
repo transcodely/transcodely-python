@@ -9,6 +9,7 @@ import httpx
 from ._transport.transport import LogEvent, Transport
 from .resources.api_keys import ApiKeys
 from .resources.apps import Apps
+from .resources.events import Events
 from .resources.health import Health
 from .resources.jobs import Jobs
 from .resources.memberships import Memberships
@@ -17,7 +18,9 @@ from .resources.origins import Origins
 from .resources.presets import Presets
 from .resources.users import Users
 from .resources.videos import Videos
+from .resources.webhook_endpoints import WebhookEndpoints
 from .version import API_VERSION, SDK_VERSION
+from .webhooks import Webhooks
 
 
 class Transcodely:
@@ -62,6 +65,8 @@ class Transcodely:
         self._memberships: Optional[Memberships] = None
         self._users: Optional[Users] = None
         self._health: Optional[Health] = None
+        self._webhook_endpoints: Optional[WebhookEndpoints] = None
+        self._events: Optional[Events] = None
 
     def close(self) -> None:
         self._transport.close()
@@ -136,3 +141,20 @@ class Transcodely:
         if self._health is None:
             self._health = Health(self._transport)
         return self._health
+
+    @property
+    def webhook_endpoints(self) -> WebhookEndpoints:
+        if self._webhook_endpoints is None:
+            self._webhook_endpoints = WebhookEndpoints(self._transport)
+        return self._webhook_endpoints
+
+    @property
+    def events(self) -> Events:
+        if self._events is None:
+            self._events = Events(self._transport)
+        return self._events
+
+    @property
+    def webhooks(self) -> type[Webhooks]:
+        """Stripe-style facade: ``client.webhooks.construct_event(body, sig, secret)``."""
+        return Webhooks
