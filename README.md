@@ -54,6 +54,9 @@ client.organizations   # create / get / list / update / check_slug
 client.memberships     # list / get / update_role / remove
 client.users           # get_me / get / list / update_me
 client.health          # check
+client.webhook_endpoints  # create / retrieve / update / delete / list / rotate_secret / send_test / list_deliveries / get_health
+client.events          # retrieve / list / resend
+client.webhooks        # construct_event / verify_signature (signature-verification helpers)
 ```
 
 ## Origins
@@ -181,6 +184,8 @@ except TranscodelyError as err:
 
 Every error carries `request_id`, `code`, `http_status`, and `raw` for debugging.
 
+Webhook verification raises `WebhookError` (or a subclass) — see [Webhooks](#webhooks).
+
 ## Pagination
 
 ```python
@@ -215,6 +220,64 @@ for event in client.jobs.watch(job.id):
 ```
 
 The SDK auto-reconnects on transient network failures — Watch is read-only and re-emits a SNAPSHOT on every reconnect. HEARTBEAT events are filtered by default.
+
+## Webhooks
+
+Verify a signed delivery and get back a typed `Event`. Pass the **raw** request body (bytes or str — do not re-serialize) and the `Transcodely-Signature` header:
+
+```python
+from transcodely import construct_event, WebhookSignatureError
+
+try:
+    event = construct_event(
+        request.body,                       # raw bytes/str, exactly as received
+        request.headers["transcodely-signature"],
+        "whsec_...",                        # your endpoint's signing secret
+    )
+except WebhookSignatureError:
+    return Response(status_code=400)
+
+# `event.data` is the decoded resource (a Job, JobOutput, Video, or App).
+if event.type == "job.succeeded":
+    print("job done:", event.data.id)
+elif event.type == "video.uploaded":
+    print("new video:", event.data.id)
+```
+
+`construct_event` also accepts a **list** of secrets so deliveries keep verifying during a secret rotation's overlap window:
+
+```python
+event = construct_event(body, sig_header, ["whsec_previous", "whsec_current"])
+```
+
+Tuning and errors:
+
+- `tolerance` (default `300` seconds) bounds clock skew / replay; widen or narrow it per call.
+- `WebhookSignatureError` — header malformed or no signature matched.
+- `WebhookTimestampError` — timestamp outside the tolerance window.
+- `WebhookPayloadError` — body isn't valid JSON or doesn't match the event envelope.
+
+All three inherit from `WebhookError`. `client.webhooks.construct_event(...)` is an alias for the module-level function.
+
+Manage endpoints and replay events via the API:
+
+```python
+endpoint = client.webhook_endpoints.create(
+    app_id="app_123",
+    url="https://example.com/hooks/transcodely",
+    enabled_events=["job.succeeded", "job.failed"],   # or ["*"] for all
+)
+print(endpoint.secret)   # shown only on create + rotate_secret — store it now
+
+# The same typed Event, fetched from the API instead of an HTTP delivery:
+event = client.events.retrieve("evt_123")
+for event in client.events.list(app_id="app_123").auto_paging_iter():
+    print(event.type, event.id)
+
+client.events.resend("evt_123")   # re-queue delivery to all subscribed endpoints
+```
+
+The 13 event types are `job.created`, `job.succeeded`, `job.failed`, `job.canceled`, `job.progress`, `output.created`, `output.ready`, `output.failed`, `output.progress`, `video.uploaded`, `video.deleted`, `app.created`, and `app.updated`. Subscribe to `"*"` to receive all of them (including ones added later). An unrecognized future type still verifies; its `event.data` is left as a plain `dict`.
 
 ## Configuration
 

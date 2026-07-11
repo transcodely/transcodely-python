@@ -92,3 +92,24 @@ class InvalidRequestError(TranscodelyError):
 
 class PreconditionError(TranscodelyError):
     """412 — preconditions not met (e.g. job not cancelable in current state)."""
+
+
+class WebhookError(TranscodelyError):
+    """Base class for webhook signature-verification failures.
+
+    Raised by :func:`transcodely.construct_event` /
+    :func:`transcodely.verify_signature`. Catch this to handle any verification
+    failure, or one of its subclasses to distinguish the cause.
+    """
+
+
+class WebhookSignatureError(WebhookError):
+    """The signature header was malformed or no signature matched the body."""
+
+
+class WebhookTimestampError(WebhookError):
+    """The signature timestamp fell outside the allowed tolerance window."""
+
+
+class WebhookPayloadError(WebhookError):
+    """The body was not valid JSON or did not match the event-envelope shape."""
