@@ -39,7 +39,6 @@ def _envelope(type_: str, data: dict[str, Any]) -> str:
             "created": "2026-05-24T10:55:08Z",
             "type": type_,
             "data": data,
-            "livemode": True,
             "pending_webhooks": 0,
             "request": {"id": "req_1", "idempotency_key": None},
         }

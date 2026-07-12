@@ -74,8 +74,6 @@ class Event:
     type: str
     #: The decoded resource snapshot (a proto message, or ``dict`` for unknown types).
     data: Any
-    #: ``True`` for production-mode events. Reserved for a future test-mode concept.
-    livemode: bool
     #: Delivery attempts still pending across all subscribed endpoints.
     pending_webhooks: int
     #: The originating API request.

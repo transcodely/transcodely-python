@@ -27,7 +27,7 @@ from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__
 from transcodely.v1 import common_pb2 as transcodely_dot_v1_dot_common__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1ctranscodely/v1/api_key.proto\x12\x0etranscodely.v1\x1a\x1b\x62uf/validate/validate.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1btranscodely/v1/common.proto\"\xb1\x04\n\x06\x41PIKey\x12\x0e\n\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n\x04name\x18\x02 \x01(\tR\x04name\x12 \n\x0b\x64\x65scription\x18\x03 \x01(\tR\x0b\x64\x65scription\x12\x1d\n\nkey_prefix\x18\x04 \x01(\tR\tkeyPrefix\x12\x19\n\x08key_hint\x18\x05 \x01(\tR\x07keyHint\x12\x43\n\x0b\x65nvironment\x18\x06 \x01(\x0e\x32!.transcodely.v1.APIKeyEnvironmentR\x0b\x65nvironment\x12\x16\n\x06scopes\x18\x07 \x03(\tR\x06scopes\x12\x41\n\x0clast_used_at\x18\x08 \x01(\x0b\x32\x1a.google.protobuf.TimestampH\x00R\nlastUsedAt\x88\x01\x01\x12>\n\nexpires_at\x18\t \x01(\x0b\x32\x1a.google.protobuf.TimestampH\x01R\texpiresAt\x88\x01\x01\x12\x39\n\ncreated_at\x18\n \x01(\x0b\x32\x1a.google.protobuf.TimestampR\tcreatedAt\x12\x1d\n\nis_revoked\x18\x0b \x01(\x08R\tisRevoked\x12>\n\nrevoked_at\x18\x0c \x01(\x0b\x32\x1a.google.protobuf.TimestampH\x02R\trevokedAt\x88\x01\x01\x42\x0f\n\r_last_used_atB\r\n\x0b_expires_atB\r\n\x0b_revoked_at\"\xb9\x02\n\x13\x43reateAPIKeyRequest\x12!\n\x04name\x18\x01 \x01(\tB\r\xbaH\nr\x05\x10\x01\x18\xff\x01\xc8\x01\x01R\x04name\x12*\n\x0b\x64\x65scription\x18\x02 \x01(\tB\x08\xbaH\x05r\x03\x18\xe8\x07R\x0b\x64\x65scription\x12P\n\x0b\x65nvironment\x18\x03 \x01(\x0e\x32!.transcodely.v1.APIKeyEnvironmentB\x0b\xbaH\x08\x82\x01\x02 \x00\xc8\x01\x01R\x0b\x65nvironment\x12>\n\nexpires_at\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.TimestampH\x00R\texpiresAt\x88\x01\x01\x12\x32\n\x06\x61pp_id\x18\x05 \x01(\tB\x1b\xbaH\x18r\x16\x32\x14^app_[a-zA-Z0-9_-]+$R\x05\x61ppIdB\r\n\x0b_expires_at\"_\n\x14\x43reateAPIKeyResponse\x12/\n\x07\x61pi_key\x18\x01 \x01(\x0b\x32\x16.transcodely.v1.APIKeyR\x06\x61piKey\x12\x16\n\x06secret\x18\x02 \x01(\tR\x06secret\"A\n\x10GetAPIKeyRequest\x12-\n\x02id\x18\x01 \x01(\tB\x1d\xbaH\x1ar\x15\x32\x13^ak_[a-zA-Z0-9_-]+$\xc8\x01\x01R\x02id\"D\n\x11GetAPIKeyResponse\x12/\n\x07\x61pi_key\x18\x01 \x01(\x0b\x32\x16.transcodely.v1.APIKeyR\x06\x61piKey\"\xda\x01\n\x12ListAPIKeysRequest\x12H\n\x0b\x65nvironment\x18\x01 \x01(\x0e\x32!.transcodely.v1.APIKeyEnvironmentH\x00R\x0b\x65nvironment\x88\x01\x01\x12\'\n\x0finclude_revoked\x18\x02 \x01(\x08R\x0eincludeRevoked\x12\x41\n\npagination\x18\x03 \x01(\x0b\x32!.transcodely.v1.PaginationRequestR\npaginationB\x0e\n\x0c_environment\"\x8c\x01\n\x13ListAPIKeysResponse\x12\x31\n\x08\x61pi_keys\x18\x01 \x03(\x0b\x32\x16.transcodely.v1.APIKeyR\x07\x61piKeys\x12\x42\n\npagination\x18\x02 \x01(\x0b\x32\".transcodely.v1.PaginationResponseR\npagination\"f\n\x13RevokeAPIKeyRequest\x12-\n\x02id\x18\x01 \x01(\tB\x1d\xbaH\x1ar\x15\x32\x13^ak_[a-zA-Z0-9_-]+$\xc8\x01\x01R\x02id\x12 \n\x06reason\x18\x02 \x01(\tB\x08\xbaH\x05r\x03\x18\xf4\x03R\x06reason\"G\n\x14RevokeAPIKeyResponse\x12/\n\x07\x61pi_key\x18\x01 \x01(\x0b\x32\x16.transcodely.v1.APIKeyR\x06\x61piKey*t\n\x11\x41PIKeyEnvironment\x12#\n\x1f\x41PI_KEY_ENVIRONMENT_UNSPECIFIED\x10\x00\x12\x1c\n\x18\x41PI_KEY_ENVIRONMENT_LIVE\x10\x01\x12\x1c\n\x18\x41PI_KEY_ENVIRONMENT_TEST\x10\x02\x32\xd6\x02\n\rAPIKeyService\x12S\n\x06\x43reate\x12#.transcodely.v1.CreateAPIKeyRequest\x1a$.transcodely.v1.CreateAPIKeyResponse\x12J\n\x03Get\x12 .transcodely.v1.GetAPIKeyRequest\x1a!.transcodely.v1.GetAPIKeyResponse\x12O\n\x04List\x12\".transcodely.v1.ListAPIKeysRequest\x1a#.transcodely.v1.ListAPIKeysResponse\x12S\n\x06Revoke\x12#.transcodely.v1.RevokeAPIKeyRequest\x1a$.transcodely.v1.RevokeAPIKeyResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1ctranscodely/v1/api_key.proto\x12\x0etranscodely.v1\x1a\x1b\x62uf/validate/validate.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1btranscodely/v1/common.proto\"\xff\x03\n\x06\x41PIKey\x12\x0e\n\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n\x04name\x18\x02 \x01(\tR\x04name\x12 \n\x0b\x64\x65scription\x18\x03 \x01(\tR\x0b\x64\x65scription\x12\x1d\n\nkey_prefix\x18\x04 \x01(\tR\tkeyPrefix\x12\x19\n\x08key_hint\x18\x05 \x01(\tR\x07keyHint\x12\x16\n\x06scopes\x18\x07 \x03(\tR\x06scopes\x12\x41\n\x0clast_used_at\x18\x08 \x01(\x0b\x32\x1a.google.protobuf.TimestampH\x00R\nlastUsedAt\x88\x01\x01\x12>\n\nexpires_at\x18\t \x01(\x0b\x32\x1a.google.protobuf.TimestampH\x01R\texpiresAt\x88\x01\x01\x12\x39\n\ncreated_at\x18\n \x01(\x0b\x32\x1a.google.protobuf.TimestampR\tcreatedAt\x12\x1d\n\nis_revoked\x18\x0b \x01(\x08R\tisRevoked\x12>\n\nrevoked_at\x18\x0c \x01(\x0b\x32\x1a.google.protobuf.TimestampH\x02R\trevokedAt\x88\x01\x01\x42\x0f\n\r_last_used_atB\r\n\x0b_expires_atB\r\n\x0b_revoked_atJ\x04\x08\x06\x10\x07R\x0b\x65nvironment\"\xfa\x01\n\x13\x43reateAPIKeyRequest\x12!\n\x04name\x18\x01 \x01(\tB\r\xbaH\nr\x05\x10\x01\x18\xff\x01\xc8\x01\x01R\x04name\x12*\n\x0b\x64\x65scription\x18\x02 \x01(\tB\x08\xbaH\x05r\x03\x18\xe8\x07R\x0b\x64\x65scription\x12>\n\nexpires_at\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.TimestampH\x00R\texpiresAt\x88\x01\x01\x12\x32\n\x06\x61pp_id\x18\x05 \x01(\tB\x1b\xbaH\x18r\x16\x32\x14^app_[a-zA-Z0-9_-]+$R\x05\x61ppIdB\r\n\x0b_expires_atJ\x04\x08\x03\x10\x04R\x0b\x65nvironment\"_\n\x14\x43reateAPIKeyResponse\x12/\n\x07\x61pi_key\x18\x01 \x01(\x0b\x32\x16.transcodely.v1.APIKeyR\x06\x61piKey\x12\x16\n\x06secret\x18\x02 \x01(\tR\x06secret\"A\n\x10GetAPIKeyRequest\x12-\n\x02id\x18\x01 \x01(\tB\x1d\xbaH\x1ar\x15\x32\x13^ak_[a-zA-Z0-9_-]+$\xc8\x01\x01R\x02id\"D\n\x11GetAPIKeyResponse\x12/\n\x07\x61pi_key\x18\x01 \x01(\x0b\x32\x16.transcodely.v1.APIKeyR\x06\x61piKey\"\x93\x01\n\x12ListAPIKeysRequest\x12\'\n\x0finclude_revoked\x18\x02 \x01(\x08R\x0eincludeRevoked\x12\x41\n\npagination\x18\x03 \x01(\x0b\x32!.transcodely.v1.PaginationRequestR\npaginationJ\x04\x08\x01\x10\x02R\x0b\x65nvironment\"\x8c\x01\n\x13ListAPIKeysResponse\x12\x31\n\x08\x61pi_keys\x18\x01 \x03(\x0b\x32\x16.transcodely.v1.APIKeyR\x07\x61piKeys\x12\x42\n\npagination\x18\x02 \x01(\x0b\x32\".transcodely.v1.PaginationResponseR\npagination\"f\n\x13RevokeAPIKeyRequest\x12-\n\x02id\x18\x01 \x01(\tB\x1d\xbaH\x1ar\x15\x32\x13^ak_[a-zA-Z0-9_-]+$\xc8\x01\x01R\x02id\x12 \n\x06reason\x18\x02 \x01(\tB\x08\xbaH\x05r\x03\x18\xf4\x03R\x06reason\"G\n\x14RevokeAPIKeyResponse\x12/\n\x07\x61pi_key\x18\x01 \x01(\x0b\x32\x16.transcodely.v1.APIKeyR\x06\x61piKey2\xd6\x02\n\rAPIKeyService\x12S\n\x06\x43reate\x12#.transcodely.v1.CreateAPIKeyRequest\x1a$.transcodely.v1.CreateAPIKeyResponse\x12J\n\x03Get\x12 .transcodely.v1.GetAPIKeyRequest\x1a!.transcodely.v1.GetAPIKeyResponse\x12O\n\x04List\x12\".transcodely.v1.ListAPIKeysRequest\x1a#.transcodely.v1.ListAPIKeysResponse\x12S\n\x06Revoke\x12#.transcodely.v1.RevokeAPIKeyRequest\x1a$.transcodely.v1.RevokeAPIKeyResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -38,8 +38,6 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_CREATEAPIKEYREQUEST'].fields_by_name['name']._serialized_options = b'\272H\nr\005\020\001\030\377\001\310\001\001'
   _globals['_CREATEAPIKEYREQUEST'].fields_by_name['description']._loaded_options = None
   _globals['_CREATEAPIKEYREQUEST'].fields_by_name['description']._serialized_options = b'\272H\005r\003\030\350\007'
-  _globals['_CREATEAPIKEYREQUEST'].fields_by_name['environment']._loaded_options = None
-  _globals['_CREATEAPIKEYREQUEST'].fields_by_name['environment']._serialized_options = b'\272H\010\202\001\002 \000\310\001\001'
   _globals['_CREATEAPIKEYREQUEST'].fields_by_name['app_id']._loaded_options = None
   _globals['_CREATEAPIKEYREQUEST'].fields_by_name['app_id']._serialized_options = b'\272H\030r\0262\024^app_[a-zA-Z0-9_-]+$'
   _globals['_GETAPIKEYREQUEST'].fields_by_name['id']._loaded_options = None
@@ -48,26 +46,24 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_REVOKEAPIKEYREQUEST'].fields_by_name['id']._serialized_options = b'\272H\032r\0252\023^ak_[a-zA-Z0-9_-]+$\310\001\001'
   _globals['_REVOKEAPIKEYREQUEST'].fields_by_name['reason']._loaded_options = None
   _globals['_REVOKEAPIKEYREQUEST'].fields_by_name['reason']._serialized_options = b'\272H\005r\003\030\364\003'
-  _globals['_APIKEYENVIRONMENT']._serialized_start=1794
-  _globals['_APIKEYENVIRONMENT']._serialized_end=1910
   _globals['_APIKEY']._serialized_start=140
-  _globals['_APIKEY']._serialized_end=701
-  _globals['_CREATEAPIKEYREQUEST']._serialized_start=704
-  _globals['_CREATEAPIKEYREQUEST']._serialized_end=1017
-  _globals['_CREATEAPIKEYRESPONSE']._serialized_start=1019
-  _globals['_CREATEAPIKEYRESPONSE']._serialized_end=1114
-  _globals['_GETAPIKEYREQUEST']._serialized_start=1116
-  _globals['_GETAPIKEYREQUEST']._serialized_end=1181
-  _globals['_GETAPIKEYRESPONSE']._serialized_start=1183
-  _globals['_GETAPIKEYRESPONSE']._serialized_end=1251
-  _globals['_LISTAPIKEYSREQUEST']._serialized_start=1254
-  _globals['_LISTAPIKEYSREQUEST']._serialized_end=1472
-  _globals['_LISTAPIKEYSRESPONSE']._serialized_start=1475
-  _globals['_LISTAPIKEYSRESPONSE']._serialized_end=1615
-  _globals['_REVOKEAPIKEYREQUEST']._serialized_start=1617
-  _globals['_REVOKEAPIKEYREQUEST']._serialized_end=1719
-  _globals['_REVOKEAPIKEYRESPONSE']._serialized_start=1721
-  _globals['_REVOKEAPIKEYRESPONSE']._serialized_end=1792
-  _globals['_APIKEYSERVICE']._serialized_start=1913
-  _globals['_APIKEYSERVICE']._serialized_end=2255
+  _globals['_APIKEY']._serialized_end=651
+  _globals['_CREATEAPIKEYREQUEST']._serialized_start=654
+  _globals['_CREATEAPIKEYREQUEST']._serialized_end=904
+  _globals['_CREATEAPIKEYRESPONSE']._serialized_start=906
+  _globals['_CREATEAPIKEYRESPONSE']._serialized_end=1001
+  _globals['_GETAPIKEYREQUEST']._serialized_start=1003
+  _globals['_GETAPIKEYREQUEST']._serialized_end=1068
+  _globals['_GETAPIKEYRESPONSE']._serialized_start=1070
+  _globals['_GETAPIKEYRESPONSE']._serialized_end=1138
+  _globals['_LISTAPIKEYSREQUEST']._serialized_start=1141
+  _globals['_LISTAPIKEYSREQUEST']._serialized_end=1288
+  _globals['_LISTAPIKEYSRESPONSE']._serialized_start=1291
+  _globals['_LISTAPIKEYSRESPONSE']._serialized_end=1431
+  _globals['_REVOKEAPIKEYREQUEST']._serialized_start=1433
+  _globals['_REVOKEAPIKEYREQUEST']._serialized_end=1535
+  _globals['_REVOKEAPIKEYRESPONSE']._serialized_start=1537
+  _globals['_REVOKEAPIKEYRESPONSE']._serialized_end=1608
+  _globals['_APIKEYSERVICE']._serialized_start=1611
+  _globals['_APIKEYSERVICE']._serialized_end=1953
 # @@protoc_insertion_point(module_scope)
