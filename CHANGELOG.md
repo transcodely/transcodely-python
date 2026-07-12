@@ -4,6 +4,24 @@ All notable changes to the Transcodely Python SDK will be documented in this fil
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Breaking changes are allowed on minor bumps until 1.0.0.
 
+## [0.2.0](https://github.com/transcodely/transcodely-python/compare/v0.1.3...v0.2.0) (2026-07-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* `Event.livemode` is removed and API keys no longer carry an environment (no `ak_test_`/`ak_live_` distinction).
+
+### Features
+
+* proto resync — rotation metadata + measured output metrics ([#11](https://github.com/transcodely/transcodely-python/issues/11)) ([e5fa0e8](https://github.com/transcodely/transcodely-python/commit/e5fa0e8d85adabd296cb362cd6d419c1bb735e48))
+* remove API-key environment and webhook livemode ([#13](https://github.com/transcodely/transcodely-python/issues/13)) ([0b68641](https://github.com/transcodely/transcodely-python/commit/0b68641fc7508c55114eae78ec9d99269ef91312))
+* **webhooks:** add signature verification and endpoint/event resources ([#10](https://github.com/transcodely/transcodely-python/issues/10)) ([e742828](https://github.com/transcodely/transcodely-python/commit/e742828d6ce91ec8cc16d82ee6bc1982a5787a94))
+
+
+### Documentation
+
+* commit CLAUDE.md (was untracked — the routine fleet reads it via the GitHub API) ([b2a843e](https://github.com/transcodely/transcodely-python/commit/b2a843e64e3589f3adbbb86fc1c4a5b5ef85cfda))
+
 ## [0.1.3](https://github.com/transcodely/transcodely-python/compare/v0.1.2...v0.1.3) (2026-07-07)
 
 
