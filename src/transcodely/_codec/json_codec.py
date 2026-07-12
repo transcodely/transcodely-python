@@ -22,7 +22,7 @@ _CAMEL_BOUNDARY = re.compile(r"(?<!^)(?=[A-Z])")
 
 
 def camel_to_screaming_snake(name: str) -> str:
-    """``"JobStatus" → "JOB_STATUS"``; ``"APIKeyEnvironment" → "API_KEY_ENVIRONMENT"``."""
+    """``"JobStatus" → "JOB_STATUS"``; ``"HLSSegmentFormat" → "HLS_SEGMENT_FORMAT"``."""
     out: list[str] = []
     for i, ch in enumerate(name):
         if i > 0 and ch.isupper():

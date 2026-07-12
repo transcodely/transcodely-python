@@ -50,13 +50,6 @@ def _require_string(obj: Mapping[str, Any], key: str) -> str:
     return v
 
 
-def _require_bool(obj: Mapping[str, Any], key: str) -> bool:
-    v = obj.get(key)
-    if not isinstance(v, bool):
-        raise WebhookPayloadError(f"Webhook envelope field `{key}` must be a boolean")
-    return v
-
-
 def _require_number(obj: Mapping[str, Any], key: str) -> int:
     v = obj.get(key)
     # bool is a subclass of int in Python — reject it explicitly so a JSON
@@ -76,7 +69,6 @@ def _build_event(parsed: Any) -> Event:
     api_version = _require_string(parsed, "api_version")
     created = _require_string(parsed, "created")
     type_ = _require_string(parsed, "type")
-    livemode = _require_bool(parsed, "livemode")
     pending_webhooks = _require_number(parsed, "pending_webhooks")
 
     data_raw = parsed.get("data")
@@ -111,7 +103,6 @@ def _build_event(parsed: Any) -> Event:
         created=created,
         type=type_,
         data=data,
-        livemode=livemode,
         pending_webhooks=pending_webhooks,
         request=EventRequest(id=request_id, idempotency_key=idempotency_key),
     )

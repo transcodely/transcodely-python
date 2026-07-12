@@ -46,7 +46,6 @@ def test_bridge_decodes_resource_and_maps_fields() -> None:
         request_id="req_z",
         pending_webhooks=3,
         api_version="2026-05-23",
-        livemode=True,
         object="event",
     )
     e.created_at.FromJsonString("2026-05-24T10:55:08Z")

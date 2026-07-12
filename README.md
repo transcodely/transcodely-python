@@ -39,7 +39,7 @@ The simplified-string form (`"hls"`, `"h264"`, `"1080p"`) is what the API actual
 client = Transcodely(api_key=os.environ["TRANSCODELY_API_KEY"])
 ```
 
-Test-mode (`ak_test_*`) and live-mode (`ak_live_*`) keys hit the same base URL — the environment is encoded in the prefix.
+API keys are opaque `ak_`-prefixed secrets — pass the full value shown once at creation time.
 
 ## Resources
 

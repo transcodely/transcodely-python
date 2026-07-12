@@ -109,7 +109,6 @@ def proto_event_to_sdk(proto: webhook_pb2.Event) -> Event:
         created=created,
         type=proto.type,
         data=data,
-        livemode=proto.livemode,
         pending_webhooks=proto.pending_webhooks,
         # proto Event carries only request_id; idempotency_key is always None
         # until JobService.Create propagates it. An unset request_id maps to

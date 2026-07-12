@@ -43,7 +43,7 @@ class TestCamelToScreamingSnake:
         assert camel_to_screaming_snake("OutputFormat") == "OUTPUT_FORMAT"
 
     def test_keeps_acronyms_together_when_followed_by_lowercase(self) -> None:
-        assert camel_to_screaming_snake("APIKeyEnvironment") == "API_KEY_ENVIRONMENT"
+        assert camel_to_screaming_snake("HLSSegmentFormat") == "HLS_SEGMENT_FORMAT"
         assert camel_to_screaming_snake("HTTPCredentials") == "HTTP_CREDENTIALS"
 
     def test_treats_digit_uppercase_lowercase_as_a_single_token(self) -> None:

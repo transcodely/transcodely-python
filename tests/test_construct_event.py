@@ -29,7 +29,6 @@ def envelope(type_: str, data: Any, **overrides: Any) -> dict[str, Any]:
         "created": "2026-05-24T10:55:08Z",
         "type": type_,
         "data": data,
-        "livemode": True,
         "pending_webhooks": 0,
         "request": {"id": "req_1", "idempotency_key": None},
     }
@@ -63,7 +62,6 @@ def test_job_succeeded_decodes_job() -> None:
     assert ev.data.id == "job_1"
     assert ev.data.status == job_pb2.JOB_STATUS_COMPLETED
     assert ev.object == "event"
-    assert ev.livemode is True
 
 
 def test_output_ready_decodes_job_output() -> None:

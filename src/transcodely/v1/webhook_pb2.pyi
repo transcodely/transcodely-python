@@ -48,7 +48,7 @@ class WebhookEndpoint(_message.Message):
     def __init__(self, id: _Optional[str] = ..., app_id: _Optional[str] = ..., url: _Optional[str] = ..., description: _Optional[str] = ..., enabled_events: _Optional[_Iterable[str]] = ..., status: _Optional[str] = ..., api_version: _Optional[str] = ..., metadata: _Optional[_Mapping[str, str]] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., secret: _Optional[str] = ..., disabled_reason: _Optional[str] = ..., last_rotated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., previous_secret_expires_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
 class Event(_message.Message):
-    __slots__ = ("id", "app_id", "type", "data", "request_id", "pending_webhooks", "created_at", "api_version", "livemode", "object")
+    __slots__ = ("id", "app_id", "type", "data", "request_id", "pending_webhooks", "created_at", "api_version", "object")
     ID_FIELD_NUMBER: _ClassVar[int]
     APP_ID_FIELD_NUMBER: _ClassVar[int]
     TYPE_FIELD_NUMBER: _ClassVar[int]
@@ -57,7 +57,6 @@ class Event(_message.Message):
     PENDING_WEBHOOKS_FIELD_NUMBER: _ClassVar[int]
     CREATED_AT_FIELD_NUMBER: _ClassVar[int]
     API_VERSION_FIELD_NUMBER: _ClassVar[int]
-    LIVEMODE_FIELD_NUMBER: _ClassVar[int]
     OBJECT_FIELD_NUMBER: _ClassVar[int]
     id: str
     app_id: str
@@ -67,12 +66,11 @@ class Event(_message.Message):
     pending_webhooks: int
     created_at: _timestamp_pb2.Timestamp
     api_version: str
-    livemode: bool
     object: str
-    def __init__(self, id: _Optional[str] = ..., app_id: _Optional[str] = ..., type: _Optional[str] = ..., data: _Optional[str] = ..., request_id: _Optional[str] = ..., pending_webhooks: _Optional[int] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., api_version: _Optional[str] = ..., livemode: bool = ..., object: _Optional[str] = ...) -> None: ...
+    def __init__(self, id: _Optional[str] = ..., app_id: _Optional[str] = ..., type: _Optional[str] = ..., data: _Optional[str] = ..., request_id: _Optional[str] = ..., pending_webhooks: _Optional[int] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., api_version: _Optional[str] = ..., object: _Optional[str] = ...) -> None: ...
 
 class WebhookDelivery(_message.Message):
-    __slots__ = ("id", "webhook_endpoint_id", "event_id", "status", "attempt", "response_status", "response_body", "next_attempt_at", "created_at", "updated_at", "latency_ms", "transport_error", "response_headers")
+    __slots__ = ("id", "webhook_endpoint_id", "event_id", "status", "attempt", "response_status", "response_body", "next_attempt_at", "created_at", "updated_at", "latency_ms", "transport_error", "response_headers", "error_message")
     ID_FIELD_NUMBER: _ClassVar[int]
     WEBHOOK_ENDPOINT_ID_FIELD_NUMBER: _ClassVar[int]
     EVENT_ID_FIELD_NUMBER: _ClassVar[int]
@@ -86,6 +84,7 @@ class WebhookDelivery(_message.Message):
     LATENCY_MS_FIELD_NUMBER: _ClassVar[int]
     TRANSPORT_ERROR_FIELD_NUMBER: _ClassVar[int]
     RESPONSE_HEADERS_FIELD_NUMBER: _ClassVar[int]
+    ERROR_MESSAGE_FIELD_NUMBER: _ClassVar[int]
     id: str
     webhook_endpoint_id: str
     event_id: str
@@ -99,7 +98,8 @@ class WebhookDelivery(_message.Message):
     latency_ms: int
     transport_error: str
     response_headers: str
-    def __init__(self, id: _Optional[str] = ..., webhook_endpoint_id: _Optional[str] = ..., event_id: _Optional[str] = ..., status: _Optional[str] = ..., attempt: _Optional[int] = ..., response_status: _Optional[int] = ..., response_body: _Optional[str] = ..., next_attempt_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., latency_ms: _Optional[int] = ..., transport_error: _Optional[str] = ..., response_headers: _Optional[str] = ...) -> None: ...
+    error_message: str
+    def __init__(self, id: _Optional[str] = ..., webhook_endpoint_id: _Optional[str] = ..., event_id: _Optional[str] = ..., status: _Optional[str] = ..., attempt: _Optional[int] = ..., response_status: _Optional[int] = ..., response_body: _Optional[str] = ..., next_attempt_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., latency_ms: _Optional[int] = ..., transport_error: _Optional[str] = ..., response_headers: _Optional[str] = ..., error_message: _Optional[str] = ...) -> None: ...
 
 class CreateWebhookEndpointRequest(_message.Message):
     __slots__ = ("app_id", "url", "description", "enabled_events", "api_version", "metadata")
