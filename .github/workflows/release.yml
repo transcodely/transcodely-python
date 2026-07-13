@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - master
+  # Manual re-publish path: publishes the version currently on master (e.g.
+  # after a publish-step failure, or once the PyPI trusted publisher is
+  # registered) without cutting a new release.
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -44,7 +48,7 @@ jobs:
   publish-pypi:
     name: Publish to PyPI
     needs: release-please
-    if: ${{ needs.release-please.outputs.release_created }}
+    if: ${{ needs.release-please.outputs.release_created || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     environment:
       name: pypi
