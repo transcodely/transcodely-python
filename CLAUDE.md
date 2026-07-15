@@ -10,6 +10,29 @@ wire/enum/error behavior.
 - Regenerate from proto: `./scripts/sync-protos.sh && buf generate`
 - Build / test: `python -m build` · `pytest`
 
+## Docs are the contract (drift)
+
+The public docs (`transcodely/web` → `src/routes/(docs)/docs/**`, especially
+`getting-started/sdks/python` and the per-resource SDK method maps such as the one in
+`api-reference/webhooks`) document this SDK's exact public surface — including exact
+kwarg names on every resource method. Rules:
+
+- Any public-surface change (methods, kwargs, enum-string handling, webhook event
+  types, exception classes) must be mirrored in those web docs pages **in the same
+  release window**. Web's mechanical drift gate validates proto-level facts but does
+  NOT parse `python` code fences — whoever changes this SDK owns the docs snippets.
+- Before renaming/removing anything public, grep the web repo's docs for usages
+  (` ```python ` fences calling `client.<resource>.<method>(...)`); docs may also
+  reference capabilities that shipped here first (docs kwargs are the target
+  signature — the 2026-07 `jobs.create()` extension exists because docs led the SDK).
+- Watch the `opts=` split: fixed-signature methods (jobs, webhook_endpoints, health,
+  list/get) accept `opts=`; bare-`**kwargs` create/update methods (presets, origins,
+  organizations, api_keys, apps, videos) do NOT — keep docs examples consistent with
+  the signature that actually exists.
+- Vendored proto comments flow into generated `.pyi` stubs and docs — when resyncing,
+  take the api repo's comments verbatim (they are maintained as public documentation
+  there).
+
 ---
 
 ## TODO: surface `disable_audio` + single-variant streaming presets
@@ -32,8 +55,8 @@ Upstream API changes this SDK still needs to expose (api PR #119, worker PR #57)
    HLS stream). No proto change — just relax any client-side mirror and update examples.
 
 ### Work items
-- [ ] `./scripts/sync-protos.sh && buf generate` — `disable_audio` then appears on
-      `job_pb2.OutputSpec` / `preset_pb2.Preset` automatically. The resource methods take
+- [x] `./scripts/sync-protos.sh && buf generate` — DONE: `disable_audio` is present on
+      `job_pb2.OutputSpec` / `preset_pb2.Preset` (verified 2026-07-15). The resource methods take
       `outputs` as dicts, so pass `outputs=[{"type": "hls", "video": [...], "disable_audio": True}]`.
 - [ ] Add an `examples/` demo creating a video-only output (and/or a single-variant
       streaming preset).
