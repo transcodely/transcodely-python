@@ -263,14 +263,16 @@ class GetVideoResponse(_message.Message):
     def __init__(self, video: _Optional[_Union[Video, _Mapping]] = ...) -> None: ...
 
 class ListVideosRequest(_message.Message):
-    __slots__ = ("page_size", "page_token", "status")
+    __slots__ = ("page_size", "page_token", "status", "app_id")
     PAGE_SIZE_FIELD_NUMBER: _ClassVar[int]
     PAGE_TOKEN_FIELD_NUMBER: _ClassVar[int]
     STATUS_FIELD_NUMBER: _ClassVar[int]
+    APP_ID_FIELD_NUMBER: _ClassVar[int]
     page_size: int
     page_token: str
     status: str
-    def __init__(self, page_size: _Optional[int] = ..., page_token: _Optional[str] = ..., status: _Optional[str] = ...) -> None: ...
+    app_id: str
+    def __init__(self, page_size: _Optional[int] = ..., page_token: _Optional[str] = ..., status: _Optional[str] = ..., app_id: _Optional[str] = ...) -> None: ...
 
 class ListVideosResponse(_message.Message):
     __slots__ = ("videos", "next_page_token", "total_count")
