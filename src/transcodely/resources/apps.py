@@ -31,11 +31,23 @@ class Apps:
     def list(
         self,
         *,
+        org_id: Optional[str] = None,
         limit: Optional[int] = None,
+        include_archived: Optional[bool] = None,
         opts: Optional[CallOptions] = None,
     ) -> Page[app_pb2.App]:
+        """List apps in an organization.
+
+        ``org_id`` (the parent organization, e.g. ``"org_a1b2c3d4e5"``) is required
+        by the API. Pass ``include_archived=True`` to include archived apps.
+        """
+
         def fetch(cursor: Optional[str]) -> PageContents[app_pb2.App]:
             req = app_pb2.ListAppsRequest()
+            if org_id is not None:
+                req.org_id = org_id
+            if include_archived is not None:
+                req.include_archived = include_archived
             assign_pagination(req.pagination, limit=limit, cursor=cursor)
             res = self._t.unary(_SERVICE, "List", req, app_pb2.ListAppsResponse(), opts)
             return PageContents(

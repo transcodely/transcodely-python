@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 from .._transport.transport import CallOptions, Transport
 from ..pagination import Page, PageContents
 from ..v1 import user_pb2
-from ._helpers import assign_pagination, fill_from_dict
+from ._helpers import assign_pagination, fill_from_dict, resolve_enum
 
 _SERVICE = "transcodely.v1.UserService"
 
@@ -32,11 +32,23 @@ class Users:
     def list(
         self,
         *,
+        status: Optional[Union[int, str]] = None,
         limit: Optional[int] = None,
         opts: Optional[CallOptions] = None,
     ) -> Page[user_pb2.User]:
+        """List users, optionally filtered by ``status``.
+
+        ``status`` accepts the simplified lowercase string (``"active"``,
+        ``"suspended"``, ``"deleted"``) or the raw ``UserStatus`` int.
+        """
+        status_value = (
+            resolve_enum(status, user_pb2.UserStatus.DESCRIPTOR) if status is not None else None
+        )
+
         def fetch(cursor: Optional[str]) -> PageContents[user_pb2.User]:
             req = user_pb2.ListUsersRequest()
+            if status_value is not None:
+                req.status = status_value
             assign_pagination(req.pagination, limit=limit, cursor=cursor)
             res = self._t.unary(_SERVICE, "List", req, user_pb2.ListUsersResponse(), opts)
             return PageContents(
