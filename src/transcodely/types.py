@@ -157,7 +157,6 @@ from transcodely.v1.app_pb2 import (
     AutoProfileDefaults,
     CreateAppRequest,
     CreateAppResponse,
-    CreateWebhookConfig,
     EnableHostingRequest,
     EnableHostingResponse,
     GetAppRequest,
@@ -169,8 +168,6 @@ from transcodely.v1.app_pb2 import (
     UpdateAppResponse,
     UpdateHostingConfigRequest,
     UpdateHostingConfigResponse,
-    UpdateWebhookConfig,
-    WebhookConfig,
 )
 
 # API keys.
@@ -379,7 +376,6 @@ __all__ = [
     "CreatePresetResponse",
     "CreateUploadRequest",
     "CreateUploadResponse",
-    "CreateWebhookConfig",
     "CreateWebhookEndpointRequest",
     "CreateWebhookEndpointResponse",
     "DASHConfig",
@@ -537,7 +533,6 @@ __all__ = [
     "UpdatePresetResponse",
     "UpdateVideoRequest",
     "UpdateVideoResponse",
-    "UpdateWebhookConfig",
     "UpdateWebhookEndpointRequest",
     "UpdateWebhookEndpointResponse",
     "UploadPart",
@@ -563,7 +558,6 @@ __all__ = [
     "WatchJobResponse",
     "WatchVideoRequest",
     "WatchVideoResponse",
-    "WebhookConfig",
     "WebhookDelivery",
     "WebhookEndpoint",
     "WebhookEvent",

@@ -19,12 +19,11 @@ APP_STATUS_ACTIVE: AppStatus
 APP_STATUS_ARCHIVED: AppStatus
 
 class App(_message.Message):
-    __slots__ = ("id", "org_id", "name", "description", "webhook", "status", "created_at", "updated_at", "archived_at", "hosting_enabled", "hosting_status", "cdn_hostname", "hosting_config", "object")
+    __slots__ = ("id", "org_id", "name", "description", "status", "created_at", "updated_at", "archived_at", "hosting_enabled", "hosting_status", "cdn_hostname", "hosting_config", "object")
     ID_FIELD_NUMBER: _ClassVar[int]
     ORG_ID_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
     DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
-    WEBHOOK_FIELD_NUMBER: _ClassVar[int]
     STATUS_FIELD_NUMBER: _ClassVar[int]
     CREATED_AT_FIELD_NUMBER: _ClassVar[int]
     UPDATED_AT_FIELD_NUMBER: _ClassVar[int]
@@ -38,7 +37,6 @@ class App(_message.Message):
     org_id: str
     name: str
     description: str
-    webhook: WebhookConfig
     status: AppStatus
     created_at: _timestamp_pb2.Timestamp
     updated_at: _timestamp_pb2.Timestamp
@@ -48,51 +46,25 @@ class App(_message.Message):
     cdn_hostname: str
     hosting_config: HostingConfig
     object: str
-    def __init__(self, id: _Optional[str] = ..., org_id: _Optional[str] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., webhook: _Optional[_Union[WebhookConfig, _Mapping]] = ..., status: _Optional[_Union[AppStatus, str]] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., archived_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., hosting_enabled: bool = ..., hosting_status: _Optional[str] = ..., cdn_hostname: _Optional[str] = ..., hosting_config: _Optional[_Union[HostingConfig, _Mapping]] = ..., object: _Optional[str] = ...) -> None: ...
-
-class WebhookConfig(_message.Message):
-    __slots__ = ("url", "secret_hint", "has_secret", "events")
-    URL_FIELD_NUMBER: _ClassVar[int]
-    SECRET_HINT_FIELD_NUMBER: _ClassVar[int]
-    HAS_SECRET_FIELD_NUMBER: _ClassVar[int]
-    EVENTS_FIELD_NUMBER: _ClassVar[int]
-    url: str
-    secret_hint: str
-    has_secret: bool
-    events: _containers.RepeatedScalarFieldContainer[str]
-    def __init__(self, url: _Optional[str] = ..., secret_hint: _Optional[str] = ..., has_secret: bool = ..., events: _Optional[_Iterable[str]] = ...) -> None: ...
+    def __init__(self, id: _Optional[str] = ..., org_id: _Optional[str] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., status: _Optional[_Union[AppStatus, str]] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., archived_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., hosting_enabled: bool = ..., hosting_status: _Optional[str] = ..., cdn_hostname: _Optional[str] = ..., hosting_config: _Optional[_Union[HostingConfig, _Mapping]] = ..., object: _Optional[str] = ...) -> None: ...
 
 class CreateAppRequest(_message.Message):
-    __slots__ = ("org_id", "name", "description", "webhook", "enable_hosting")
+    __slots__ = ("org_id", "name", "description", "enable_hosting")
     ORG_ID_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
     DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
-    WEBHOOK_FIELD_NUMBER: _ClassVar[int]
     ENABLE_HOSTING_FIELD_NUMBER: _ClassVar[int]
     org_id: str
     name: str
     description: str
-    webhook: CreateWebhookConfig
     enable_hosting: bool
-    def __init__(self, org_id: _Optional[str] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., webhook: _Optional[_Union[CreateWebhookConfig, _Mapping]] = ..., enable_hosting: bool = ...) -> None: ...
-
-class CreateWebhookConfig(_message.Message):
-    __slots__ = ("url", "generate_secret", "events")
-    URL_FIELD_NUMBER: _ClassVar[int]
-    GENERATE_SECRET_FIELD_NUMBER: _ClassVar[int]
-    EVENTS_FIELD_NUMBER: _ClassVar[int]
-    url: str
-    generate_secret: bool
-    events: _containers.RepeatedScalarFieldContainer[str]
-    def __init__(self, url: _Optional[str] = ..., generate_secret: bool = ..., events: _Optional[_Iterable[str]] = ...) -> None: ...
+    def __init__(self, org_id: _Optional[str] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., enable_hosting: bool = ...) -> None: ...
 
 class CreateAppResponse(_message.Message):
-    __slots__ = ("app", "webhook_secret")
+    __slots__ = ("app",)
     APP_FIELD_NUMBER: _ClassVar[int]
-    WEBHOOK_SECRET_FIELD_NUMBER: _ClassVar[int]
     app: App
-    webhook_secret: str
-    def __init__(self, app: _Optional[_Union[App, _Mapping]] = ..., webhook_secret: _Optional[str] = ...) -> None: ...
+    def __init__(self, app: _Optional[_Union[App, _Mapping]] = ...) -> None: ...
 
 class GetAppRequest(_message.Message):
     __slots__ = ("id",)
@@ -107,34 +79,20 @@ class GetAppResponse(_message.Message):
     def __init__(self, app: _Optional[_Union[App, _Mapping]] = ...) -> None: ...
 
 class UpdateAppRequest(_message.Message):
-    __slots__ = ("id", "name", "description", "webhook")
+    __slots__ = ("id", "name", "description")
     ID_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
     DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
-    WEBHOOK_FIELD_NUMBER: _ClassVar[int]
     id: str
     name: str
     description: str
-    webhook: UpdateWebhookConfig
-    def __init__(self, id: _Optional[str] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., webhook: _Optional[_Union[UpdateWebhookConfig, _Mapping]] = ...) -> None: ...
-
-class UpdateWebhookConfig(_message.Message):
-    __slots__ = ("url", "regenerate_secret", "events")
-    URL_FIELD_NUMBER: _ClassVar[int]
-    REGENERATE_SECRET_FIELD_NUMBER: _ClassVar[int]
-    EVENTS_FIELD_NUMBER: _ClassVar[int]
-    url: str
-    regenerate_secret: bool
-    events: _containers.RepeatedScalarFieldContainer[str]
-    def __init__(self, url: _Optional[str] = ..., regenerate_secret: bool = ..., events: _Optional[_Iterable[str]] = ...) -> None: ...
+    def __init__(self, id: _Optional[str] = ..., name: _Optional[str] = ..., description: _Optional[str] = ...) -> None: ...
 
 class UpdateAppResponse(_message.Message):
-    __slots__ = ("app", "webhook_secret")
+    __slots__ = ("app",)
     APP_FIELD_NUMBER: _ClassVar[int]
-    WEBHOOK_SECRET_FIELD_NUMBER: _ClassVar[int]
     app: App
-    webhook_secret: str
-    def __init__(self, app: _Optional[_Union[App, _Mapping]] = ..., webhook_secret: _Optional[str] = ...) -> None: ...
+    def __init__(self, app: _Optional[_Union[App, _Mapping]] = ...) -> None: ...
 
 class ListAppsRequest(_message.Message):
     __slots__ = ("org_id", "pagination", "include_archived")

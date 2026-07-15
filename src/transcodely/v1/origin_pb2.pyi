@@ -141,8 +141,9 @@ class OriginRef(_message.Message):
     def __init__(self, id: _Optional[str] = ..., name: _Optional[str] = ..., provider: _Optional[_Union[OriginProvider, str]] = ..., path: _Optional[str] = ..., bucket: _Optional[str] = ..., base_url: _Optional[str] = ...) -> None: ...
 
 class Origin(_message.Message):
-    __slots__ = ("id", "name", "description", "provider", "permissions", "status", "base_path", "path_template", "gcs", "s3", "http", "last_validated_at", "validation_error", "created_at", "updated_at", "archived_at", "is_managed", "r2")
+    __slots__ = ("id", "app_id", "name", "description", "provider", "permissions", "status", "base_path", "path_template", "gcs", "s3", "http", "last_validated_at", "validation_error", "created_at", "updated_at", "archived_at", "is_managed", "r2")
     ID_FIELD_NUMBER: _ClassVar[int]
+    APP_ID_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
     DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
     PROVIDER_FIELD_NUMBER: _ClassVar[int]
@@ -161,6 +162,7 @@ class Origin(_message.Message):
     IS_MANAGED_FIELD_NUMBER: _ClassVar[int]
     R2_FIELD_NUMBER: _ClassVar[int]
     id: str
+    app_id: str
     name: str
     description: str
     provider: OriginProvider
@@ -178,10 +180,10 @@ class Origin(_message.Message):
     archived_at: _timestamp_pb2.Timestamp
     is_managed: bool
     r2: R2OriginConfig
-    def __init__(self, id: _Optional[str] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., provider: _Optional[_Union[OriginProvider, str]] = ..., permissions: _Optional[_Iterable[_Union[OriginPermission, str]]] = ..., status: _Optional[_Union[OriginStatus, str]] = ..., base_path: _Optional[str] = ..., path_template: _Optional[str] = ..., gcs: _Optional[_Union[GcsOriginConfig, _Mapping]] = ..., s3: _Optional[_Union[S3OriginConfig, _Mapping]] = ..., http: _Optional[_Union[HttpOriginConfig, _Mapping]] = ..., last_validated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., validation_error: _Optional[str] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., archived_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., is_managed: bool = ..., r2: _Optional[_Union[R2OriginConfig, _Mapping]] = ...) -> None: ...
+    def __init__(self, id: _Optional[str] = ..., app_id: _Optional[str] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., provider: _Optional[_Union[OriginProvider, str]] = ..., permissions: _Optional[_Iterable[_Union[OriginPermission, str]]] = ..., status: _Optional[_Union[OriginStatus, str]] = ..., base_path: _Optional[str] = ..., path_template: _Optional[str] = ..., gcs: _Optional[_Union[GcsOriginConfig, _Mapping]] = ..., s3: _Optional[_Union[S3OriginConfig, _Mapping]] = ..., http: _Optional[_Union[HttpOriginConfig, _Mapping]] = ..., last_validated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., validation_error: _Optional[str] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., archived_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., is_managed: bool = ..., r2: _Optional[_Union[R2OriginConfig, _Mapping]] = ...) -> None: ...
 
 class CreateOriginRequest(_message.Message):
-    __slots__ = ("name", "description", "permissions", "base_path", "path_template", "gcs", "s3", "http", "r2")
+    __slots__ = ("name", "description", "permissions", "base_path", "path_template", "gcs", "s3", "http", "r2", "app_id")
     NAME_FIELD_NUMBER: _ClassVar[int]
     DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
     PERMISSIONS_FIELD_NUMBER: _ClassVar[int]
@@ -191,6 +193,7 @@ class CreateOriginRequest(_message.Message):
     S3_FIELD_NUMBER: _ClassVar[int]
     HTTP_FIELD_NUMBER: _ClassVar[int]
     R2_FIELD_NUMBER: _ClassVar[int]
+    APP_ID_FIELD_NUMBER: _ClassVar[int]
     name: str
     description: str
     permissions: _containers.RepeatedScalarFieldContainer[OriginPermission]
@@ -200,7 +203,8 @@ class CreateOriginRequest(_message.Message):
     s3: S3OriginConfig
     http: HttpOriginConfig
     r2: R2OriginConfig
-    def __init__(self, name: _Optional[str] = ..., description: _Optional[str] = ..., permissions: _Optional[_Iterable[_Union[OriginPermission, str]]] = ..., base_path: _Optional[str] = ..., path_template: _Optional[str] = ..., gcs: _Optional[_Union[GcsOriginConfig, _Mapping]] = ..., s3: _Optional[_Union[S3OriginConfig, _Mapping]] = ..., http: _Optional[_Union[HttpOriginConfig, _Mapping]] = ..., r2: _Optional[_Union[R2OriginConfig, _Mapping]] = ...) -> None: ...
+    app_id: str
+    def __init__(self, name: _Optional[str] = ..., description: _Optional[str] = ..., permissions: _Optional[_Iterable[_Union[OriginPermission, str]]] = ..., base_path: _Optional[str] = ..., path_template: _Optional[str] = ..., gcs: _Optional[_Union[GcsOriginConfig, _Mapping]] = ..., s3: _Optional[_Union[S3OriginConfig, _Mapping]] = ..., http: _Optional[_Union[HttpOriginConfig, _Mapping]] = ..., r2: _Optional[_Union[R2OriginConfig, _Mapping]] = ..., app_id: _Optional[str] = ...) -> None: ...
 
 class CreateOriginResponse(_message.Message):
     __slots__ = ("origin", "validation")
@@ -239,18 +243,20 @@ class GetOriginResponse(_message.Message):
     def __init__(self, origin: _Optional[_Union[Origin, _Mapping]] = ...) -> None: ...
 
 class ListOriginsRequest(_message.Message):
-    __slots__ = ("provider", "status", "permission", "include_archived", "pagination")
+    __slots__ = ("provider", "status", "permission", "include_archived", "pagination", "app_id")
     PROVIDER_FIELD_NUMBER: _ClassVar[int]
     STATUS_FIELD_NUMBER: _ClassVar[int]
     PERMISSION_FIELD_NUMBER: _ClassVar[int]
     INCLUDE_ARCHIVED_FIELD_NUMBER: _ClassVar[int]
     PAGINATION_FIELD_NUMBER: _ClassVar[int]
+    APP_ID_FIELD_NUMBER: _ClassVar[int]
     provider: OriginProvider
     status: OriginStatus
     permission: OriginPermission
     include_archived: bool
     pagination: _common_pb2.PaginationRequest
-    def __init__(self, provider: _Optional[_Union[OriginProvider, str]] = ..., status: _Optional[_Union[OriginStatus, str]] = ..., permission: _Optional[_Union[OriginPermission, str]] = ..., include_archived: bool = ..., pagination: _Optional[_Union[_common_pb2.PaginationRequest, _Mapping]] = ...) -> None: ...
+    app_id: str
+    def __init__(self, provider: _Optional[_Union[OriginProvider, str]] = ..., status: _Optional[_Union[OriginStatus, str]] = ..., permission: _Optional[_Union[OriginPermission, str]] = ..., include_archived: bool = ..., pagination: _Optional[_Union[_common_pb2.PaginationRequest, _Mapping]] = ..., app_id: _Optional[str] = ...) -> None: ...
 
 class ListOriginsResponse(_message.Message):
     __slots__ = ("origins", "pagination")

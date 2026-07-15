@@ -9,8 +9,9 @@ from typing import ClassVar as _ClassVar, Iterable as _Iterable, Mapping as _Map
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class APIKey(_message.Message):
-    __slots__ = ("id", "name", "description", "key_prefix", "key_hint", "scopes", "last_used_at", "expires_at", "created_at", "is_revoked", "revoked_at")
+    __slots__ = ("id", "app_id", "name", "description", "key_prefix", "key_hint", "scopes", "last_used_at", "expires_at", "created_at", "is_revoked", "revoked_at")
     ID_FIELD_NUMBER: _ClassVar[int]
+    APP_ID_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
     DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
     KEY_PREFIX_FIELD_NUMBER: _ClassVar[int]
@@ -22,6 +23,7 @@ class APIKey(_message.Message):
     IS_REVOKED_FIELD_NUMBER: _ClassVar[int]
     REVOKED_AT_FIELD_NUMBER: _ClassVar[int]
     id: str
+    app_id: str
     name: str
     description: str
     key_prefix: str
@@ -32,7 +34,7 @@ class APIKey(_message.Message):
     created_at: _timestamp_pb2.Timestamp
     is_revoked: bool
     revoked_at: _timestamp_pb2.Timestamp
-    def __init__(self, id: _Optional[str] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., key_prefix: _Optional[str] = ..., key_hint: _Optional[str] = ..., scopes: _Optional[_Iterable[str]] = ..., last_used_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., expires_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., is_revoked: bool = ..., revoked_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+    def __init__(self, id: _Optional[str] = ..., app_id: _Optional[str] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., key_prefix: _Optional[str] = ..., key_hint: _Optional[str] = ..., scopes: _Optional[_Iterable[str]] = ..., last_used_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., expires_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., is_revoked: bool = ..., revoked_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
 class CreateAPIKeyRequest(_message.Message):
     __slots__ = ("name", "description", "expires_at", "app_id")
@@ -67,12 +69,14 @@ class GetAPIKeyResponse(_message.Message):
     def __init__(self, api_key: _Optional[_Union[APIKey, _Mapping]] = ...) -> None: ...
 
 class ListAPIKeysRequest(_message.Message):
-    __slots__ = ("include_revoked", "pagination")
+    __slots__ = ("include_revoked", "pagination", "app_id")
     INCLUDE_REVOKED_FIELD_NUMBER: _ClassVar[int]
     PAGINATION_FIELD_NUMBER: _ClassVar[int]
+    APP_ID_FIELD_NUMBER: _ClassVar[int]
     include_revoked: bool
     pagination: _common_pb2.PaginationRequest
-    def __init__(self, include_revoked: bool = ..., pagination: _Optional[_Union[_common_pb2.PaginationRequest, _Mapping]] = ...) -> None: ...
+    app_id: str
+    def __init__(self, include_revoked: bool = ..., pagination: _Optional[_Union[_common_pb2.PaginationRequest, _Mapping]] = ..., app_id: _Optional[str] = ...) -> None: ...
 
 class ListAPIKeysResponse(_message.Message):
     __slots__ = ("api_keys", "pagination")
