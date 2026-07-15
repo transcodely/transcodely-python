@@ -4,6 +4,13 @@ All notable changes to the Transcodely Python SDK will be documented in this fil
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Breaking changes are allowed on minor bumps until 1.0.0.
 
+## [0.3.1](https://github.com/transcodely/transcodely-python/compare/v0.3.0...v0.3.1) (2026-07-15)
+
+
+### Features
+
+* **resources:** match the documented public surface ([#19](https://github.com/transcodely/transcodely-python/issues/19)) ([4eb4110](https://github.com/transcodely/transcodely-python/commit/4eb411056b78742d92dc5a7c78478ff0812f7aee))
+
 ## [0.3.0](https://github.com/transcodely/transcodely-python/compare/v0.2.0...v0.3.0) (2026-07-15)
 
 
