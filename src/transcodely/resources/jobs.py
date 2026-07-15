@@ -21,6 +21,11 @@ class Jobs:
         input_url: Optional[str] = None,
         outputs: Optional[list[Mapping[str, Any]]] = None,
         *,
+        input_origin_id: Optional[str] = None,
+        input_path: Optional[str] = None,
+        output_origin_id: Optional[str] = None,
+        output_path_template: Optional[str] = None,
+        managed: Optional[bool] = None,
         idempotency_key: Optional[str] = None,
         webhook_url: Optional[str] = None,
         priority: Optional[int] = None,
@@ -28,11 +33,27 @@ class Jobs:
         request: Optional[job_pb2.CreateJobRequest] = None,
         opts: Optional[CallOptions] = None,
     ) -> job_pb2.Job:
-        """Create a new transcoding job. Auto-fills ``idempotency_key`` if omitted."""
+        """Create a new transcoding job. Auto-fills ``idempotency_key`` if omitted.
+
+        For apps without a server-side managed default origin, either pass
+        ``managed=True`` or supply ``output_origin_id`` (plus ``input_origin_id``/
+        ``input_path`` if the input isn't a bare URL) — the API requires
+        ``output_origin_id`` unless ``managed`` is true.
+        """
         if request is None:
             req = job_pb2.CreateJobRequest()
             if input_url is not None:
                 req.input_url = input_url
+            if input_origin_id is not None:
+                req.input_origin_id = input_origin_id
+            if input_path is not None:
+                req.input_path = input_path
+            if output_origin_id is not None:
+                req.output_origin_id = output_origin_id
+            if output_path_template is not None:
+                req.output_path_template = output_path_template
+            if managed is not None:
+                req.managed = managed
             if outputs:
                 from google.protobuf import json_format
 

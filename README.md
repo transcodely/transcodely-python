@@ -22,6 +22,9 @@ with Transcodely(api_key=os.environ["TRANSCODELY_API_KEY"]) as client:
                 {"codec": "h264", "resolution": "720p"},
             ],
         }],
+        # The API requires output_origin_id unless managed=True — pass an
+        # output_origin_id instead if your app has origins configured.
+        managed=True,
     )
     print(job.id)  # "job_a1b2c3d4e5f6"
 
