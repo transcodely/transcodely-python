@@ -23,6 +23,7 @@ class Jobs:
         outputs: Optional[list[Mapping[str, Any]]] = None,
         *,
         output_origin_id: Optional[str] = None,
+        output_path_template: Optional[str] = None,
         input_origin_id: Optional[str] = None,
         input_path: Optional[str] = None,
         priority: Optional[Union[int, str]] = None,
@@ -41,7 +42,9 @@ class Jobs:
         Provide inputs via ``input_url`` (direct URL) OR ``input_origin_id`` +
         ``input_path`` (origin mode); the server rejects both. Pass a fully-built
         ``request=`` to bypass the convenience kwargs entirely. ``idempotency_key`` is
-        auto-filled with a uuid4 when omitted.
+        auto-filled with a uuid4 when omitted. ``output_path_template`` overrides where
+        rendered outputs are written within the output origin (e.g.
+        ``"videos/{job_id}/{output}"``).
         """
         if request is None:
             payload: dict[str, Any] = {}
@@ -53,6 +56,8 @@ class Jobs:
                 payload["input_path"] = input_path
             if output_origin_id is not None:
                 payload["output_origin_id"] = output_origin_id
+            if output_path_template is not None:
+                payload["output_path_template"] = output_path_template
             if outputs:
                 payload["outputs"] = list(outputs)
             if priority is not None:

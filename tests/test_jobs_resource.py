@@ -97,6 +97,28 @@ class TestJobsCreateKwargs:
         )
         assert req.delayed_start is True
 
+    def test_output_path_template(self) -> None:
+        req = _capture_create(
+            input_url="gs://b/in.mp4",
+            output_origin_id="ori_x9y8z7w6v5",
+            output_path_template="videos/{job_id}/{output}",
+        )
+        assert req.output_path_template == "videos/{job_id}/{output}"
+        # Survives the wire: optional-field presence is set and round-trips.
+        roundtrip = job_pb2.CreateJobRequest.FromString(req.SerializeToString())
+        assert roundtrip.output_path_template == "videos/{job_id}/{output}"
+
+    def test_output_path_template_with_origin_mode(self) -> None:
+        req = _capture_create(
+            input_origin_id="ori_in",
+            input_path="uploads/v.mp4",
+            output_origin_id="ori_out",
+            output_path_template="renders/{job_id}",
+        )
+        assert req.output_path_template == "renders/{job_id}"
+        assert req.input_origin_id == "ori_in"
+        assert req.output_origin_id == "ori_out"
+
     def test_webhook_url(self) -> None:
         req = _capture_create(input_url="gs://b/in.mp4", webhook_url="https://x.test/hook")
         assert req.webhook_url == "https://x.test/hook"
@@ -160,6 +182,7 @@ class TestJobsCreateCombined:
             input_origin_id="ori_input12345",
             input_path="uploads/my-video.mp4",
             output_origin_id="ori_output6789",
+            output_path_template="videos/{job_id}/{output}",
             priority="premium",
             delayed_start=True,
             webhook_url="https://x.test/hook",
@@ -179,6 +202,7 @@ class TestJobsCreateCombined:
         assert req.input_origin_id == "ori_input12345"
         assert req.input_path == "uploads/my-video.mp4"
         assert req.output_origin_id == "ori_output6789"
+        assert req.output_path_template == "videos/{job_id}/{output}"
         assert req.priority == job_pb2.JOB_PRIORITY_PREMIUM
         assert req.delayed_start is True
         assert req.webhook_url == "https://x.test/hook"
