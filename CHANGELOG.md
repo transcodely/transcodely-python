@@ -4,6 +4,17 @@ All notable changes to the Transcodely Python SDK will be documented in this fil
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Breaking changes are allowed on minor bumps until 1.0.0.
 
+## [0.3.0](https://github.com/transcodely/transcodely-python/compare/v0.2.0...v0.3.0) (2026-07-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* App.webhook, CreateAppRequest.webhook, and UpdateAppRequest.webhook (WebhookConfig / CreateWebhookConfig / UpdateWebhookConfig) are removed; the proto field numbers/names are now reserved. App-level webhook configuration is superseded by the WebhookService endpoints API, already exposed in this SDK as client.webhook_endpoints (create / retrieve / update / delete / list / rotate_secret / send_test / list_deliveries / get_health) with signature-verification helpers under client.webhooks. The three removed types are dropped from transcodely.types imports and __all__.
+
+### Features
+
+* sync protos — explicit app scoping; remove legacy app webhook config ([#15](https://github.com/transcodely/transcodely-python/issues/15)) ([9784930](https://github.com/transcodely/transcodely-python/commit/9784930122a899fa60469b687c51d85d7ac987bc))
+
 ## [0.2.0](https://github.com/transcodely/transcodely-python/compare/v0.1.3...v0.2.0) (2026-07-12)
 
 
