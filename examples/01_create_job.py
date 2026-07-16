@@ -9,6 +9,9 @@ def main() -> None:
     with Transcodely(api_key=os.environ["TRANSCODELY_API_KEY"]) as client:
         job = client.jobs.create(
             input_url="https://download.samplelib.com/mp4/sample-30s.mp4",
+            # Write outputs to Transcodely-managed storage. Drop `managed` and set
+            # `output_origin_id="ori_..."` to write to your own configured origin.
+            managed=True,
             outputs=[
                 {
                     "type": "hls",

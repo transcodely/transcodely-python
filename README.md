@@ -15,6 +15,7 @@ from transcodely import Transcodely
 with Transcodely(api_key=os.environ["TRANSCODELY_API_KEY"]) as client:
     job = client.jobs.create(
         input_url="https://example.com/source.mp4",
+        managed=True,  # write outputs to Transcodely-managed storage
         outputs=[{
             "type": "hls",
             "video": [
