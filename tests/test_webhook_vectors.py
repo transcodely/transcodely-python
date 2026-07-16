@@ -70,6 +70,10 @@ def test_vector(v: dict[str, Any]) -> None:
         assert event.data.id == expect["data_id"]
         if "idempotency_key" in expect:
             assert event.request.idempotency_key == expect["idempotency_key"]
+        # `request_id` is `null` for events emitted outside a request scope; the
+        # key is omitted entirely when the assertion should be skipped.
+        if "request_id" in expect:
+            assert event.request.id == expect["request_id"]
     else:
         with pytest.raises(_ERROR_FOR_RESULT[result]):
             run()
