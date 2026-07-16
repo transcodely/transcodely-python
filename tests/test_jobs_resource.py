@@ -97,6 +97,21 @@ class TestJobsCreateKwargs:
         )
         assert req.delayed_start is True
 
+    def test_managed(self) -> None:
+        req = _capture_create(input_url="gs://b/in.mp4", managed=True)
+        assert req.managed is True
+
+    def test_managed_minimal_shape_without_output_origin(self) -> None:
+        # Managed apps write to Transcodely-managed storage, so output_origin_id
+        # is not required — the quickstart shape.
+        req = _capture_create(input_url="https://storage.example.com/source.mp4", managed=True)
+        assert req.managed is True
+        assert req.output_origin_id == ""
+
+    def test_managed_omitted_leaves_field_default(self) -> None:
+        req = _capture_create(input_url="gs://b/in.mp4", output_origin_id="ori_x")
+        assert req.managed is False
+
     def test_output_path_template(self) -> None:
         req = _capture_create(
             input_url="gs://b/in.mp4",
@@ -183,6 +198,7 @@ class TestJobsCreateCombined:
             input_path="uploads/my-video.mp4",
             output_origin_id="ori_output6789",
             output_path_template="videos/{job_id}/{output}",
+            managed=True,
             priority="premium",
             delayed_start=True,
             webhook_url="https://x.test/hook",
@@ -203,6 +219,7 @@ class TestJobsCreateCombined:
         assert req.input_path == "uploads/my-video.mp4"
         assert req.output_origin_id == "ori_output6789"
         assert req.output_path_template == "videos/{job_id}/{output}"
+        assert req.managed is True
         assert req.priority == job_pb2.JOB_PRIORITY_PREMIUM
         assert req.delayed_start is True
         assert req.webhook_url == "https://x.test/hook"
@@ -266,6 +283,20 @@ DOCS_CREATE_SHAPES: list[dict[str, Any]] = [
     {
         "input_url": "https://storage.example.com/source.mp4",
         "output_origin_id": "ori_x9y8z7w6v5",
+        "outputs": [
+            {
+                "type": "hls",
+                "video": [
+                    {"codec": "h264", "resolution": "1080p"},
+                    {"codec": "h264", "resolution": "720p"},
+                ],
+            }
+        ],
+    },
+    # getting-started/quickstart, README (managed app — no output origin required)
+    {
+        "input_url": "https://storage.example.com/source.mp4",
+        "managed": True,
         "outputs": [
             {
                 "type": "hls",

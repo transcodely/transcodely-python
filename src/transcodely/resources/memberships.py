@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Optional, Union
+from typing import Any, Optional, Union, cast
 
 from .._transport.transport import CallOptions, Transport
 from ..pagination import Page, PageContents
@@ -37,7 +37,8 @@ class Memberships:
         def fetch(cursor: Optional[str]) -> PageContents[membership_pb2.MembershipWithUser]:
             req = membership_pb2.ListMembershipsRequest()
             if status_value is not None:
-                req.status = status_value
+                # resolve_enum returns a plain int; the field is typed as the enum.
+                req.status = cast("membership_pb2.MembershipStatus", status_value)
             assign_pagination(req.pagination, limit=limit, cursor=cursor)
             res = self._t.unary(
                 _SERVICE, "List", req, membership_pb2.ListMembershipsResponse(), opts
