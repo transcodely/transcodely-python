@@ -9,7 +9,7 @@ from typing import ClassVar as _ClassVar, Iterable as _Iterable, Mapping as _Map
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class WebhookEndpoint(_message.Message):
-    __slots__ = ("id", "app_id", "url", "description", "enabled_events", "status", "api_version", "metadata", "created_at", "updated_at", "secret", "disabled_reason", "last_rotated_at", "previous_secret_expires_at")
+    __slots__ = ("id", "app_id", "url", "description", "enabled_events", "status", "api_version", "metadata", "created_at", "updated_at", "secret", "disabled_reason", "last_rotated_at", "previous_secret_expires_at", "health")
     class MetadataEntry(_message.Message):
         __slots__ = ("key", "value")
         KEY_FIELD_NUMBER: _ClassVar[int]
@@ -31,6 +31,7 @@ class WebhookEndpoint(_message.Message):
     DISABLED_REASON_FIELD_NUMBER: _ClassVar[int]
     LAST_ROTATED_AT_FIELD_NUMBER: _ClassVar[int]
     PREVIOUS_SECRET_EXPIRES_AT_FIELD_NUMBER: _ClassVar[int]
+    HEALTH_FIELD_NUMBER: _ClassVar[int]
     id: str
     app_id: str
     url: str
@@ -45,7 +46,18 @@ class WebhookEndpoint(_message.Message):
     disabled_reason: str
     last_rotated_at: _timestamp_pb2.Timestamp
     previous_secret_expires_at: _timestamp_pb2.Timestamp
-    def __init__(self, id: _Optional[str] = ..., app_id: _Optional[str] = ..., url: _Optional[str] = ..., description: _Optional[str] = ..., enabled_events: _Optional[_Iterable[str]] = ..., status: _Optional[str] = ..., api_version: _Optional[str] = ..., metadata: _Optional[_Mapping[str, str]] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., secret: _Optional[str] = ..., disabled_reason: _Optional[str] = ..., last_rotated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., previous_secret_expires_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+    health: EndpointHealthSummary
+    def __init__(self, id: _Optional[str] = ..., app_id: _Optional[str] = ..., url: _Optional[str] = ..., description: _Optional[str] = ..., enabled_events: _Optional[_Iterable[str]] = ..., status: _Optional[str] = ..., api_version: _Optional[str] = ..., metadata: _Optional[_Mapping[str, str]] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., secret: _Optional[str] = ..., disabled_reason: _Optional[str] = ..., last_rotated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., previous_secret_expires_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., health: _Optional[_Union[EndpointHealthSummary, _Mapping]] = ...) -> None: ...
+
+class EndpointHealthSummary(_message.Message):
+    __slots__ = ("total_attempts", "failed", "success_rate")
+    TOTAL_ATTEMPTS_FIELD_NUMBER: _ClassVar[int]
+    FAILED_FIELD_NUMBER: _ClassVar[int]
+    SUCCESS_RATE_FIELD_NUMBER: _ClassVar[int]
+    total_attempts: int
+    failed: int
+    success_rate: float
+    def __init__(self, total_attempts: _Optional[int] = ..., failed: _Optional[int] = ..., success_rate: _Optional[float] = ...) -> None: ...
 
 class Event(_message.Message):
     __slots__ = ("id", "app_id", "type", "data", "request_id", "pending_webhooks", "created_at", "api_version", "object")
@@ -182,12 +194,14 @@ class DeleteWebhookEndpointResponse(_message.Message):
     def __init__(self) -> None: ...
 
 class ListWebhookEndpointsRequest(_message.Message):
-    __slots__ = ("app_id", "pagination")
+    __slots__ = ("app_id", "pagination", "include_health")
     APP_ID_FIELD_NUMBER: _ClassVar[int]
     PAGINATION_FIELD_NUMBER: _ClassVar[int]
+    INCLUDE_HEALTH_FIELD_NUMBER: _ClassVar[int]
     app_id: str
     pagination: _common_pb2.PaginationRequest
-    def __init__(self, app_id: _Optional[str] = ..., pagination: _Optional[_Union[_common_pb2.PaginationRequest, _Mapping]] = ...) -> None: ...
+    include_health: bool
+    def __init__(self, app_id: _Optional[str] = ..., pagination: _Optional[_Union[_common_pb2.PaginationRequest, _Mapping]] = ..., include_health: bool = ...) -> None: ...
 
 class ListWebhookEndpointsResponse(_message.Message):
     __slots__ = ("endpoints", "pagination")
@@ -210,18 +224,20 @@ class RotateWebhookSecretResponse(_message.Message):
     def __init__(self, endpoint: _Optional[_Union[WebhookEndpoint, _Mapping]] = ...) -> None: ...
 
 class ListEventsRequest(_message.Message):
-    __slots__ = ("app_id", "type", "created_after", "created_before", "pagination")
+    __slots__ = ("app_id", "type", "created_after", "created_before", "pagination", "object_id")
     APP_ID_FIELD_NUMBER: _ClassVar[int]
     TYPE_FIELD_NUMBER: _ClassVar[int]
     CREATED_AFTER_FIELD_NUMBER: _ClassVar[int]
     CREATED_BEFORE_FIELD_NUMBER: _ClassVar[int]
     PAGINATION_FIELD_NUMBER: _ClassVar[int]
+    OBJECT_ID_FIELD_NUMBER: _ClassVar[int]
     app_id: str
     type: str
     created_after: _timestamp_pb2.Timestamp
     created_before: _timestamp_pb2.Timestamp
     pagination: _common_pb2.PaginationRequest
-    def __init__(self, app_id: _Optional[str] = ..., type: _Optional[str] = ..., created_after: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., created_before: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., pagination: _Optional[_Union[_common_pb2.PaginationRequest, _Mapping]] = ...) -> None: ...
+    object_id: str
+    def __init__(self, app_id: _Optional[str] = ..., type: _Optional[str] = ..., created_after: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., created_before: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., pagination: _Optional[_Union[_common_pb2.PaginationRequest, _Mapping]] = ..., object_id: _Optional[str] = ...) -> None: ...
 
 class ListEventsResponse(_message.Message):
     __slots__ = ("events", "pagination")
