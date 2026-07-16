@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Generator, Mapping, Optional, Union
+from typing import Any, Generator, Mapping, Optional, Union, cast
 
 from .._transport.transport import CallOptions, Transport
 from ..pagination import Page, PageContents
@@ -24,6 +24,7 @@ class Jobs:
         *,
         output_origin_id: Optional[str] = None,
         output_path_template: Optional[str] = None,
+        managed: Optional[bool] = None,
         input_origin_id: Optional[str] = None,
         input_path: Optional[str] = None,
         priority: Optional[Union[int, str]] = None,
@@ -44,7 +45,9 @@ class Jobs:
         ``request=`` to bypass the convenience kwargs entirely. ``idempotency_key`` is
         auto-filled with a uuid4 when omitted. ``output_path_template`` overrides where
         rendered outputs are written within the output origin (e.g.
-        ``"videos/{job_id}/{output}"``).
+        ``"videos/{job_id}/{output}"``). Set ``managed=True`` to write outputs to
+        Transcodely-managed hosting storage and create a video record; managed apps do
+        not require an ``output_origin_id``.
         """
         if request is None:
             payload: dict[str, Any] = {}
@@ -58,6 +61,8 @@ class Jobs:
                 payload["output_origin_id"] = output_origin_id
             if output_path_template is not None:
                 payload["output_path_template"] = output_path_template
+            if managed is not None:
+                payload["managed"] = managed
             if outputs:
                 payload["outputs"] = list(outputs)
             if priority is not None:
@@ -110,7 +115,8 @@ class Jobs:
         def fetch(cursor: Optional[str]) -> PageContents[job_pb2.Job]:
             req = job_pb2.ListJobsRequest()
             if status_value is not None:
-                req.status = status_value
+                # resolve_enum returns a plain int; the field is typed as the enum.
+                req.status = cast("job_pb2.JobStatus", status_value)
             assign_pagination(
                 req.pagination,
                 limit=eff_limit,
