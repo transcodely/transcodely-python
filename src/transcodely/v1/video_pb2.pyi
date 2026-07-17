@@ -150,6 +150,30 @@ class CompleteUploadResponse(_message.Message):
     video: Video
     def __init__(self, video: _Optional[_Union[Video, _Mapping]] = ...) -> None: ...
 
+class CreateFromUrlRequest(_message.Message):
+    __slots__ = ("app_id", "url", "title", "description", "tags", "visibility", "preset")
+    APP_ID_FIELD_NUMBER: _ClassVar[int]
+    URL_FIELD_NUMBER: _ClassVar[int]
+    TITLE_FIELD_NUMBER: _ClassVar[int]
+    DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
+    TAGS_FIELD_NUMBER: _ClassVar[int]
+    VISIBILITY_FIELD_NUMBER: _ClassVar[int]
+    PRESET_FIELD_NUMBER: _ClassVar[int]
+    app_id: str
+    url: str
+    title: str
+    description: str
+    tags: _containers.RepeatedScalarFieldContainer[str]
+    visibility: str
+    preset: str
+    def __init__(self, app_id: _Optional[str] = ..., url: _Optional[str] = ..., title: _Optional[str] = ..., description: _Optional[str] = ..., tags: _Optional[_Iterable[str]] = ..., visibility: _Optional[str] = ..., preset: _Optional[str] = ...) -> None: ...
+
+class CreateFromUrlResponse(_message.Message):
+    __slots__ = ("video",)
+    VIDEO_FIELD_NUMBER: _ClassVar[int]
+    video: Video
+    def __init__(self, video: _Optional[_Union[Video, _Mapping]] = ...) -> None: ...
+
 class UploadPart(_message.Message):
     __slots__ = ("part_number", "upload_url")
     PART_NUMBER_FIELD_NUMBER: _ClassVar[int]
@@ -285,18 +309,20 @@ class ListVideosResponse(_message.Message):
     def __init__(self, videos: _Optional[_Iterable[_Union[Video, _Mapping]]] = ..., next_page_token: _Optional[str] = ..., total_count: _Optional[int] = ...) -> None: ...
 
 class UpdateVideoRequest(_message.Message):
-    __slots__ = ("id", "title", "description", "tags", "visibility")
+    __slots__ = ("id", "title", "description", "tags", "visibility", "clear_tags")
     ID_FIELD_NUMBER: _ClassVar[int]
     TITLE_FIELD_NUMBER: _ClassVar[int]
     DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
     TAGS_FIELD_NUMBER: _ClassVar[int]
     VISIBILITY_FIELD_NUMBER: _ClassVar[int]
+    CLEAR_TAGS_FIELD_NUMBER: _ClassVar[int]
     id: str
     title: str
     description: str
     tags: _containers.RepeatedScalarFieldContainer[str]
     visibility: str
-    def __init__(self, id: _Optional[str] = ..., title: _Optional[str] = ..., description: _Optional[str] = ..., tags: _Optional[_Iterable[str]] = ..., visibility: _Optional[str] = ...) -> None: ...
+    clear_tags: bool
+    def __init__(self, id: _Optional[str] = ..., title: _Optional[str] = ..., description: _Optional[str] = ..., tags: _Optional[_Iterable[str]] = ..., visibility: _Optional[str] = ..., clear_tags: bool = ...) -> None: ...
 
 class UpdateVideoResponse(_message.Message):
     __slots__ = ("video",)

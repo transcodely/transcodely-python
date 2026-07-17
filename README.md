@@ -278,7 +278,7 @@ for event in client.events.list(app_id="app_123").auto_paging_iter():
 client.events.resend("evt_123")   # re-queue delivery to all subscribed endpoints
 ```
 
-The 13 event types are `job.created`, `job.succeeded`, `job.failed`, `job.canceled`, `job.progress`, `output.created`, `output.ready`, `output.failed`, `output.progress`, `video.uploaded`, `video.deleted`, `app.created`, and `app.updated`. Subscribe to `"*"` to receive all of them (including ones added later). An unrecognized future type still verifies; its `event.data` is left as a plain `dict`.
+The 15 event types are `job.created`, `job.succeeded`, `job.failed`, `job.canceled`, `job.progress`, `output.created`, `output.ready`, `output.failed`, `output.progress`, `video.uploaded`, `video.ready`, `video.failed`, `video.deleted`, `app.created`, and `app.updated`. Subscribe to `"*"` to receive all of them (including ones added later). An unrecognized future type still verifies; its `event.data` is left as a plain `dict`.
 
 ## Configuration
 
