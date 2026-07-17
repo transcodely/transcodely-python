@@ -409,3 +409,77 @@ class DailyUsage(_message.Message):
     request_count: int
     encoding_cost: float
     def __init__(self, date: _Optional[str] = ..., storage_bytes: _Optional[int] = ..., egress_bytes: _Optional[int] = ..., request_count: _Optional[int] = ..., encoding_cost: _Optional[float] = ...) -> None: ...
+
+class GetStatsRequest(_message.Message):
+    __slots__ = ("video_id", "start_date", "end_date")
+    VIDEO_ID_FIELD_NUMBER: _ClassVar[int]
+    START_DATE_FIELD_NUMBER: _ClassVar[int]
+    END_DATE_FIELD_NUMBER: _ClassVar[int]
+    video_id: str
+    start_date: str
+    end_date: str
+    def __init__(self, video_id: _Optional[str] = ..., start_date: _Optional[str] = ..., end_date: _Optional[str] = ...) -> None: ...
+
+class GetStatsResponse(_message.Message):
+    __slots__ = ("daily", "totals")
+    DAILY_FIELD_NUMBER: _ClassVar[int]
+    TOTALS_FIELD_NUMBER: _ClassVar[int]
+    daily: _containers.RepeatedCompositeFieldContainer[VideoStatsDay]
+    totals: VideoStatsTotals
+    def __init__(self, daily: _Optional[_Iterable[_Union[VideoStatsDay, _Mapping]]] = ..., totals: _Optional[_Union[VideoStatsTotals, _Mapping]] = ...) -> None: ...
+
+class VideoStatsDay(_message.Message):
+    __slots__ = ("date", "plays", "watch_seconds", "unique_viewers")
+    DATE_FIELD_NUMBER: _ClassVar[int]
+    PLAYS_FIELD_NUMBER: _ClassVar[int]
+    WATCH_SECONDS_FIELD_NUMBER: _ClassVar[int]
+    UNIQUE_VIEWERS_FIELD_NUMBER: _ClassVar[int]
+    date: str
+    plays: int
+    watch_seconds: int
+    unique_viewers: int
+    def __init__(self, date: _Optional[str] = ..., plays: _Optional[int] = ..., watch_seconds: _Optional[int] = ..., unique_viewers: _Optional[int] = ...) -> None: ...
+
+class VideoStatsTotals(_message.Message):
+    __slots__ = ("plays", "watch_seconds", "unique_viewers")
+    PLAYS_FIELD_NUMBER: _ClassVar[int]
+    WATCH_SECONDS_FIELD_NUMBER: _ClassVar[int]
+    UNIQUE_VIEWERS_FIELD_NUMBER: _ClassVar[int]
+    plays: int
+    watch_seconds: int
+    unique_viewers: int
+    def __init__(self, plays: _Optional[int] = ..., watch_seconds: _Optional[int] = ..., unique_viewers: _Optional[int] = ...) -> None: ...
+
+class ListTopVideosRequest(_message.Message):
+    __slots__ = ("app_id", "start_date", "end_date", "limit")
+    APP_ID_FIELD_NUMBER: _ClassVar[int]
+    START_DATE_FIELD_NUMBER: _ClassVar[int]
+    END_DATE_FIELD_NUMBER: _ClassVar[int]
+    LIMIT_FIELD_NUMBER: _ClassVar[int]
+    app_id: str
+    start_date: str
+    end_date: str
+    limit: int
+    def __init__(self, app_id: _Optional[str] = ..., start_date: _Optional[str] = ..., end_date: _Optional[str] = ..., limit: _Optional[int] = ...) -> None: ...
+
+class ListTopVideosResponse(_message.Message):
+    __slots__ = ("items",)
+    ITEMS_FIELD_NUMBER: _ClassVar[int]
+    items: _containers.RepeatedCompositeFieldContainer[TopVideo]
+    def __init__(self, items: _Optional[_Iterable[_Union[TopVideo, _Mapping]]] = ...) -> None: ...
+
+class TopVideo(_message.Message):
+    __slots__ = ("video_id", "title", "poster_url", "plays", "watch_seconds", "unique_viewers")
+    VIDEO_ID_FIELD_NUMBER: _ClassVar[int]
+    TITLE_FIELD_NUMBER: _ClassVar[int]
+    POSTER_URL_FIELD_NUMBER: _ClassVar[int]
+    PLAYS_FIELD_NUMBER: _ClassVar[int]
+    WATCH_SECONDS_FIELD_NUMBER: _ClassVar[int]
+    UNIQUE_VIEWERS_FIELD_NUMBER: _ClassVar[int]
+    video_id: str
+    title: str
+    poster_url: str
+    plays: int
+    watch_seconds: int
+    unique_viewers: int
+    def __init__(self, video_id: _Optional[str] = ..., title: _Optional[str] = ..., poster_url: _Optional[str] = ..., plays: _Optional[int] = ..., watch_seconds: _Optional[int] = ..., unique_viewers: _Optional[int] = ...) -> None: ...

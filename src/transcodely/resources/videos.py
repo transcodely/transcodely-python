@@ -126,3 +126,28 @@ class Videos:
     def get_usage(self, **kwargs: Any) -> video_pb2.GetUsageResponse:
         req = fill_from_dict(video_pb2.GetUsageRequest(), kwargs)
         return self._t.unary(_SERVICE, "GetUsage", req, video_pb2.GetUsageResponse())
+
+    def get_stats(self, **kwargs: Any) -> video_pb2.GetStatsResponse:
+        """Playback analytics for a single video: plays, watch time, and unique
+        viewers per UTC day, plus range totals.
+
+        Pass ``video_id`` (required) and optional ``start_date`` / ``end_date``
+        (inclusive, ``YYYY-MM-DD``). Returns the full ``GetStatsResponse`` —
+        ``.daily`` holds per-day rows (oldest first, activity-only, no zero-fill)
+        and ``.totals`` the range aggregate. Stats are best-effort and roll up
+        hourly, so recent activity can lag by up to an hour.
+        """
+        req = fill_from_dict(video_pb2.GetStatsRequest(), kwargs)
+        return self._t.unary(_SERVICE, "GetStats", req, video_pb2.GetStatsResponse())
+
+    def list_top_videos(self, **kwargs: Any) -> video_pb2.ListTopVideosResponse:
+        """An app's top videos ranked by plays over a date range.
+
+        Optional kwargs: ``app_id`` (API-key callers may omit it — their key's
+        app is used), ``start_date`` / ``end_date`` (inclusive, ``YYYY-MM-DD``),
+        and ``limit`` (1-100, default 10). Returns the full
+        ``ListTopVideosResponse`` — ``.items`` is the ranked list of
+        ``TopVideo`` rows (by plays, then watch time, descending).
+        """
+        req = fill_from_dict(video_pb2.ListTopVideosRequest(), kwargs)
+        return self._t.unary(_SERVICE, "ListTopVideos", req, video_pb2.ListTopVideosResponse())

@@ -46,7 +46,7 @@ API keys are opaque `ak_`-prefixed secrets — pass the full value shown once at
 
 ```python
 client.jobs            # create / get / list / cancel / confirm / watch
-client.videos          # upload helpers, multipart, create_from_url, get / list / update / delete / watch
+client.videos          # upload helpers, multipart, create_from_url, get / list / update / delete / watch, get_stats / list_top_videos
 client.presets         # create / get / get_by_slug / list / update / duplicate / archive
 client.origins         # create / get / list / update / validate / archive
 client.apps            # create / get / list / update / archive / enable_hosting
@@ -85,6 +85,29 @@ for event in client.videos.watch(video.id):
 No `video.uploaded` event fires for URL ingest (no bytes are uploaded to the
 API) — subscribe to `video.ready` / `video.failed` instead to know when it's
 playable.
+
+### Playback analytics
+
+`get_stats` returns a single video's playback stats — plays, watch time, and
+unique viewers — aggregated per UTC day, plus range totals. `list_top_videos`
+ranks an app's videos by plays over a date range. Both accept optional
+`start_date` / `end_date` (`YYYY-MM-DD`, inclusive); stats are best-effort and
+roll up hourly, so recent activity can lag by up to an hour.
+
+```python
+stats = client.videos.get_stats(
+    video_id="vid_abc123def456",
+    start_date="2026-07-01",
+    end_date="2026-07-16",
+)
+for day in stats.daily:
+    print(day.date, day.plays, day.watch_seconds, day.unique_viewers)
+print("range totals:", stats.totals.plays, stats.totals.watch_seconds)
+
+top = client.videos.list_top_videos(app_id="app_default000", limit=10)
+for video in top.items:
+    print(video.video_id, video.title, video.plays, video.watch_seconds)
+```
 
 ## Origins
 
