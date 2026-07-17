@@ -25,6 +25,20 @@ class Videos:
         req = fill_from_dict(video_pb2.CompleteUploadRequest(), kwargs)
         return self._t.unary(_SERVICE, "CompleteUpload", req, video_pb2.CompleteUploadResponse())
 
+    def create_from_url(self, **kwargs: Any) -> video_pb2.Video:
+        """One-call video ingest from a publicly-reachable http(s) URL.
+
+        No upload step: the API records the video in "processing" and hands
+        the URL to the transcoding pipeline. Returns the ``Video`` directly
+        (``CreateFromUrlResponse`` carries nothing else) — playback/embed
+        URLs populate once it reaches "ready" (watch it or subscribe to
+        ``video.ready``).
+        """
+        req = fill_from_dict(video_pb2.CreateFromUrlRequest(), kwargs)
+        return self._t.unary(
+            _SERVICE, "CreateFromUrl", req, video_pb2.CreateFromUrlResponse()
+        ).video
+
     def create_multipart_upload(self, **kwargs: Any) -> video_pb2.CreateMultipartUploadResponse:
         req = fill_from_dict(video_pb2.CreateMultipartUploadRequest(), kwargs)
         return self._t.unary(
