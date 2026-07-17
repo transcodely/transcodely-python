@@ -259,6 +259,12 @@ from transcodely.v1.hdr_pb2 import (
     ToneMapping,
 )
 
+# Content-aware encoding is currently unavailable: the API rejects any job
+# create request that sets ``content_aware`` (per-title or auto-ABR) on an
+# output with InvalidArgument — rule ``parameter_unsupported`` on
+# ``outputs[i].content_aware`` — until worker support ships. These types stay
+# re-exported for forward compatibility.
+# See https://github.com/transcodely/api/issues/167.
 from transcodely.v1.content_aware_pb2 import (
     AutoABRConfig,
     ContentAnalysis,
