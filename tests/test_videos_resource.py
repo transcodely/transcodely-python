@@ -1,6 +1,7 @@
-"""Tests for the Videos resource: create_from_url request construction.
+"""Tests for the Videos resource: create_from_url + playback analytics.
 
-``create_from_url`` is the one-call URL-ingest RPC — no upload step. Mirrors
+``create_from_url`` is the one-call URL-ingest RPC — no upload step.
+``get_stats`` / ``list_top_videos`` are the playback-analytics RPCs. Mirrors
 test_apps_resource.py / test_jobs_resource.py: request construction verified
 against a duck-typed FakeTransport (no live server).
 """
@@ -128,3 +129,122 @@ class TestVideosCreateFromUrl:
         # etc. rather than raising locally.
         req = _capture_create_from_url(app_id="app_default000", url="gs://bucket/in.mp4")
         assert req.url == "gs://bucket/in.mp4"
+
+
+def _capture_get_stats(**kwargs: Any) -> video_pb2.GetStatsRequest:
+    """Run ``Videos.get_stats(**kwargs)`` and return the request sent to the wire."""
+    t = FakeTransport({"GetStats": video_pb2.GetStatsResponse()})
+    Videos(t).get_stats(**kwargs)  # type: ignore[arg-type]
+    return t.calls[0][1]
+
+
+class TestVideosGetStats:
+    def test_required_video_id(self) -> None:
+        req = _capture_get_stats(video_id="vid_abc123def456")
+        assert req.video_id == "vid_abc123def456"
+        # Unset optional date bounds stay empty (proto3 string default).
+        assert req.start_date == ""
+        assert req.end_date == ""
+
+    def test_optional_date_range(self) -> None:
+        req = _capture_get_stats(
+            video_id="vid_abc123def456",
+            start_date="2026-07-01",
+            end_date="2026-07-16",
+        )
+        assert req.start_date == "2026-07-01"
+        assert req.end_date == "2026-07-16"
+
+    def test_returns_full_response_with_daily_and_totals(self) -> None:
+        # GetStatsResponse carries both daily rows and range totals — the method
+        # returns the whole response (matching get_usage), not a single field.
+        resp = video_pb2.GetStatsResponse(
+            daily=[
+                video_pb2.VideoStatsDay(
+                    date="2026-07-15", plays=10, watch_seconds=1200, unique_viewers=7
+                ),
+                video_pb2.VideoStatsDay(
+                    date="2026-07-16", plays=4, watch_seconds=480, unique_viewers=3
+                ),
+            ],
+            totals=video_pb2.VideoStatsTotals(plays=14, watch_seconds=1680, unique_viewers=10),
+        )
+        t = FakeTransport({"GetStats": resp})
+        out = Videos(t).get_stats(video_id="vid_abc123def456")  # type: ignore[arg-type]
+        assert isinstance(out, video_pb2.GetStatsResponse)
+        assert [d.date for d in out.daily] == ["2026-07-15", "2026-07-16"]
+        assert out.daily[0].plays == 10
+        assert out.daily[0].watch_seconds == 1200
+        assert out.daily[0].unique_viewers == 7
+        assert out.totals.plays == 14
+        assert out.totals.watch_seconds == 1680
+        assert out.totals.unique_viewers == 10
+
+    def test_sends_get_stats_method(self) -> None:
+        t = FakeTransport({"GetStats": video_pb2.GetStatsResponse()})
+        Videos(t).get_stats(video_id="vid_abc123def456")  # type: ignore[arg-type]
+        assert t.calls[0][0] == "GetStats"
+
+
+def _capture_list_top_videos(**kwargs: Any) -> video_pb2.ListTopVideosRequest:
+    """Run ``Videos.list_top_videos(**kwargs)`` and return the request sent to the wire."""
+    t = FakeTransport({"ListTopVideos": video_pb2.ListTopVideosResponse()})
+    Videos(t).list_top_videos(**kwargs)  # type: ignore[arg-type]
+    return t.calls[0][1]
+
+
+class TestVideosListTopVideos:
+    def test_no_kwargs_sends_empty_request(self) -> None:
+        # app_id is optional (API-key callers may omit it); an empty request is
+        # valid and resolves the app server-side.
+        req = _capture_list_top_videos()
+        assert req.app_id == ""
+        assert req.limit == 0  # unset int32 default
+
+    def test_app_id_and_limit(self) -> None:
+        req = _capture_list_top_videos(app_id="app_k1l2m3n4o5", limit=25)
+        assert req.app_id == "app_k1l2m3n4o5"
+        assert req.limit == 25
+
+    def test_optional_date_range(self) -> None:
+        req = _capture_list_top_videos(
+            app_id="app_k1l2m3n4o5",
+            start_date="2026-07-01",
+            end_date="2026-07-16",
+        )
+        assert req.start_date == "2026-07-01"
+        assert req.end_date == "2026-07-16"
+
+    def test_returns_full_response_with_items(self) -> None:
+        # ListTopVideos is not paginated (no page_token) — the method returns the
+        # whole ListTopVideosResponse, whose `items` is the ranked leaderboard.
+        resp = video_pb2.ListTopVideosResponse(
+            items=[
+                video_pb2.TopVideo(
+                    video_id="vid_top1",
+                    title="Most watched",
+                    poster_url="https://cdn.example.com/vid_top1/poster.jpg",
+                    plays=500,
+                    watch_seconds=60000,
+                    unique_viewers=320,
+                ),
+                video_pb2.TopVideo(video_id="vid_top2", plays=210, watch_seconds=25000),
+            ]
+        )
+        t = FakeTransport({"ListTopVideos": resp})
+        out = Videos(t).list_top_videos(app_id="app_k1l2m3n4o5")  # type: ignore[arg-type]
+        assert isinstance(out, video_pb2.ListTopVideosResponse)
+        assert [v.video_id for v in out.items] == ["vid_top1", "vid_top2"]
+        assert out.items[0].title == "Most watched"
+        assert out.items[0].poster_url == "https://cdn.example.com/vid_top1/poster.jpg"
+        assert out.items[0].plays == 500
+        assert out.items[0].watch_seconds == 60000
+        assert out.items[0].unique_viewers == 320
+        # Unset optional title/poster on the second row are empty strings.
+        assert out.items[1].title == ""
+        assert out.items[1].poster_url == ""
+
+    def test_sends_list_top_videos_method(self) -> None:
+        t = FakeTransport({"ListTopVideos": video_pb2.ListTopVideosResponse()})
+        Videos(t).list_top_videos(app_id="app_k1l2m3n4o5")  # type: ignore[arg-type]
+        assert t.calls[0][0] == "ListTopVideos"
