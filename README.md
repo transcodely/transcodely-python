@@ -46,7 +46,7 @@ API keys are opaque `ak_`-prefixed secrets — pass the full value shown once at
 
 ```python
 client.jobs            # create / get / list / cancel / confirm / watch
-client.videos          # upload helpers, multipart, get / list / update / delete / watch
+client.videos          # upload helpers, multipart, create_from_url, get / list / update / delete / watch
 client.presets         # create / get / get_by_slug / list / update / duplicate / archive
 client.origins         # create / get / list / update / validate / archive
 client.apps            # create / get / list / update / archive / enable_hosting
@@ -59,6 +59,32 @@ client.webhook_endpoints  # create / retrieve / update / delete / list / rotate_
 client.events          # retrieve / list / resend
 client.webhooks        # construct_event / verify_signature (signature-verification helpers)
 ```
+
+## Videos
+
+### One-call ingest from a URL
+
+`create_from_url` skips the upload dance entirely: give it a publicly-reachable
+`http(s)` URL and the worker fetches it at transcode time. Requires an app with
+managed hosting enabled (`client.apps.enable_hosting(...)`).
+
+```python
+video = client.videos.create_from_url(
+    app_id="app_default000",
+    url="https://example.com/source.mp4",
+    title="Product demo",
+)
+print(video.id, video.status)  # "processing" — no upload step
+
+for event in client.videos.watch(video.id):
+    if event.video.status == "ready":
+        print(event.video.playback_url, event.video.embed_url)
+        break
+```
+
+No `video.uploaded` event fires for URL ingest (no bytes are uploaded to the
+API) — subscribe to `video.ready` / `video.failed` instead to know when it's
+playable.
 
 ## Origins
 
