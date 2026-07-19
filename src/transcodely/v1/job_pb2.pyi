@@ -366,7 +366,7 @@ class ExecutionTiming(_message.Message):
     def __init__(self, instance_id: _Optional[str] = ..., instance_type: _Optional[str] = ..., instance_location: _Optional[str] = ..., vcpu_count: _Optional[int] = ..., memory_mb: _Optional[int] = ..., boot_duration_ms: _Optional[int] = ..., download_duration_ms: _Optional[int] = ..., probe_duration_ms: _Optional[int] = ..., encode_duration_ms: _Optional[int] = ..., upload_duration_ms: _Optional[int] = ..., packaging_duration_ms: _Optional[int] = ..., total_duration_ms: _Optional[int] = ..., download_bytes: _Optional[int] = ..., download_speed_mbps: _Optional[float] = ..., upload_bytes: _Optional[int] = ..., upload_speed_mbps: _Optional[float] = ..., avg_cpu_percent: _Optional[float] = ..., peak_cpu_percent: _Optional[float] = ..., avg_memory_mb: _Optional[int] = ..., peak_memory_mb: _Optional[int] = ..., chunk_count: _Optional[int] = ..., chunk_strategy: _Optional[str] = ..., exit_code: _Optional[int] = ..., exit_reason: _Optional[str] = ...) -> None: ...
 
 class Job(_message.Message):
-    __slots__ = ("id", "app_id", "input_url", "input_origin", "output_origin", "status", "progress", "priority", "input_metadata", "outputs", "total_estimated_cost", "total_actual_cost", "error_code", "error_message", "webhook_url", "metadata", "created_at", "updated_at", "probed_at", "started_at", "completed_at", "delayed_start", "confirmed_at", "currency", "execution", "thumbnails", "thumbnail_results", "output_path_template", "object")
+    __slots__ = ("id", "app_id", "input_url", "input_origin", "output_origin", "status", "progress", "priority", "input_metadata", "outputs", "total_estimated_cost", "total_actual_cost", "error_code", "error_message", "webhook_url", "metadata", "created_at", "updated_at", "probed_at", "started_at", "completed_at", "delayed_start", "confirmed_at", "currency", "execution", "thumbnails", "thumbnail_results", "output_path_template", "object", "minimum_charge_eur", "minimum_charge_applied", "clip")
     class MetadataEntry(_message.Message):
         __slots__ = ("key", "value")
         KEY_FIELD_NUMBER: _ClassVar[int]
@@ -403,6 +403,9 @@ class Job(_message.Message):
     THUMBNAIL_RESULTS_FIELD_NUMBER: _ClassVar[int]
     OUTPUT_PATH_TEMPLATE_FIELD_NUMBER: _ClassVar[int]
     OBJECT_FIELD_NUMBER: _ClassVar[int]
+    MINIMUM_CHARGE_EUR_FIELD_NUMBER: _ClassVar[int]
+    MINIMUM_CHARGE_APPLIED_FIELD_NUMBER: _ClassVar[int]
+    CLIP_FIELD_NUMBER: _ClassVar[int]
     id: str
     app_id: str
     input_url: str
@@ -432,10 +435,21 @@ class Job(_message.Message):
     thumbnail_results: _containers.RepeatedCompositeFieldContainer[_thumbnails_pb2.ThumbnailResult]
     output_path_template: str
     object: str
-    def __init__(self, id: _Optional[str] = ..., app_id: _Optional[str] = ..., input_url: _Optional[str] = ..., input_origin: _Optional[_Union[_origin_pb2.OriginRef, _Mapping]] = ..., output_origin: _Optional[_Union[_origin_pb2.OriginRef, _Mapping]] = ..., status: _Optional[_Union[JobStatus, str]] = ..., progress: _Optional[int] = ..., priority: _Optional[_Union[JobPriority, str]] = ..., input_metadata: _Optional[_Union[_media_pb2.InputMetadata, _Mapping]] = ..., outputs: _Optional[_Iterable[_Union[JobOutput, _Mapping]]] = ..., total_estimated_cost: _Optional[float] = ..., total_actual_cost: _Optional[float] = ..., error_code: _Optional[str] = ..., error_message: _Optional[str] = ..., webhook_url: _Optional[str] = ..., metadata: _Optional[_Mapping[str, str]] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., probed_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., started_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., completed_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., delayed_start: bool = ..., confirmed_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., currency: _Optional[str] = ..., execution: _Optional[_Union[ExecutionTiming, _Mapping]] = ..., thumbnails: _Optional[_Iterable[_Union[_thumbnails_pb2.ThumbnailSpec, _Mapping]]] = ..., thumbnail_results: _Optional[_Iterable[_Union[_thumbnails_pb2.ThumbnailResult, _Mapping]]] = ..., output_path_template: _Optional[str] = ..., object: _Optional[str] = ...) -> None: ...
+    minimum_charge_eur: float
+    minimum_charge_applied: bool
+    clip: ClipConfig
+    def __init__(self, id: _Optional[str] = ..., app_id: _Optional[str] = ..., input_url: _Optional[str] = ..., input_origin: _Optional[_Union[_origin_pb2.OriginRef, _Mapping]] = ..., output_origin: _Optional[_Union[_origin_pb2.OriginRef, _Mapping]] = ..., status: _Optional[_Union[JobStatus, str]] = ..., progress: _Optional[int] = ..., priority: _Optional[_Union[JobPriority, str]] = ..., input_metadata: _Optional[_Union[_media_pb2.InputMetadata, _Mapping]] = ..., outputs: _Optional[_Iterable[_Union[JobOutput, _Mapping]]] = ..., total_estimated_cost: _Optional[float] = ..., total_actual_cost: _Optional[float] = ..., error_code: _Optional[str] = ..., error_message: _Optional[str] = ..., webhook_url: _Optional[str] = ..., metadata: _Optional[_Mapping[str, str]] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., probed_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., started_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., completed_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., delayed_start: bool = ..., confirmed_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., currency: _Optional[str] = ..., execution: _Optional[_Union[ExecutionTiming, _Mapping]] = ..., thumbnails: _Optional[_Iterable[_Union[_thumbnails_pb2.ThumbnailSpec, _Mapping]]] = ..., thumbnail_results: _Optional[_Iterable[_Union[_thumbnails_pb2.ThumbnailResult, _Mapping]]] = ..., output_path_template: _Optional[str] = ..., object: _Optional[str] = ..., minimum_charge_eur: _Optional[float] = ..., minimum_charge_applied: bool = ..., clip: _Optional[_Union[ClipConfig, _Mapping]] = ...) -> None: ...
+
+class ClipConfig(_message.Message):
+    __slots__ = ("start_seconds", "end_seconds")
+    START_SECONDS_FIELD_NUMBER: _ClassVar[int]
+    END_SECONDS_FIELD_NUMBER: _ClassVar[int]
+    start_seconds: float
+    end_seconds: float
+    def __init__(self, start_seconds: _Optional[float] = ..., end_seconds: _Optional[float] = ...) -> None: ...
 
 class CreateJobRequest(_message.Message):
-    __slots__ = ("input_url", "input_origin_id", "input_path", "output_origin_id", "outputs", "priority", "webhook_url", "idempotency_key", "metadata", "delayed_start", "thumbnails", "output_path_template", "managed", "app_id")
+    __slots__ = ("input_url", "input_origin_id", "input_path", "output_origin_id", "outputs", "priority", "webhook_url", "idempotency_key", "metadata", "delayed_start", "thumbnails", "output_path_template", "managed", "app_id", "clip")
     class MetadataEntry(_message.Message):
         __slots__ = ("key", "value")
         KEY_FIELD_NUMBER: _ClassVar[int]
@@ -457,6 +471,7 @@ class CreateJobRequest(_message.Message):
     OUTPUT_PATH_TEMPLATE_FIELD_NUMBER: _ClassVar[int]
     MANAGED_FIELD_NUMBER: _ClassVar[int]
     APP_ID_FIELD_NUMBER: _ClassVar[int]
+    CLIP_FIELD_NUMBER: _ClassVar[int]
     input_url: str
     input_origin_id: str
     input_path: str
@@ -471,7 +486,8 @@ class CreateJobRequest(_message.Message):
     output_path_template: str
     managed: bool
     app_id: str
-    def __init__(self, input_url: _Optional[str] = ..., input_origin_id: _Optional[str] = ..., input_path: _Optional[str] = ..., output_origin_id: _Optional[str] = ..., outputs: _Optional[_Iterable[_Union[OutputSpec, _Mapping]]] = ..., priority: _Optional[_Union[JobPriority, str]] = ..., webhook_url: _Optional[str] = ..., idempotency_key: _Optional[str] = ..., metadata: _Optional[_Mapping[str, str]] = ..., delayed_start: bool = ..., thumbnails: _Optional[_Iterable[_Union[_thumbnails_pb2.ThumbnailSpec, _Mapping]]] = ..., output_path_template: _Optional[str] = ..., managed: bool = ..., app_id: _Optional[str] = ...) -> None: ...
+    clip: ClipConfig
+    def __init__(self, input_url: _Optional[str] = ..., input_origin_id: _Optional[str] = ..., input_path: _Optional[str] = ..., output_origin_id: _Optional[str] = ..., outputs: _Optional[_Iterable[_Union[OutputSpec, _Mapping]]] = ..., priority: _Optional[_Union[JobPriority, str]] = ..., webhook_url: _Optional[str] = ..., idempotency_key: _Optional[str] = ..., metadata: _Optional[_Mapping[str, str]] = ..., delayed_start: bool = ..., thumbnails: _Optional[_Iterable[_Union[_thumbnails_pb2.ThumbnailSpec, _Mapping]]] = ..., output_path_template: _Optional[str] = ..., managed: bool = ..., app_id: _Optional[str] = ..., clip: _Optional[_Union[ClipConfig, _Mapping]] = ...) -> None: ...
 
 class CreateJobResponse(_message.Message):
     __slots__ = ("job", "video_id")
