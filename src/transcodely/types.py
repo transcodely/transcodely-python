@@ -50,6 +50,7 @@ from transcodely.v1.job_pb2 import (
     GetJobResponse,
     HLSConfig,
     Job,
+    JobFee,
     JobOutput,
     JobPriority,
     JobStatus,
@@ -276,6 +277,7 @@ from transcodely.v1.subtitles_pb2 import (
     BurnInStyle,
     SubtitleFormat,
     SubtitleOperation,
+    SubtitleResult,
     SubtitleTrack,
 )
 
@@ -466,6 +468,7 @@ __all__ = [
     "HttpOriginConfig",
     "InputMetadata",
     "Job",
+    "JobFee",
     "JobOutput",
     "JobPriority",
     "JobStatus",
@@ -535,6 +538,7 @@ __all__ = [
     "StreamingConfig",
     "SubtitleFormat",
     "SubtitleOperation",
+    "SubtitleResult",
     "SubtitleStreamInfo",
     "SubtitleTrack",
     "ThumbnailFormat",

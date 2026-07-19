@@ -20,7 +20,7 @@ from transcodely._codec.json_codec import (
     simplify_enum_value,
     transform_enums_in_dict,
 )
-from transcodely.v1 import common_pb2, job_pb2, origin_pb2
+from transcodely.v1 import common_pb2, job_pb2, origin_pb2, subtitles_pb2
 
 
 # ---- Helper enum descriptors -------------------------------------------------
@@ -157,6 +157,31 @@ class TestSerialize:
         assert obj["outputs"][0]["video"][0]["codec"] == "h264"
         assert obj["outputs"][0]["video"][0]["resolution"] == "1080p"
 
+    def test_serializes_generate_captions_track_and_input_video_id(self) -> None:
+        # F5 AI captions: retro-caption a hosted video via input_video_id with a
+        # single captions-only output (no video[], no type) carrying a generate
+        # track that auto-detects the language.
+        req = job_pb2.CreateJobRequest(
+            input_video_id="vid_a1b2c3d4e5f6g7",
+            outputs=[
+                job_pb2.OutputSpec(
+                    subtitle_tracks=[
+                        subtitles_pb2.SubtitleTrack(
+                            operation=subtitles_pb2.SUBTITLE_OPERATION_GENERATE,
+                            language="auto",
+                        )
+                    ],
+                )
+            ],
+        )
+        obj = json.loads(serialize(req).decode())
+        assert obj["input_video_id"] == "vid_a1b2c3d4e5f6g7"
+        # input_video_id is the retro-caption source; input_url stays empty.
+        assert obj.get("input_url", "") == ""
+        track = obj["outputs"][0]["subtitle_tracks"][0]
+        assert track["operation"] == "generate"
+        assert track["language"] == "auto"
+
 
 # ---- deserialize -------------------------------------------------------------
 
@@ -186,6 +211,60 @@ class TestDeserialize:
         payload = json.dumps({"job": {"id": "job_a"}, "made_up_field": 42}).encode()
         resp = deserialize(payload, job_pb2.GetJobResponse())
         assert resp.job.id == "job_a"
+
+    def test_parses_subtitle_results_and_fees(self) -> None:
+        # F5: the read-only subtitle_results (with auto_generated) and the
+        # additive captions fee line item decode off a job response.
+        payload = json.dumps(
+            {
+                "job": {
+                    "id": "job_t1",
+                    "object": "job",
+                    "status": "completed",
+                    "input_video_id": "vid_a1b2c3d4e5f6g7",
+                    "subtitle_results": [
+                        {
+                            "output_id": "out_a1b2c3d4e5f6g7",
+                            "operation": "generate",
+                            "format": "webvtt",
+                            "language": "eng",
+                            "label": "English",
+                            "auto_generated": True,
+                            "storage_key": "job_t1/subtitles/out_a1b2c3d4e5f6g7_eng.vtt",
+                            "url": "https://cdn.example.com/job_t1/subtitles/out_a1b2c3d4e5f6g7_eng.vtt",
+                            "transcript_storage_key": "job_t1/subtitles/out_a1b2c3d4e5f6g7_eng.transcript.json",
+                            "transcript_url": "https://cdn.example.com/job_t1/subtitles/out_a1b2c3d4e5f6g7_eng.transcript.json",
+                        }
+                    ],
+                    "fees": [
+                        {
+                            "fee_type": "captions",
+                            "description": "AI caption generation",
+                            "unit": "source_minute",
+                            "quantity": 10.224667,
+                            "rate": 0.05,
+                            "amount": 0.511233,
+                            "currency": "eur",
+                        }
+                    ],
+                }
+            }
+        ).encode()
+        resp = deserialize(payload, job_pb2.GetJobResponse())
+
+        assert len(resp.job.subtitle_results) == 1
+        result = resp.job.subtitle_results[0]
+        assert result.operation == subtitles_pb2.SUBTITLE_OPERATION_GENERATE
+        assert result.format == subtitles_pb2.SUBTITLE_FORMAT_WEBVTT
+        assert result.auto_generated is True
+        assert result.language == "eng"
+        assert result.transcript_storage_key != ""
+
+        assert len(resp.job.fees) == 1
+        fee = resp.job.fees[0]
+        assert fee.fee_type == "captions"
+        assert fee.amount == pytest.approx(0.511233)
+        assert fee.currency == "eur"
 
 
 # ---- round-trip --------------------------------------------------------------

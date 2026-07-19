@@ -15,7 +15,7 @@ import pytest
 
 from transcodely.resources._helpers import resolve_enum
 from transcodely.resources.jobs import Jobs
-from transcodely.v1 import common_pb2, job_pb2, streaming_pb2
+from transcodely.v1 import common_pb2, job_pb2, streaming_pb2, subtitles_pb2
 
 
 class FakeTransport:
@@ -75,6 +75,19 @@ class TestJobsCreateKwargs:
         assert req.input_path == "uploads/my-video.mp4"
         assert req.output_origin_id == "ori_output6789"
         assert req.input_url == ""
+
+    def test_input_video_id_retro_caption_mode(self) -> None:
+        # F5: retro-caption a hosted video — input_video_id source with a single
+        # captions-only output (no video[], no type) carrying a generate track.
+        req = _capture_create(
+            input_video_id="vid_a1b2c3d4e5f6g7",
+            outputs=[{"subtitle_tracks": [{"operation": "generate", "language": "auto"}]}],
+        )
+        assert req.input_video_id == "vid_a1b2c3d4e5f6g7"
+        assert req.input_url == ""
+        track = req.outputs[0].subtitle_tracks[0]
+        assert track.operation == subtitles_pb2.SUBTITLE_OPERATION_GENERATE
+        assert track.language == "auto"
 
     def test_priority_as_lowercase_string(self) -> None:
         req = _capture_create(input_url="gs://b/in.mp4", priority="standard")
