@@ -14,6 +14,7 @@ class ThumbnailMode(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     THUMBNAIL_MODE_INTERVAL: _ClassVar[ThumbnailMode]
     THUMBNAIL_MODE_SPRITE: _ClassVar[ThumbnailMode]
     THUMBNAIL_MODE_TIMESTAMPS: _ClassVar[ThumbnailMode]
+    THUMBNAIL_MODE_ANIMATED: _ClassVar[ThumbnailMode]
 
 class ThumbnailFormat(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
@@ -26,13 +27,14 @@ THUMBNAIL_MODE_SINGLE: ThumbnailMode
 THUMBNAIL_MODE_INTERVAL: ThumbnailMode
 THUMBNAIL_MODE_SPRITE: ThumbnailMode
 THUMBNAIL_MODE_TIMESTAMPS: ThumbnailMode
+THUMBNAIL_MODE_ANIMATED: ThumbnailMode
 THUMBNAIL_FORMAT_UNSPECIFIED: ThumbnailFormat
 THUMBNAIL_FORMAT_JPEG: ThumbnailFormat
 THUMBNAIL_FORMAT_PNG: ThumbnailFormat
 THUMBNAIL_FORMAT_WEBP: ThumbnailFormat
 
 class ThumbnailSpec(_message.Message):
-    __slots__ = ("mode", "format", "width", "height", "quality", "timestamp", "interval_seconds", "timestamps", "sprite_columns", "path_template")
+    __slots__ = ("mode", "format", "width", "height", "quality", "timestamp", "interval_seconds", "timestamps", "sprite_columns", "path_template", "duration_seconds", "fps", "start_offsets")
     MODE_FIELD_NUMBER: _ClassVar[int]
     FORMAT_FIELD_NUMBER: _ClassVar[int]
     WIDTH_FIELD_NUMBER: _ClassVar[int]
@@ -43,6 +45,9 @@ class ThumbnailSpec(_message.Message):
     TIMESTAMPS_FIELD_NUMBER: _ClassVar[int]
     SPRITE_COLUMNS_FIELD_NUMBER: _ClassVar[int]
     PATH_TEMPLATE_FIELD_NUMBER: _ClassVar[int]
+    DURATION_SECONDS_FIELD_NUMBER: _ClassVar[int]
+    FPS_FIELD_NUMBER: _ClassVar[int]
+    START_OFFSETS_FIELD_NUMBER: _ClassVar[int]
     mode: ThumbnailMode
     format: ThumbnailFormat
     width: int
@@ -53,7 +58,10 @@ class ThumbnailSpec(_message.Message):
     timestamps: _containers.RepeatedScalarFieldContainer[float]
     sprite_columns: int
     path_template: str
-    def __init__(self, mode: _Optional[_Union[ThumbnailMode, str]] = ..., format: _Optional[_Union[ThumbnailFormat, str]] = ..., width: _Optional[int] = ..., height: _Optional[int] = ..., quality: _Optional[int] = ..., timestamp: _Optional[float] = ..., interval_seconds: _Optional[float] = ..., timestamps: _Optional[_Iterable[float]] = ..., sprite_columns: _Optional[int] = ..., path_template: _Optional[str] = ...) -> None: ...
+    duration_seconds: float
+    fps: int
+    start_offsets: _containers.RepeatedScalarFieldContainer[float]
+    def __init__(self, mode: _Optional[_Union[ThumbnailMode, str]] = ..., format: _Optional[_Union[ThumbnailFormat, str]] = ..., width: _Optional[int] = ..., height: _Optional[int] = ..., quality: _Optional[int] = ..., timestamp: _Optional[float] = ..., interval_seconds: _Optional[float] = ..., timestamps: _Optional[_Iterable[float]] = ..., sprite_columns: _Optional[int] = ..., path_template: _Optional[str] = ..., duration_seconds: _Optional[float] = ..., fps: _Optional[int] = ..., start_offsets: _Optional[_Iterable[float]] = ...) -> None: ...
 
 class ThumbnailResult(_message.Message):
     __slots__ = ("storage_key", "url", "mode", "format", "width", "height", "index")
