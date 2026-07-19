@@ -35,6 +35,7 @@ CANONICAL_EVENT_TYPES = {
     "video.ready",
     "video.failed",
     "video.deleted",
+    "video.source_scheduled_for_deletion",
     "app.created",
     "app.updated",
 }
@@ -44,11 +45,11 @@ def test_event_type_literal_matches_api_catalog() -> None:
     assert set(get_args(EventType)) == CANONICAL_EVENT_TYPES
 
 
-def test_catalog_has_exactly_15_types() -> None:
+def test_catalog_has_exactly_16_types() -> None:
     types = get_args(EventType)
-    assert len(types) == 15
+    assert len(types) == 16
     # No accidental duplicates in the literal.
-    assert len(set(types)) == 15
+    assert len(set(types)) == 16
 
 
 def test_job_updated_is_not_in_catalog() -> None:

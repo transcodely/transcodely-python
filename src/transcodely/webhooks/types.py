@@ -18,7 +18,7 @@ from google.protobuf.message import Message
 from ..resources._helpers import fill_from_dict
 from ..v1 import app_pb2, job_pb2, video_pb2
 
-#: The 15 canonical event types the webhook system can emit, mirroring the API's
+#: The 16 canonical event types the webhook system can emit, mirroring the API's
 #: ``domain.WebhookEventTypes()``. The ``"*"`` wildcard is intentionally absent —
 #: it is a subscription value only, never the ``type`` of an emitted event. Used
 #: for annotations and documentation; the ``Event.type`` field is a plain ``str``
@@ -38,6 +38,7 @@ EventType = Literal[
     "video.ready",
     "video.failed",
     "video.deleted",
+    "video.source_scheduled_for_deletion",
     "app.created",
     "app.updated",
 ]
