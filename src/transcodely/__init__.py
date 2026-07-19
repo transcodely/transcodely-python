@@ -99,6 +99,7 @@ from .types import (
     WatchEventType,
     WatchJobResponse,
     WatchVideoResponse,
+    WatermarkConfig,
     WebhookDelivery,
     WebhookEndpoint,
 )
@@ -164,6 +165,7 @@ __all__ = [
     "WatchEventType",
     "WatchJobResponse",
     "WatchVideoResponse",
+    "WatermarkConfig",
     "WebhookDelivery",
     "WebhookEndpoint",
     "WebhookError",

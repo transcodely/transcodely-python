@@ -10,6 +10,7 @@ from transcodely.v1 import origin_pb2 as _origin_pb2
 from transcodely.v1 import streaming_pb2 as _streaming_pb2
 from transcodely.v1 import thumbnails_pb2 as _thumbnails_pb2
 from transcodely.v1 import subtitles_pb2 as _subtitles_pb2
+from transcodely.v1 import watermark_pb2 as _watermark_pb2
 from transcodely.v1 import drm_pb2 as _drm_pb2
 from transcodely.v1 import hdr_pb2 as _hdr_pb2
 from transcodely.v1 import content_aware_pb2 as _content_aware_pb2
@@ -152,7 +153,7 @@ class SegmentConfig(_message.Message):
     def __init__(self, duration: _Optional[int] = ..., gop_alignment: _Optional[_Union[_streaming_pb2.GOPAlignmentMode, str]] = ..., gop_size: _Optional[int] = ...) -> None: ...
 
 class OutputSpec(_message.Message):
-    __slots__ = ("type", "video", "audio", "hls", "dash", "segments", "path_template", "preset", "subtitle_tracks", "drm", "content_aware", "encoding_mode", "effective_path_template", "disable_audio")
+    __slots__ = ("type", "video", "audio", "hls", "dash", "segments", "path_template", "preset", "subtitle_tracks", "drm", "content_aware", "encoding_mode", "effective_path_template", "disable_audio", "watermark")
     TYPE_FIELD_NUMBER: _ClassVar[int]
     VIDEO_FIELD_NUMBER: _ClassVar[int]
     AUDIO_FIELD_NUMBER: _ClassVar[int]
@@ -167,6 +168,7 @@ class OutputSpec(_message.Message):
     ENCODING_MODE_FIELD_NUMBER: _ClassVar[int]
     EFFECTIVE_PATH_TEMPLATE_FIELD_NUMBER: _ClassVar[int]
     DISABLE_AUDIO_FIELD_NUMBER: _ClassVar[int]
+    WATERMARK_FIELD_NUMBER: _ClassVar[int]
     type: _common_pb2.OutputFormat
     video: _containers.RepeatedCompositeFieldContainer[VideoVariant]
     audio: _containers.RepeatedCompositeFieldContainer[AudioTrackConfig]
@@ -181,7 +183,8 @@ class OutputSpec(_message.Message):
     encoding_mode: str
     effective_path_template: str
     disable_audio: bool
-    def __init__(self, type: _Optional[_Union[_common_pb2.OutputFormat, str]] = ..., video: _Optional[_Iterable[_Union[VideoVariant, _Mapping]]] = ..., audio: _Optional[_Iterable[_Union[AudioTrackConfig, _Mapping]]] = ..., hls: _Optional[_Union[HLSConfig, _Mapping]] = ..., dash: _Optional[_Union[DASHConfig, _Mapping]] = ..., segments: _Optional[_Union[SegmentConfig, _Mapping]] = ..., path_template: _Optional[str] = ..., preset: _Optional[str] = ..., subtitle_tracks: _Optional[_Iterable[_Union[_subtitles_pb2.SubtitleTrack, _Mapping]]] = ..., drm: _Optional[_Union[_drm_pb2.DRMConfig, _Mapping]] = ..., content_aware: _Optional[_Union[_content_aware_pb2.ContentAwareConfig, _Mapping]] = ..., encoding_mode: _Optional[str] = ..., effective_path_template: _Optional[str] = ..., disable_audio: bool = ...) -> None: ...
+    watermark: _watermark_pb2.WatermarkConfig
+    def __init__(self, type: _Optional[_Union[_common_pb2.OutputFormat, str]] = ..., video: _Optional[_Iterable[_Union[VideoVariant, _Mapping]]] = ..., audio: _Optional[_Iterable[_Union[AudioTrackConfig, _Mapping]]] = ..., hls: _Optional[_Union[HLSConfig, _Mapping]] = ..., dash: _Optional[_Union[DASHConfig, _Mapping]] = ..., segments: _Optional[_Union[SegmentConfig, _Mapping]] = ..., path_template: _Optional[str] = ..., preset: _Optional[str] = ..., subtitle_tracks: _Optional[_Iterable[_Union[_subtitles_pb2.SubtitleTrack, _Mapping]]] = ..., drm: _Optional[_Union[_drm_pb2.DRMConfig, _Mapping]] = ..., content_aware: _Optional[_Union[_content_aware_pb2.ContentAwareConfig, _Mapping]] = ..., encoding_mode: _Optional[str] = ..., effective_path_template: _Optional[str] = ..., disable_audio: bool = ..., watermark: _Optional[_Union[_watermark_pb2.WatermarkConfig, _Mapping]] = ...) -> None: ...
 
 class PricingSnapshot(_message.Message):
     __slots__ = ("base_price", "codec_multiplier", "resolution_multiplier", "framerate_multiplier", "quality_multiplier", "resolution_tier", "actual_framerate", "pixel_count", "feature_multiplier")
@@ -366,7 +369,7 @@ class ExecutionTiming(_message.Message):
     def __init__(self, instance_id: _Optional[str] = ..., instance_type: _Optional[str] = ..., instance_location: _Optional[str] = ..., vcpu_count: _Optional[int] = ..., memory_mb: _Optional[int] = ..., boot_duration_ms: _Optional[int] = ..., download_duration_ms: _Optional[int] = ..., probe_duration_ms: _Optional[int] = ..., encode_duration_ms: _Optional[int] = ..., upload_duration_ms: _Optional[int] = ..., packaging_duration_ms: _Optional[int] = ..., total_duration_ms: _Optional[int] = ..., download_bytes: _Optional[int] = ..., download_speed_mbps: _Optional[float] = ..., upload_bytes: _Optional[int] = ..., upload_speed_mbps: _Optional[float] = ..., avg_cpu_percent: _Optional[float] = ..., peak_cpu_percent: _Optional[float] = ..., avg_memory_mb: _Optional[int] = ..., peak_memory_mb: _Optional[int] = ..., chunk_count: _Optional[int] = ..., chunk_strategy: _Optional[str] = ..., exit_code: _Optional[int] = ..., exit_reason: _Optional[str] = ...) -> None: ...
 
 class Job(_message.Message):
-    __slots__ = ("id", "app_id", "input_url", "input_origin", "output_origin", "status", "progress", "priority", "input_metadata", "outputs", "total_estimated_cost", "total_actual_cost", "error_code", "error_message", "webhook_url", "metadata", "created_at", "updated_at", "probed_at", "started_at", "completed_at", "delayed_start", "confirmed_at", "currency", "execution", "thumbnails", "thumbnail_results", "output_path_template", "object")
+    __slots__ = ("id", "app_id", "input_url", "input_origin", "output_origin", "status", "progress", "priority", "input_metadata", "outputs", "total_estimated_cost", "total_actual_cost", "error_code", "error_message", "webhook_url", "metadata", "created_at", "updated_at", "probed_at", "started_at", "completed_at", "delayed_start", "confirmed_at", "currency", "execution", "thumbnails", "thumbnail_results", "output_path_template", "object", "minimum_charge_eur", "minimum_charge_applied")
     class MetadataEntry(_message.Message):
         __slots__ = ("key", "value")
         KEY_FIELD_NUMBER: _ClassVar[int]
@@ -403,6 +406,8 @@ class Job(_message.Message):
     THUMBNAIL_RESULTS_FIELD_NUMBER: _ClassVar[int]
     OUTPUT_PATH_TEMPLATE_FIELD_NUMBER: _ClassVar[int]
     OBJECT_FIELD_NUMBER: _ClassVar[int]
+    MINIMUM_CHARGE_EUR_FIELD_NUMBER: _ClassVar[int]
+    MINIMUM_CHARGE_APPLIED_FIELD_NUMBER: _ClassVar[int]
     id: str
     app_id: str
     input_url: str
@@ -432,7 +437,9 @@ class Job(_message.Message):
     thumbnail_results: _containers.RepeatedCompositeFieldContainer[_thumbnails_pb2.ThumbnailResult]
     output_path_template: str
     object: str
-    def __init__(self, id: _Optional[str] = ..., app_id: _Optional[str] = ..., input_url: _Optional[str] = ..., input_origin: _Optional[_Union[_origin_pb2.OriginRef, _Mapping]] = ..., output_origin: _Optional[_Union[_origin_pb2.OriginRef, _Mapping]] = ..., status: _Optional[_Union[JobStatus, str]] = ..., progress: _Optional[int] = ..., priority: _Optional[_Union[JobPriority, str]] = ..., input_metadata: _Optional[_Union[_media_pb2.InputMetadata, _Mapping]] = ..., outputs: _Optional[_Iterable[_Union[JobOutput, _Mapping]]] = ..., total_estimated_cost: _Optional[float] = ..., total_actual_cost: _Optional[float] = ..., error_code: _Optional[str] = ..., error_message: _Optional[str] = ..., webhook_url: _Optional[str] = ..., metadata: _Optional[_Mapping[str, str]] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., probed_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., started_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., completed_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., delayed_start: bool = ..., confirmed_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., currency: _Optional[str] = ..., execution: _Optional[_Union[ExecutionTiming, _Mapping]] = ..., thumbnails: _Optional[_Iterable[_Union[_thumbnails_pb2.ThumbnailSpec, _Mapping]]] = ..., thumbnail_results: _Optional[_Iterable[_Union[_thumbnails_pb2.ThumbnailResult, _Mapping]]] = ..., output_path_template: _Optional[str] = ..., object: _Optional[str] = ...) -> None: ...
+    minimum_charge_eur: float
+    minimum_charge_applied: bool
+    def __init__(self, id: _Optional[str] = ..., app_id: _Optional[str] = ..., input_url: _Optional[str] = ..., input_origin: _Optional[_Union[_origin_pb2.OriginRef, _Mapping]] = ..., output_origin: _Optional[_Union[_origin_pb2.OriginRef, _Mapping]] = ..., status: _Optional[_Union[JobStatus, str]] = ..., progress: _Optional[int] = ..., priority: _Optional[_Union[JobPriority, str]] = ..., input_metadata: _Optional[_Union[_media_pb2.InputMetadata, _Mapping]] = ..., outputs: _Optional[_Iterable[_Union[JobOutput, _Mapping]]] = ..., total_estimated_cost: _Optional[float] = ..., total_actual_cost: _Optional[float] = ..., error_code: _Optional[str] = ..., error_message: _Optional[str] = ..., webhook_url: _Optional[str] = ..., metadata: _Optional[_Mapping[str, str]] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., probed_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., started_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., completed_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., delayed_start: bool = ..., confirmed_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., currency: _Optional[str] = ..., execution: _Optional[_Union[ExecutionTiming, _Mapping]] = ..., thumbnails: _Optional[_Iterable[_Union[_thumbnails_pb2.ThumbnailSpec, _Mapping]]] = ..., thumbnail_results: _Optional[_Iterable[_Union[_thumbnails_pb2.ThumbnailResult, _Mapping]]] = ..., output_path_template: _Optional[str] = ..., object: _Optional[str] = ..., minimum_charge_eur: _Optional[float] = ..., minimum_charge_applied: bool = ...) -> None: ...
 
 class CreateJobRequest(_message.Message):
     __slots__ = ("input_url", "input_origin_id", "input_path", "output_origin_id", "outputs", "priority", "webhook_url", "idempotency_key", "metadata", "delayed_start", "thumbnails", "output_path_template", "managed", "app_id")
