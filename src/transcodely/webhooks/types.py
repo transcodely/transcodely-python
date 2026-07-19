@@ -18,7 +18,7 @@ from google.protobuf.message import Message
 from ..resources._helpers import fill_from_dict
 from ..v1 import app_pb2, job_pb2, video_pb2
 
-#: The 15 canonical event types the webhook system can emit, mirroring the API's
+#: The 17 canonical event types the webhook system can emit, mirroring the API's
 #: ``domain.WebhookEventTypes()``. The ``"*"`` wildcard is intentionally absent —
 #: it is a subscription value only, never the ``type`` of an emitted event. Used
 #: for annotations and documentation; the ``Event.type`` field is a plain ``str``
@@ -40,6 +40,8 @@ EventType = Literal[
     "video.deleted",
     "app.created",
     "app.updated",
+    "app.spend_limit_warning",
+    "app.spend_limit_exceeded",
 ]
 
 
@@ -60,8 +62,15 @@ class Event:
 
     ``data`` carries the decoded resource snapshot — a :class:`~transcodely.Job`,
     :class:`~transcodely.JobOutput`, :class:`~transcodely.Video`, or
-    :class:`~transcodely.App` for a known ``type``, or the raw ``dict`` for an
-    unrecognized one (forward compatibility).
+    :class:`~transcodely.App` for a known resource ``type``, or the raw ``dict``
+    for an unrecognized one (forward compatibility).
+
+    The two spend-limit events (``app.spend_limit_warning`` and
+    ``app.spend_limit_exceeded``) are the exception: they carry a notification
+    payload, not a resource snapshot, so ``data`` is the raw ``dict`` with keys
+    ``app_id``, ``period_start``, ``period_end`` (RFC 3339 full-dates, UTC),
+    ``limit_eur``, ``spent_eur``, ``threshold_pct`` (``80`` or ``100``), and
+    ``currency`` (always ``"EUR"``).
     """
 
     #: Event ID (``evt_*``).
@@ -99,8 +108,20 @@ RESOURCE_DECODERS: list[tuple[str, Decoder]] = [
 ]
 
 
+#: Event types that share a resource prefix but carry a notification payload
+#: rather than a resource snapshot. Their ``data`` is left as the raw ``dict``.
+_NOTIFICATION_EVENT_TYPES = frozenset({"app.spend_limit_warning", "app.spend_limit_exceeded"})
+
+
 def decoder_for_type(type: str) -> Optional[Decoder]:
-    """Return a resource decoder for ``type``, or ``None`` if the type is unknown."""
+    """Return a resource decoder for ``type``, or ``None`` if the type has none.
+
+    Unknown types and the spend-limit notification events (which share the
+    ``app.`` prefix but carry a notification payload, not an App snapshot) return
+    ``None`` — their ``data`` stays the raw ``dict``.
+    """
+    if type in _NOTIFICATION_EVENT_TYPES:
+        return None
     for prefix, decode in RESOURCE_DECODERS:
         if type.startswith(prefix):
             return decode

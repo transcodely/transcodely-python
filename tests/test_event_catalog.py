@@ -37,6 +37,16 @@ CANONICAL_EVENT_TYPES = {
     "video.deleted",
     "app.created",
     "app.updated",
+    "app.spend_limit_warning",
+    "app.spend_limit_exceeded",
+}
+
+# The two spend-limit events share the "app." prefix but carry a notification
+# payload, not a resource snapshot — they intentionally route to no resource
+# decoder (their data stays the raw dict).
+NOTIFICATION_EVENT_TYPES = {
+    "app.spend_limit_warning",
+    "app.spend_limit_exceeded",
 }
 
 
@@ -44,11 +54,11 @@ def test_event_type_literal_matches_api_catalog() -> None:
     assert set(get_args(EventType)) == CANONICAL_EVENT_TYPES
 
 
-def test_catalog_has_exactly_15_types() -> None:
+def test_catalog_has_exactly_17_types() -> None:
     types = get_args(EventType)
-    assert len(types) == 15
+    assert len(types) == 17
     # No accidental duplicates in the literal.
-    assert len(set(types)) == 15
+    assert len(set(types)) == 17
 
 
 def test_job_updated_is_not_in_catalog() -> None:
@@ -61,12 +71,21 @@ def test_wildcard_is_not_an_emitted_type() -> None:
     assert "*" not in get_args(EventType)
 
 
-def test_every_event_type_has_a_resource_decoder() -> None:
+def test_every_resource_event_type_has_a_resource_decoder() -> None:
     # RESOURCE_DECODERS is a second hand-maintained mirror (event-type prefix ->
-    # resource). Every concrete type must route to a decoder, so a newly added
-    # resource family can't silently fall through to the raw-dict path.
-    for event_type in CANONICAL_EVENT_TYPES:
+    # resource). Every concrete resource-carrying type must route to a decoder,
+    # so a newly added resource family can't silently fall through to the
+    # raw-dict path. The notification events are the deliberate exception.
+    for event_type in CANONICAL_EVENT_TYPES - NOTIFICATION_EVENT_TYPES:
         assert decoder_for_type(event_type) is not None, event_type
+
+
+def test_notification_events_have_no_resource_decoder() -> None:
+    # Spend-limit events carry a notification payload, not a resource snapshot,
+    # so they must NOT decode via the App resource decoder — their data stays the
+    # raw dict.
+    for event_type in NOTIFICATION_EVENT_TYPES:
+        assert decoder_for_type(event_type) is None, event_type
 
 
 def test_resource_decoder_prefixes_cover_the_catalog() -> None:

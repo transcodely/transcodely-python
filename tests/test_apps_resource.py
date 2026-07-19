@@ -88,3 +88,47 @@ class TestAppsList:
         assert t.calls[1][1].org_id == "org_a1b2c3d4e5"
         assert t.calls[1][1].include_archived is True
         assert t.calls[1][1].pagination.cursor == "c1"
+
+
+class TestAppsSpendLimit:
+    def _resp(self, **kwargs: Any) -> app_pb2.UpdateSpendLimitResponse:
+        return app_pb2.UpdateSpendLimitResponse(app=app_pb2.App(id="app_1", **kwargs))
+
+    def test_set_spend_limit_marks_field_presence(self) -> None:
+        t = FakeTransport({"UpdateSpendLimit": self._resp(monthly_spend_limit_eur=250.0)})
+        app = Apps(t).set_spend_limit("app_1", 250.0)
+        method, req = t.calls[0]
+        assert method == "UpdateSpendLimit"
+        assert req.app_id == "app_1"
+        # Set path marks presence on the optional field.
+        assert req.HasField("monthly_spend_limit_eur")
+        assert req.monthly_spend_limit_eur == 250.0
+        assert app.id == "app_1"
+
+    def test_clear_spend_limit_omits_the_field(self) -> None:
+        t = FakeTransport({"UpdateSpendLimit": self._resp()})
+        Apps(t).clear_spend_limit("app_1")
+        _, req = t.calls[0]
+        assert req.app_id == "app_1"
+        # Clear path leaves the optional field unset (absent) — the server reads
+        # an absent field as "clear the cap".
+        assert not req.HasField("monthly_spend_limit_eur")
+
+    def test_update_spend_limit_none_clears(self) -> None:
+        t = FakeTransport({"UpdateSpendLimit": self._resp()})
+        Apps(t).update_spend_limit("app_1", None)
+        _, req = t.calls[0]
+        assert not req.HasField("monthly_spend_limit_eur")
+
+    def test_get_spend_returns_full_response(self) -> None:
+        resp = app_pb2.GetSpendResponse(
+            spent_eur=42.0, currency="EUR", monthly_spend_limit_eur=100.0
+        )
+        t = FakeTransport({"GetSpend": resp})
+        out = Apps(t).get_spend("app_1")
+        method, req = t.calls[0]
+        assert method == "GetSpend"
+        assert req.app_id == "app_1"
+        assert out.spent_eur == 42.0
+        assert out.currency == "EUR"
+        assert out.monthly_spend_limit_eur == 100.0
