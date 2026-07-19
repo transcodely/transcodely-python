@@ -145,6 +145,39 @@ class TestJobsCreateKwargs:
         )
         assert dict(req.metadata) == {"user_id": "usr_12345", "project": "marketing-videos"}
 
+    def test_clip_as_dict(self) -> None:
+        req = _capture_create(
+            input_url="gs://b/in.mp4",
+            clip={"start_seconds": 2, "end_seconds": 7},
+        )
+        assert req.HasField("clip")
+        assert req.clip.start_seconds == 2
+        assert req.clip.end_seconds == 7
+        # Survives the wire: the sub-message round-trips.
+        roundtrip = job_pb2.CreateJobRequest.FromString(req.SerializeToString())
+        assert roundtrip.clip.start_seconds == 2
+        assert roundtrip.clip.end_seconds == 7
+
+    def test_clip_as_message(self) -> None:
+        req = _capture_create(
+            input_url="gs://b/in.mp4",
+            clip=job_pb2.ClipConfig(start_seconds=1.5, end_seconds=9),
+        )
+        assert req.HasField("clip")
+        assert req.clip.start_seconds == 1.5
+        assert req.clip.end_seconds == 9
+
+    def test_clip_open_ended_end_defaults_to_zero(self) -> None:
+        # Omitting end_seconds means "end of input"; the double defaults to 0.
+        req = _capture_create(input_url="gs://b/in.mp4", clip={"start_seconds": 10})
+        assert req.HasField("clip")
+        assert req.clip.start_seconds == 10
+        assert req.clip.end_seconds == 0
+
+    def test_clip_omitted_leaves_field_unset(self) -> None:
+        req = _capture_create(input_url="gs://b/in.mp4")
+        assert not req.HasField("clip")
+
     def test_outputs_accept_simplified_enum_strings(self) -> None:
         req = _capture_create(
             input_url="gs://b/in.mp4",
@@ -203,6 +236,7 @@ class TestJobsCreateCombined:
             delayed_start=True,
             webhook_url="https://x.test/hook",
             metadata={"batch": "b1"},
+            clip={"start_seconds": 2, "end_seconds": 7},
             idempotency_key="key-123",
             outputs=[
                 {"type": "mp4", "video": [{"codec": "h264", "resolution": "1080p"}]},
@@ -224,6 +258,8 @@ class TestJobsCreateCombined:
         assert req.delayed_start is True
         assert req.webhook_url == "https://x.test/hook"
         assert dict(req.metadata) == {"batch": "b1"}
+        assert req.clip.start_seconds == 2
+        assert req.clip.end_seconds == 7
         assert req.idempotency_key == "key-123"
         assert len(req.outputs) == 2
         assert req.outputs[1].video[1].quality == common_pb2.QUALITY_TIER_ECONOMY

@@ -31,6 +31,7 @@ class Jobs:
         delayed_start: Optional[bool] = None,
         webhook_url: Optional[str] = None,
         metadata: Optional[Mapping[str, str]] = None,
+        clip: Optional[Union[job_pb2.ClipConfig, Mapping[str, Any]]] = None,
         idempotency_key: Optional[str] = None,
         request: Optional[job_pb2.CreateJobRequest] = None,
         opts: Optional[CallOptions] = None,
@@ -48,9 +49,22 @@ class Jobs:
         ``"videos/{job_id}/{output}"``). Set ``managed=True`` to write outputs to
         Transcodely-managed hosting storage and create a video record; managed apps do
         not require an ``output_origin_id``.
+
+        ``clip`` trims the input to a sub-range before encoding — pass a
+        :class:`~transcodely.types.ClipConfig` or a plain dict like
+        ``{"start_seconds": 2, "end_seconds": 7}``. It applies job-wide (every output
+        and thumbnails/sprites are computed within the range) and reduces cost, since
+        billing keys off the produced output duration. Omit ``end_seconds`` (or leave it
+        ``0``) to encode through to the end of the input; a range outside the probed
+        input duration fails the job at probe time with ``input_clip_out_of_range``.
         """
         if request is None:
             payload: dict[str, Any] = {}
+            clip_msg: Optional[job_pb2.ClipConfig] = None
+            if isinstance(clip, job_pb2.ClipConfig):
+                clip_msg = clip
+            elif clip is not None:
+                payload["clip"] = dict(clip)
             if input_url is not None:
                 payload["input_url"] = input_url
             if input_origin_id is not None:
@@ -75,6 +89,8 @@ class Jobs:
                 payload["metadata"] = dict(metadata)
             req = job_pb2.CreateJobRequest()
             fill_from_dict(req, payload)
+            if clip_msg is not None:
+                req.clip.CopyFrom(clip_msg)
         else:
             req = request
         if not req.idempotency_key:
