@@ -27,6 +27,7 @@ class Jobs:
         managed: Optional[bool] = None,
         input_origin_id: Optional[str] = None,
         input_path: Optional[str] = None,
+        input_video_id: Optional[str] = None,
         priority: Optional[Union[int, str]] = None,
         delayed_start: Optional[bool] = None,
         webhook_url: Optional[str] = None,
@@ -40,9 +41,11 @@ class Jobs:
         Keyword arguments mirror the API's snake_case fields. Enum-valued fields —
         ``priority`` here, plus any enum inside ``outputs`` dicts — accept either the
         simplified lowercase string (``"standard"``, ``"h264"``) or the raw proto int.
-        Provide inputs via ``input_url`` (direct URL) OR ``input_origin_id`` +
-        ``input_path`` (origin mode); the server rejects both. Pass a fully-built
-        ``request=`` to bypass the convenience kwargs entirely. ``idempotency_key`` is
+        Provide inputs via exactly one of: ``input_url`` (direct URL),
+        ``input_origin_id`` + ``input_path`` (origin mode), or ``input_video_id``
+        (a hosted ``vid_`` video, e.g. to retro-caption it); the server rejects
+        more than one. Pass a fully-built ``request=`` to bypass the convenience
+        kwargs entirely. ``idempotency_key`` is
         auto-filled with a uuid4 when omitted. ``output_path_template`` overrides where
         rendered outputs are written within the output origin (e.g.
         ``"videos/{job_id}/{output}"``). Set ``managed=True`` to write outputs to
@@ -57,6 +60,8 @@ class Jobs:
                 payload["input_origin_id"] = input_origin_id
             if input_path is not None:
                 payload["input_path"] = input_path
+            if input_video_id is not None:
+                payload["input_video_id"] = input_video_id
             if output_origin_id is not None:
                 payload["output_origin_id"] = output_origin_id
             if output_path_template is not None:

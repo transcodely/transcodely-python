@@ -13,6 +13,7 @@ class SubtitleOperation(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     SUBTITLE_OPERATION_CONVERT: _ClassVar[SubtitleOperation]
     SUBTITLE_OPERATION_BURN_IN: _ClassVar[SubtitleOperation]
     SUBTITLE_OPERATION_EXTRACT: _ClassVar[SubtitleOperation]
+    SUBTITLE_OPERATION_GENERATE: _ClassVar[SubtitleOperation]
 
 class SubtitleFormat(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
@@ -26,6 +27,7 @@ SUBTITLE_OPERATION_PASSTHROUGH: SubtitleOperation
 SUBTITLE_OPERATION_CONVERT: SubtitleOperation
 SUBTITLE_OPERATION_BURN_IN: SubtitleOperation
 SUBTITLE_OPERATION_EXTRACT: SubtitleOperation
+SUBTITLE_OPERATION_GENERATE: SubtitleOperation
 SUBTITLE_FORMAT_UNSPECIFIED: SubtitleFormat
 SUBTITLE_FORMAT_SRT: SubtitleFormat
 SUBTITLE_FORMAT_WEBVTT: SubtitleFormat
@@ -73,3 +75,27 @@ class SubtitleTrack(_message.Message):
     forced: bool
     burn_in_style: BurnInStyle
     def __init__(self, operation: _Optional[_Union[SubtitleOperation, str]] = ..., source_stream_index: _Optional[int] = ..., source_url: _Optional[str] = ..., input_format: _Optional[_Union[SubtitleFormat, str]] = ..., output_format: _Optional[_Union[SubtitleFormat, str]] = ..., language: _Optional[str] = ..., label: _Optional[str] = ..., is_default: bool = ..., hearing_impaired: bool = ..., forced: bool = ..., burn_in_style: _Optional[_Union[BurnInStyle, _Mapping]] = ...) -> None: ...
+
+class SubtitleResult(_message.Message):
+    __slots__ = ("output_id", "operation", "format", "language", "label", "auto_generated", "storage_key", "url", "transcript_storage_key", "transcript_url")
+    OUTPUT_ID_FIELD_NUMBER: _ClassVar[int]
+    OPERATION_FIELD_NUMBER: _ClassVar[int]
+    FORMAT_FIELD_NUMBER: _ClassVar[int]
+    LANGUAGE_FIELD_NUMBER: _ClassVar[int]
+    LABEL_FIELD_NUMBER: _ClassVar[int]
+    AUTO_GENERATED_FIELD_NUMBER: _ClassVar[int]
+    STORAGE_KEY_FIELD_NUMBER: _ClassVar[int]
+    URL_FIELD_NUMBER: _ClassVar[int]
+    TRANSCRIPT_STORAGE_KEY_FIELD_NUMBER: _ClassVar[int]
+    TRANSCRIPT_URL_FIELD_NUMBER: _ClassVar[int]
+    output_id: str
+    operation: SubtitleOperation
+    format: SubtitleFormat
+    language: str
+    label: str
+    auto_generated: bool
+    storage_key: str
+    url: str
+    transcript_storage_key: str
+    transcript_url: str
+    def __init__(self, output_id: _Optional[str] = ..., operation: _Optional[_Union[SubtitleOperation, str]] = ..., format: _Optional[_Union[SubtitleFormat, str]] = ..., language: _Optional[str] = ..., label: _Optional[str] = ..., auto_generated: bool = ..., storage_key: _Optional[str] = ..., url: _Optional[str] = ..., transcript_storage_key: _Optional[str] = ..., transcript_url: _Optional[str] = ...) -> None: ...

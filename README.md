@@ -34,6 +34,35 @@ with Transcodely(api_key=os.environ["TRANSCODELY_API_KEY"]) as client:
 
 The simplified-string form (`"hls"`, `"h264"`, `"1080p"`) is what the API actually emits over the wire — the SDK round-trips it transparently to and from the proto enum integers.
 
+## AI captions
+
+Add auto-generated captions to any output with a `generate` subtitle track. Leave `language` empty (or set `"auto"`) to auto-detect the spoken language, or pass an ISO 639-2 code to force one. A per-job fee is metered by source minute and surfaced on `job.fees`; produced captions appear on `job.subtitle_results` with `auto_generated=True`.
+
+```python
+# Generate captions while transcoding a new source.
+client.jobs.create(
+    input_url="https://example.com/source.mp4",
+    managed=True,
+    outputs=[{
+        "type": "hls",
+        "video": [{"codec": "h264", "resolution": "1080p"}],
+        "subtitle_tracks": [{"operation": "generate", "language": "auto"}],
+    }],
+)
+
+# Retro-caption a video you've already hosted: reference it by input_video_id and
+# request a single captions-only output (no video encode).
+job = client.jobs.create(
+    input_video_id="vid_a1b2c3d4e5f6g7",
+    outputs=[{"subtitle_tracks": [{"operation": "generate"}]}],
+)
+
+for result in job.subtitle_results:
+    print(result.language, result.auto_generated, result.url)
+for fee in job.fees:
+    print(fee.fee_type, fee.amount, fee.currency)  # "captions" 0.51 "eur"
+```
+
 ## Authentication
 
 ```python
