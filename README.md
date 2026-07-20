@@ -23,6 +23,10 @@ with Transcodely(api_key=os.environ["TRANSCODELY_API_KEY"]) as client:
                 {"codec": "h264", "resolution": "720p"},
             ],
         }],
+        # Optional: encode only a sub-range of the input. Applies job-wide and
+        # reduces cost (billing keys off the produced output duration). Omit
+        # "end_seconds" (or leave 0) to encode through to the end of the input.
+        clip={"start_seconds": 2, "end_seconds": 7},
     )
     print(job.id)  # "job_a1b2c3d4e5f6"
 
