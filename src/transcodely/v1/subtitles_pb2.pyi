@@ -1,8 +1,9 @@
 from buf.validate import validate_pb2 as _validate_pb2
+from google.protobuf.internal import containers as _containers
 from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
-from typing import ClassVar as _ClassVar, Mapping as _Mapping, Optional as _Optional, Union as _Union
+from typing import ClassVar as _ClassVar, Iterable as _Iterable, Mapping as _Mapping, Optional as _Optional, Union as _Union
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
@@ -51,7 +52,7 @@ class BurnInStyle(_message.Message):
     def __init__(self, font_family: _Optional[str] = ..., font_size: _Optional[int] = ..., font_color: _Optional[str] = ..., outline_color: _Optional[str] = ..., outline_width: _Optional[int] = ..., margin_bottom: _Optional[int] = ...) -> None: ...
 
 class SubtitleTrack(_message.Message):
-    __slots__ = ("operation", "source_stream_index", "source_url", "input_format", "output_format", "language", "label", "is_default", "hearing_impaired", "forced", "burn_in_style")
+    __slots__ = ("operation", "source_stream_index", "source_url", "input_format", "output_format", "language", "label", "is_default", "hearing_impaired", "forced", "burn_in_style", "generate_chapters")
     OPERATION_FIELD_NUMBER: _ClassVar[int]
     SOURCE_STREAM_INDEX_FIELD_NUMBER: _ClassVar[int]
     SOURCE_URL_FIELD_NUMBER: _ClassVar[int]
@@ -63,6 +64,7 @@ class SubtitleTrack(_message.Message):
     HEARING_IMPAIRED_FIELD_NUMBER: _ClassVar[int]
     FORCED_FIELD_NUMBER: _ClassVar[int]
     BURN_IN_STYLE_FIELD_NUMBER: _ClassVar[int]
+    GENERATE_CHAPTERS_FIELD_NUMBER: _ClassVar[int]
     operation: SubtitleOperation
     source_stream_index: int
     source_url: str
@@ -74,7 +76,32 @@ class SubtitleTrack(_message.Message):
     hearing_impaired: bool
     forced: bool
     burn_in_style: BurnInStyle
-    def __init__(self, operation: _Optional[_Union[SubtitleOperation, str]] = ..., source_stream_index: _Optional[int] = ..., source_url: _Optional[str] = ..., input_format: _Optional[_Union[SubtitleFormat, str]] = ..., output_format: _Optional[_Union[SubtitleFormat, str]] = ..., language: _Optional[str] = ..., label: _Optional[str] = ..., is_default: bool = ..., hearing_impaired: bool = ..., forced: bool = ..., burn_in_style: _Optional[_Union[BurnInStyle, _Mapping]] = ...) -> None: ...
+    generate_chapters: bool
+    def __init__(self, operation: _Optional[_Union[SubtitleOperation, str]] = ..., source_stream_index: _Optional[int] = ..., source_url: _Optional[str] = ..., input_format: _Optional[_Union[SubtitleFormat, str]] = ..., output_format: _Optional[_Union[SubtitleFormat, str]] = ..., language: _Optional[str] = ..., label: _Optional[str] = ..., is_default: bool = ..., hearing_impaired: bool = ..., forced: bool = ..., burn_in_style: _Optional[_Union[BurnInStyle, _Mapping]] = ..., generate_chapters: bool = ...) -> None: ...
+
+class ChapterPoint(_message.Message):
+    __slots__ = ("start_seconds", "end_seconds", "title")
+    START_SECONDS_FIELD_NUMBER: _ClassVar[int]
+    END_SECONDS_FIELD_NUMBER: _ClassVar[int]
+    TITLE_FIELD_NUMBER: _ClassVar[int]
+    start_seconds: float
+    end_seconds: float
+    title: str
+    def __init__(self, start_seconds: _Optional[float] = ..., end_seconds: _Optional[float] = ..., title: _Optional[str] = ...) -> None: ...
+
+class ChapterResult(_message.Message):
+    __slots__ = ("output_id", "language", "storage_key", "url", "chapters")
+    OUTPUT_ID_FIELD_NUMBER: _ClassVar[int]
+    LANGUAGE_FIELD_NUMBER: _ClassVar[int]
+    STORAGE_KEY_FIELD_NUMBER: _ClassVar[int]
+    URL_FIELD_NUMBER: _ClassVar[int]
+    CHAPTERS_FIELD_NUMBER: _ClassVar[int]
+    output_id: str
+    language: str
+    storage_key: str
+    url: str
+    chapters: _containers.RepeatedCompositeFieldContainer[ChapterPoint]
+    def __init__(self, output_id: _Optional[str] = ..., language: _Optional[str] = ..., storage_key: _Optional[str] = ..., url: _Optional[str] = ..., chapters: _Optional[_Iterable[_Union[ChapterPoint, _Mapping]]] = ...) -> None: ...
 
 class SubtitleResult(_message.Message):
     __slots__ = ("output_id", "operation", "format", "language", "label", "auto_generated", "storage_key", "url", "transcript_storage_key", "transcript_url")
