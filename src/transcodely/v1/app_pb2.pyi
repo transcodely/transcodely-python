@@ -139,16 +139,18 @@ class EnableHostingResponse(_message.Message):
     def __init__(self, app: _Optional[_Union[App, _Mapping]] = ...) -> None: ...
 
 class HostingConfig(_message.Message):
-    __slots__ = ("default_visibility", "max_upload_size_bytes", "cors_allowed_origins", "auto_profile_defaults")
+    __slots__ = ("default_visibility", "max_upload_size_bytes", "cors_allowed_origins", "auto_profile_defaults", "delete_source_after_days")
     DEFAULT_VISIBILITY_FIELD_NUMBER: _ClassVar[int]
     MAX_UPLOAD_SIZE_BYTES_FIELD_NUMBER: _ClassVar[int]
     CORS_ALLOWED_ORIGINS_FIELD_NUMBER: _ClassVar[int]
     AUTO_PROFILE_DEFAULTS_FIELD_NUMBER: _ClassVar[int]
+    DELETE_SOURCE_AFTER_DAYS_FIELD_NUMBER: _ClassVar[int]
     default_visibility: str
     max_upload_size_bytes: int
     cors_allowed_origins: _containers.RepeatedScalarFieldContainer[str]
     auto_profile_defaults: AutoProfileDefaults
-    def __init__(self, default_visibility: _Optional[str] = ..., max_upload_size_bytes: _Optional[int] = ..., cors_allowed_origins: _Optional[_Iterable[str]] = ..., auto_profile_defaults: _Optional[_Union[AutoProfileDefaults, _Mapping]] = ...) -> None: ...
+    delete_source_after_days: int
+    def __init__(self, default_visibility: _Optional[str] = ..., max_upload_size_bytes: _Optional[int] = ..., cors_allowed_origins: _Optional[_Iterable[str]] = ..., auto_profile_defaults: _Optional[_Union[AutoProfileDefaults, _Mapping]] = ..., delete_source_after_days: _Optional[int] = ...) -> None: ...
 
 class AutoProfileDefaults(_message.Message):
     __slots__ = ("format", "codec", "max_resolution", "quality_tier", "encoding_mode")
