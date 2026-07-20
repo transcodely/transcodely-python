@@ -281,6 +281,12 @@ from transcodely.v1.subtitles_pb2 import (
     SubtitleTrack,
 )
 
+from transcodely.v1.watermark_pb2 import (
+    WatermarkAnchor,
+    WatermarkConfig,
+    WatermarkPixelPlacement,
+)
+
 from transcodely.v1.thumbnails_pb2 import (
     ThumbnailFormat,
     ThumbnailMode,
@@ -590,6 +596,9 @@ __all__ = [
     "WatchJobResponse",
     "WatchVideoRequest",
     "WatchVideoResponse",
+    "WatermarkAnchor",
+    "WatermarkConfig",
+    "WatermarkPixelPlacement",
     "WebhookDelivery",
     "WebhookEndpoint",
     "WebhookEvent",
