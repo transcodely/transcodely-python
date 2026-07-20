@@ -4,6 +4,26 @@ All notable changes to the Transcodely Python SDK will be documented in this fil
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Breaking changes are allowed on minor bumps until 1.0.0.
 
+## [0.3.2](https://github.com/transcodely/transcodely-python/compare/v0.3.1...v0.3.2) (2026-07-20)
+
+
+### Features
+
+* expose daily usage buckets and webhook endpoint health + event object-id filtering ([#23](https://github.com/transcodely/transcodely-python/issues/23)) ([e24bdd0](https://github.com/transcodely/transcodely-python/commit/e24bdd0cd2e6037d8e3ab80b536ea114f6e94cbf))
+* post-launch feature program integration (transcodely-python) ([#31](https://github.com/transcodely/transcodely-python/issues/31)) ([c498665](https://github.com/transcodely/transcodely-python/commit/c498665f5bb379186d9e7fd5374111371ed22099))
+* sync protos — video.ready/video.failed events, CreateFromUrl, clear_tags ([#25](https://github.com/transcodely/transcodely-python/issues/25)) ([e63d37b](https://github.com/transcodely/transcodely-python/commit/e63d37bf39dd7a59ea03b8780535aed6366aa103))
+* sync VideoService analytics RPCs (GetStats, ListTopVideos) ([#26](https://github.com/transcodely/transcodely-python/issues/26)) ([20fa045](https://github.com/transcodely/transcodely-python/commit/20fa04545a9fbe2c211ff5b08615b343c55c0da3))
+
+
+### Bug Fixes
+
+* **jobs:** add managed kwarg, fix quickstart examples, resync webhook vectors ([#21](https://github.com/transcodely/transcodely-python/issues/21)) ([5183bf0](https://github.com/transcodely/transcodely-python/commit/5183bf067bb6b0269a4830944f8be93dbfdfa814)), closes [#17](https://github.com/transcodely/transcodely-python/issues/17)
+
+
+### Documentation
+
+* note content-aware encoding is rejected at create ([#27](https://github.com/transcodely/transcodely-python/issues/27)) ([14e6f7c](https://github.com/transcodely/transcodely-python/commit/14e6f7c0c02af3df954c34388b070b452186c35e))
+
 ## [0.3.1](https://github.com/transcodely/transcodely-python/compare/v0.3.0...v0.3.1) (2026-07-15)
 
 
