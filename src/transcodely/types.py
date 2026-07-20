@@ -280,6 +280,8 @@ from transcodely.v1.content_aware_pb2 import (
 
 from transcodely.v1.subtitles_pb2 import (
     BurnInStyle,
+    ChapterPoint,
+    ChapterResult,
     SubtitleFormat,
     SubtitleOperation,
     SubtitleResult,
@@ -375,6 +377,8 @@ __all__ = [
     "BYOKConfig",
     "CancelJobRequest",
     "CancelJobResponse",
+    "ChapterPoint",
+    "ChapterResult",
     "CheckSlugRequest",
     "CheckSlugResponse",
     "ClipConfig",
