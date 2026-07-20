@@ -40,6 +40,7 @@ from transcodely.v1.job_pb2 import (
     AudioTrackConfig,
     CancelJobRequest,
     CancelJobResponse,
+    ClipConfig,
     ConfirmJobRequest,
     ConfirmJobResponse,
     CreateJobRequest,
@@ -50,6 +51,7 @@ from transcodely.v1.job_pb2 import (
     GetJobResponse,
     HLSConfig,
     Job,
+    JobFee,
     JobOutput,
     JobPriority,
     JobStatus,
@@ -171,6 +173,8 @@ from transcodely.v1.app_pb2 import (
     EnableHostingResponse,
     GetAppRequest,
     GetAppResponse,
+    GetSpendRequest,
+    GetSpendResponse,
     HostingConfig,
     ListAppsRequest,
     ListAppsResponse,
@@ -178,6 +182,8 @@ from transcodely.v1.app_pb2 import (
     UpdateAppResponse,
     UpdateHostingConfigRequest,
     UpdateHostingConfigResponse,
+    UpdateSpendLimitRequest,
+    UpdateSpendLimitResponse,
 )
 
 # API keys.
@@ -274,9 +280,18 @@ from transcodely.v1.content_aware_pb2 import (
 
 from transcodely.v1.subtitles_pb2 import (
     BurnInStyle,
+    ChapterPoint,
+    ChapterResult,
     SubtitleFormat,
     SubtitleOperation,
+    SubtitleResult,
     SubtitleTrack,
+)
+
+from transcodely.v1.watermark_pb2 import (
+    WatermarkAnchor,
+    WatermarkConfig,
+    WatermarkPixelPlacement,
 )
 
 from transcodely.v1.thumbnails_pb2 import (
@@ -362,8 +377,11 @@ __all__ = [
     "BYOKConfig",
     "CancelJobRequest",
     "CancelJobResponse",
+    "ChapterPoint",
+    "ChapterResult",
     "CheckSlugRequest",
     "CheckSlugResponse",
+    "ClipConfig",
     "CompleteMultipartUploadRequest",
     "CompleteMultipartUploadResponse",
     "CompletedPart",
@@ -439,6 +457,8 @@ __all__ = [
     "GetPresetBySlugResponse",
     "GetPresetRequest",
     "GetPresetResponse",
+    "GetSpendRequest",
+    "GetSpendResponse",
     "GetStatsRequest",
     "GetStatsResponse",
     "GetUploadPartUrlsRequest",
@@ -466,6 +486,7 @@ __all__ = [
     "HttpOriginConfig",
     "InputMetadata",
     "Job",
+    "JobFee",
     "JobOutput",
     "JobPriority",
     "JobStatus",
@@ -535,6 +556,7 @@ __all__ = [
     "StreamingConfig",
     "SubtitleFormat",
     "SubtitleOperation",
+    "SubtitleResult",
     "SubtitleStreamInfo",
     "SubtitleTrack",
     "ThumbnailFormat",
@@ -557,6 +579,8 @@ __all__ = [
     "UpdateOriginResponse",
     "UpdatePresetRequest",
     "UpdatePresetResponse",
+    "UpdateSpendLimitRequest",
+    "UpdateSpendLimitResponse",
     "UpdateVideoRequest",
     "UpdateVideoResponse",
     "UpdateWebhookEndpointRequest",
@@ -586,6 +610,9 @@ __all__ = [
     "WatchJobResponse",
     "WatchVideoRequest",
     "WatchVideoResponse",
+    "WatermarkAnchor",
+    "WatermarkConfig",
+    "WatermarkPixelPlacement",
     "WebhookDelivery",
     "WebhookEndpoint",
     "WebhookEvent",

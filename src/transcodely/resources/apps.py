@@ -69,3 +69,50 @@ class Apps:
         return self._t.unary(
             _SERVICE, "UpdateHostingConfig", req, app_pb2.UpdateHostingConfigResponse()
         )
+
+    def update_spend_limit(
+        self,
+        app_id: str,
+        monthly_spend_limit_eur: Optional[float] = None,
+        opts: Optional[CallOptions] = None,
+    ) -> app_pb2.App:
+        """Set or clear an app's monthly transcoding spend cap.
+
+        Pass ``monthly_spend_limit_eur`` (must be > 0) to set the cap, or leave it
+        ``None`` to clear the cap and return the app to unlimited. ``set_spend_limit``
+        and ``clear_spend_limit`` are the ergonomic shorthands.
+        """
+        req = app_pb2.UpdateSpendLimitRequest(app_id=app_id)
+        if monthly_spend_limit_eur is not None:
+            # Setting the optional field marks presence; leaving it unset omits it
+            # from the request, which the server reads as "clear the cap".
+            req.monthly_spend_limit_eur = monthly_spend_limit_eur
+        return self._t.unary(
+            _SERVICE, "UpdateSpendLimit", req, app_pb2.UpdateSpendLimitResponse(), opts
+        ).app
+
+    def set_spend_limit(
+        self, app_id: str, monthly_spend_limit_eur: float, opts: Optional[CallOptions] = None
+    ) -> app_pb2.App:
+        """Set the app's monthly transcoding spend cap in EUR (must be > 0).
+
+        Once recorded spend for the current billing period reaches the cap, new
+        jobs are rejected with the ``limit_exceeded`` error code; in-flight jobs
+        are never stopped. Use :meth:`clear_spend_limit` to return to unlimited.
+        """
+        return self.update_spend_limit(app_id, monthly_spend_limit_eur, opts)
+
+    def clear_spend_limit(self, app_id: str, opts: Optional[CallOptions] = None) -> app_pb2.App:
+        """Clear the app's monthly spend cap, returning it to unlimited (the default)."""
+        return self.update_spend_limit(app_id, None, opts)
+
+    def get_spend(
+        self, app_id: str, opts: Optional[CallOptions] = None
+    ) -> app_pb2.GetSpendResponse:
+        """Get the app's current-period transcoding spend against its limit.
+
+        Returns the billing-period bounds, EUR spent so far, the cap (if set), and
+        whether the 80% warning and 100% breach events have fired this period.
+        """
+        req = app_pb2.GetSpendRequest(app_id=app_id)
+        return self._t.unary(_SERVICE, "GetSpend", req, app_pb2.GetSpendResponse(), opts)

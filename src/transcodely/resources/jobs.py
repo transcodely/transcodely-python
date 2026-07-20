@@ -27,10 +27,12 @@ class Jobs:
         managed: Optional[bool] = None,
         input_origin_id: Optional[str] = None,
         input_path: Optional[str] = None,
+        input_video_id: Optional[str] = None,
         priority: Optional[Union[int, str]] = None,
         delayed_start: Optional[bool] = None,
         webhook_url: Optional[str] = None,
         metadata: Optional[Mapping[str, str]] = None,
+        clip: Optional[Union[job_pb2.ClipConfig, Mapping[str, Any]]] = None,
         idempotency_key: Optional[str] = None,
         request: Optional[job_pb2.CreateJobRequest] = None,
         opts: Optional[CallOptions] = None,
@@ -40,23 +42,40 @@ class Jobs:
         Keyword arguments mirror the API's snake_case fields. Enum-valued fields —
         ``priority`` here, plus any enum inside ``outputs`` dicts — accept either the
         simplified lowercase string (``"standard"``, ``"h264"``) or the raw proto int.
-        Provide inputs via ``input_url`` (direct URL) OR ``input_origin_id`` +
-        ``input_path`` (origin mode); the server rejects both. Pass a fully-built
-        ``request=`` to bypass the convenience kwargs entirely. ``idempotency_key`` is
+        Provide inputs via exactly one of: ``input_url`` (direct URL),
+        ``input_origin_id`` + ``input_path`` (origin mode), or ``input_video_id``
+        (a hosted ``vid_`` video, e.g. to retro-caption it); the server rejects
+        more than one. Pass a fully-built ``request=`` to bypass the convenience
+        kwargs entirely. ``idempotency_key`` is
         auto-filled with a uuid4 when omitted. ``output_path_template`` overrides where
         rendered outputs are written within the output origin (e.g.
         ``"videos/{job_id}/{output}"``). Set ``managed=True`` to write outputs to
         Transcodely-managed hosting storage and create a video record; managed apps do
         not require an ``output_origin_id``.
+
+        ``clip`` trims the input to a sub-range before encoding — pass a
+        :class:`~transcodely.types.ClipConfig` or a plain dict like
+        ``{"start_seconds": 2, "end_seconds": 7}``. It applies job-wide (every output
+        and thumbnails/sprites are computed within the range) and reduces cost, since
+        billing keys off the produced output duration. Omit ``end_seconds`` (or leave it
+        ``0``) to encode through to the end of the input; a range outside the probed
+        input duration fails the job at probe time with ``input_clip_out_of_range``.
         """
         if request is None:
             payload: dict[str, Any] = {}
+            clip_msg: Optional[job_pb2.ClipConfig] = None
+            if isinstance(clip, job_pb2.ClipConfig):
+                clip_msg = clip
+            elif clip is not None:
+                payload["clip"] = dict(clip)
             if input_url is not None:
                 payload["input_url"] = input_url
             if input_origin_id is not None:
                 payload["input_origin_id"] = input_origin_id
             if input_path is not None:
                 payload["input_path"] = input_path
+            if input_video_id is not None:
+                payload["input_video_id"] = input_video_id
             if output_origin_id is not None:
                 payload["output_origin_id"] = output_origin_id
             if output_path_template is not None:
@@ -75,6 +94,8 @@ class Jobs:
                 payload["metadata"] = dict(metadata)
             req = job_pb2.CreateJobRequest()
             fill_from_dict(req, payload)
+            if clip_msg is not None:
+                req.clip.CopyFrom(clip_msg)
         else:
             req = request
         if not req.idempotency_key:

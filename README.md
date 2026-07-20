@@ -23,6 +23,10 @@ with Transcodely(api_key=os.environ["TRANSCODELY_API_KEY"]) as client:
                 {"codec": "h264", "resolution": "720p"},
             ],
         }],
+        # Optional: encode only a sub-range of the input. Applies job-wide and
+        # reduces cost (billing keys off the produced output duration). Omit
+        # "end_seconds" (or leave 0) to encode through to the end of the input.
+        clip={"start_seconds": 2, "end_seconds": 7},
     )
     print(job.id)  # "job_a1b2c3d4e5f6"
 
@@ -33,6 +37,35 @@ with Transcodely(api_key=os.environ["TRANSCODELY_API_KEY"]) as client:
 ```
 
 The simplified-string form (`"hls"`, `"h264"`, `"1080p"`) is what the API actually emits over the wire — the SDK round-trips it transparently to and from the proto enum integers.
+
+## AI captions
+
+Add auto-generated captions to any output with a `generate` subtitle track. Leave `language` empty (or set `"auto"`) to auto-detect the spoken language, or pass an ISO 639-2 code to force one. A per-job fee is metered by source minute and surfaced on `job.fees`; produced captions appear on `job.subtitle_results` with `auto_generated=True`.
+
+```python
+# Generate captions while transcoding a new source.
+client.jobs.create(
+    input_url="https://example.com/source.mp4",
+    managed=True,
+    outputs=[{
+        "type": "hls",
+        "video": [{"codec": "h264", "resolution": "1080p"}],
+        "subtitle_tracks": [{"operation": "generate", "language": "auto"}],
+    }],
+)
+
+# Retro-caption a video you've already hosted: reference it by input_video_id and
+# request a single captions-only output (no video encode).
+job = client.jobs.create(
+    input_video_id="vid_a1b2c3d4e5f6g7",
+    outputs=[{"subtitle_tracks": [{"operation": "generate"}]}],
+)
+
+for result in job.subtitle_results:
+    print(result.language, result.auto_generated, result.url)
+for fee in job.fees:
+    print(fee.fee_type, fee.amount, fee.currency)  # "captions" 0.51 "eur"
+```
 
 ## Authentication
 
@@ -327,7 +360,7 @@ for event in client.events.list(app_id="app_123").auto_paging_iter():
 client.events.resend("evt_123")   # re-queue delivery to all subscribed endpoints
 ```
 
-The 15 event types are `job.created`, `job.succeeded`, `job.failed`, `job.canceled`, `job.progress`, `output.created`, `output.ready`, `output.failed`, `output.progress`, `video.uploaded`, `video.ready`, `video.failed`, `video.deleted`, `app.created`, and `app.updated`. Subscribe to `"*"` to receive all of them (including ones added later). An unrecognized future type still verifies; its `event.data` is left as a plain `dict`.
+The 17 event types are `job.created`, `job.succeeded`, `job.failed`, `job.canceled`, `job.progress`, `output.created`, `output.ready`, `output.failed`, `output.progress`, `video.uploaded`, `video.ready`, `video.failed`, `video.deleted`, `app.created`, `app.updated`, `app.spend_limit_warning`, and `app.spend_limit_exceeded`. Subscribe to `"*"` to receive all of them (including ones added later). An unrecognized future type still verifies; its `event.data` is left as a plain `dict`. The two `app.spend_limit_*` events also carry a plain `dict` (`app_id`, `period_start`, `period_end`, `limit_eur`, `spent_eur`, `threshold_pct`, `currency`), not a resource snapshot.
 
 ## Configuration
 
