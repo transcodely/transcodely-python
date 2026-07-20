@@ -82,6 +82,29 @@ def test_app_created_decodes_app() -> None:
     assert ev.data.id == "app_1"
 
 
+def test_spend_limit_event_leaves_data_as_raw_dict() -> None:
+    # Spend-limit events share the "app." prefix but carry a notification
+    # payload, not an App snapshot — data must stay the raw dict, never a
+    # (mis-decoded, empty) App.
+    notification = {
+        "app_id": "app_sl",
+        "period_start": "2026-05-01",
+        "period_end": "2026-06-01",
+        "limit_eur": 100,
+        "spent_eur": 82.5,
+        "threshold_pct": 80,
+        "currency": "EUR",
+    }
+    ev = construct(
+        envelope(
+            "app.spend_limit_warning", notification, request={"id": None, "idempotency_key": None}
+        )
+    )
+    assert ev.type == "app.spend_limit_warning"
+    assert not isinstance(ev.data, app_pb2.App)
+    assert ev.data == notification
+
+
 def test_preserves_idempotency_key() -> None:
     env = envelope(
         "job.created", {"id": "job_1"}, request={"id": "req_1", "idempotency_key": "key_abc"}

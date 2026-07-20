@@ -173,6 +173,8 @@ from transcodely.v1.app_pb2 import (
     EnableHostingResponse,
     GetAppRequest,
     GetAppResponse,
+    GetSpendRequest,
+    GetSpendResponse,
     HostingConfig,
     ListAppsRequest,
     ListAppsResponse,
@@ -180,6 +182,8 @@ from transcodely.v1.app_pb2 import (
     UpdateAppResponse,
     UpdateHostingConfigRequest,
     UpdateHostingConfigResponse,
+    UpdateSpendLimitRequest,
+    UpdateSpendLimitResponse,
 )
 
 # API keys.
@@ -449,6 +453,8 @@ __all__ = [
     "GetPresetBySlugResponse",
     "GetPresetRequest",
     "GetPresetResponse",
+    "GetSpendRequest",
+    "GetSpendResponse",
     "GetStatsRequest",
     "GetStatsResponse",
     "GetUploadPartUrlsRequest",
@@ -569,6 +575,8 @@ __all__ = [
     "UpdateOriginResponse",
     "UpdatePresetRequest",
     "UpdatePresetResponse",
+    "UpdateSpendLimitRequest",
+    "UpdateSpendLimitResponse",
     "UpdateVideoRequest",
     "UpdateVideoResponse",
     "UpdateWebhookEndpointRequest",

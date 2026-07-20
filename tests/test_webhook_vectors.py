@@ -67,7 +67,11 @@ def test_vector(v: dict[str, Any]) -> None:
         event = run()
         assert event.type == expect["event_type"]
         assert event.id == expect["event_id"]
-        assert event.data.id == expect["data_id"]
+        # Notification events (e.g. app.spend_limit_*) carry a raw dict with no
+        # resource id, so their vectors omit `data_id`; only assert it when the
+        # vector supplies it (resource-snapshot events).
+        if "data_id" in expect:
+            assert event.data.id == expect["data_id"]
         if "idempotency_key" in expect:
             assert event.request.idempotency_key == expect["idempotency_key"]
         # `request_id` is `null` for events emitted outside a request scope; the

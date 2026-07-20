@@ -19,7 +19,7 @@ APP_STATUS_ACTIVE: AppStatus
 APP_STATUS_ARCHIVED: AppStatus
 
 class App(_message.Message):
-    __slots__ = ("id", "org_id", "name", "description", "status", "created_at", "updated_at", "archived_at", "hosting_enabled", "hosting_status", "cdn_hostname", "hosting_config", "object")
+    __slots__ = ("id", "org_id", "name", "description", "status", "created_at", "updated_at", "archived_at", "hosting_enabled", "hosting_status", "cdn_hostname", "hosting_config", "object", "monthly_spend_limit_eur")
     ID_FIELD_NUMBER: _ClassVar[int]
     ORG_ID_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
@@ -33,6 +33,7 @@ class App(_message.Message):
     CDN_HOSTNAME_FIELD_NUMBER: _ClassVar[int]
     HOSTING_CONFIG_FIELD_NUMBER: _ClassVar[int]
     OBJECT_FIELD_NUMBER: _ClassVar[int]
+    MONTHLY_SPEND_LIMIT_EUR_FIELD_NUMBER: _ClassVar[int]
     id: str
     org_id: str
     name: str
@@ -46,7 +47,8 @@ class App(_message.Message):
     cdn_hostname: str
     hosting_config: HostingConfig
     object: str
-    def __init__(self, id: _Optional[str] = ..., org_id: _Optional[str] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., status: _Optional[_Union[AppStatus, str]] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., archived_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., hosting_enabled: bool = ..., hosting_status: _Optional[str] = ..., cdn_hostname: _Optional[str] = ..., hosting_config: _Optional[_Union[HostingConfig, _Mapping]] = ..., object: _Optional[str] = ...) -> None: ...
+    monthly_spend_limit_eur: float
+    def __init__(self, id: _Optional[str] = ..., org_id: _Optional[str] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., status: _Optional[_Union[AppStatus, str]] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., archived_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., hosting_enabled: bool = ..., hosting_status: _Optional[str] = ..., cdn_hostname: _Optional[str] = ..., hosting_config: _Optional[_Union[HostingConfig, _Mapping]] = ..., object: _Optional[str] = ..., monthly_spend_limit_eur: _Optional[float] = ...) -> None: ...
 
 class CreateAppRequest(_message.Message):
     __slots__ = ("org_id", "name", "description", "enable_hosting")
@@ -175,3 +177,41 @@ class UpdateHostingConfigResponse(_message.Message):
     APP_FIELD_NUMBER: _ClassVar[int]
     app: App
     def __init__(self, app: _Optional[_Union[App, _Mapping]] = ...) -> None: ...
+
+class UpdateSpendLimitRequest(_message.Message):
+    __slots__ = ("app_id", "monthly_spend_limit_eur")
+    APP_ID_FIELD_NUMBER: _ClassVar[int]
+    MONTHLY_SPEND_LIMIT_EUR_FIELD_NUMBER: _ClassVar[int]
+    app_id: str
+    monthly_spend_limit_eur: float
+    def __init__(self, app_id: _Optional[str] = ..., monthly_spend_limit_eur: _Optional[float] = ...) -> None: ...
+
+class UpdateSpendLimitResponse(_message.Message):
+    __slots__ = ("app",)
+    APP_FIELD_NUMBER: _ClassVar[int]
+    app: App
+    def __init__(self, app: _Optional[_Union[App, _Mapping]] = ...) -> None: ...
+
+class GetSpendRequest(_message.Message):
+    __slots__ = ("app_id",)
+    APP_ID_FIELD_NUMBER: _ClassVar[int]
+    app_id: str
+    def __init__(self, app_id: _Optional[str] = ...) -> None: ...
+
+class GetSpendResponse(_message.Message):
+    __slots__ = ("period_start", "period_end", "spent_eur", "monthly_spend_limit_eur", "currency", "warning_triggered", "limit_reached")
+    PERIOD_START_FIELD_NUMBER: _ClassVar[int]
+    PERIOD_END_FIELD_NUMBER: _ClassVar[int]
+    SPENT_EUR_FIELD_NUMBER: _ClassVar[int]
+    MONTHLY_SPEND_LIMIT_EUR_FIELD_NUMBER: _ClassVar[int]
+    CURRENCY_FIELD_NUMBER: _ClassVar[int]
+    WARNING_TRIGGERED_FIELD_NUMBER: _ClassVar[int]
+    LIMIT_REACHED_FIELD_NUMBER: _ClassVar[int]
+    period_start: _timestamp_pb2.Timestamp
+    period_end: _timestamp_pb2.Timestamp
+    spent_eur: float
+    monthly_spend_limit_eur: float
+    currency: str
+    warning_triggered: bool
+    limit_reached: bool
+    def __init__(self, period_start: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., period_end: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., spent_eur: _Optional[float] = ..., monthly_spend_limit_eur: _Optional[float] = ..., currency: _Optional[str] = ..., warning_triggered: bool = ..., limit_reached: bool = ...) -> None: ...
