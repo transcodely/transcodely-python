@@ -14,9 +14,11 @@ class AppStatus(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     APP_STATUS_UNSPECIFIED: _ClassVar[AppStatus]
     APP_STATUS_ACTIVE: _ClassVar[AppStatus]
     APP_STATUS_ARCHIVED: _ClassVar[AppStatus]
+    APP_STATUS_SUSPENDED: _ClassVar[AppStatus]
 APP_STATUS_UNSPECIFIED: AppStatus
 APP_STATUS_ACTIVE: AppStatus
 APP_STATUS_ARCHIVED: AppStatus
+APP_STATUS_SUSPENDED: AppStatus
 
 class App(_message.Message):
     __slots__ = ("id", "org_id", "name", "description", "status", "created_at", "updated_at", "archived_at", "hosting_enabled", "hosting_status", "cdn_hostname", "hosting_config", "object", "monthly_spend_limit_eur")

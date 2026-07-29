@@ -107,6 +107,7 @@ from transcodely.v1.video_pb2 import (
     VideoStatsDay,
     VideoStatsTotals,
     VideoStatus,
+    VideoTextTrack,
     VideoVisibility,
     WatchVideoRequest,
     WatchVideoResponse,
@@ -165,6 +166,7 @@ from transcodely.v1.origin_pb2 import (
 # Apps.
 from transcodely.v1.app_pb2 import (
     App,
+    AppStatus,
     ArchiveAppRequest,
     AutoProfileDefaults,
     CreateAppRequest,
@@ -184,6 +186,23 @@ from transcodely.v1.app_pb2 import (
     UpdateHostingConfigResponse,
     UpdateSpendLimitRequest,
     UpdateSpendLimitResponse,
+)
+
+# Billing. Read through ``client.billing``, which needs a dashboard session
+# token for an organization owner plus ``organization_id`` — an API key is
+# scoped to one app, while an invoice settles a whole organization, so API keys
+# are rejected.
+from transcodely.v1.billing_pb2 import (
+    GetInvoiceRequest,
+    GetInvoiceResponse,
+    GetUpcomingInvoiceRequest,
+    GetUpcomingInvoiceResponse,
+    Invoice,
+    InvoiceLineItem,
+    InvoiceLineType,
+    InvoiceStatus,
+    ListInvoicesRequest,
+    ListInvoicesResponse,
 )
 
 # API keys.
@@ -362,6 +381,7 @@ __all__ = [
     "AbortMultipartUploadRequest",
     "APIKey",
     "App",
+    "AppStatus",
     "ArchiveAppRequest",
     "ArchiveOriginRequest",
     "ArchivePresetRequest",
@@ -443,6 +463,8 @@ __all__ = [
     "GetAppResponse",
     "GetEndpointHealthRequest",
     "GetEndpointHealthResponse",
+    "GetInvoiceRequest",
+    "GetInvoiceResponse",
     "GetJobRequest",
     "GetJobResponse",
     "GetMembershipRequest",
@@ -461,6 +483,8 @@ __all__ = [
     "GetSpendResponse",
     "GetStatsRequest",
     "GetStatsResponse",
+    "GetUpcomingInvoiceRequest",
+    "GetUpcomingInvoiceResponse",
     "GetUploadPartUrlsRequest",
     "GetUploadPartUrlsResponse",
     "GetUsageRequest",
@@ -485,6 +509,10 @@ __all__ = [
     "HttpCredentials",
     "HttpOriginConfig",
     "InputMetadata",
+    "Invoice",
+    "InvoiceLineItem",
+    "InvoiceLineType",
+    "InvoiceStatus",
     "Job",
     "JobFee",
     "JobOutput",
@@ -496,6 +524,8 @@ __all__ = [
     "ListAppsResponse",
     "ListEventsRequest",
     "ListEventsResponse",
+    "ListInvoicesRequest",
+    "ListInvoicesResponse",
     "ListJobsRequest",
     "ListJobsResponse",
     "ListMembershipsRequest",
@@ -602,6 +632,7 @@ __all__ = [
     "VideoStatsTotals",
     "VideoStatus",
     "VideoStreamInfo",
+    "VideoTextTrack",
     "VideoVariant",
     "VideoVisibility",
     "VP9Options",

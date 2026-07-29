@@ -71,6 +71,7 @@ class Transport:
         self,
         api_key: str,
         *,
+        organization_id: Optional[str] = None,
         base_url: Optional[str] = None,
         timeout: float = 30.0,
         max_retries: int = 3,
@@ -82,6 +83,7 @@ class Transport:
         if not api_key:
             raise ValueError("Transcodely: api_key is required")
         self.api_key = api_key
+        self.organization_id = organization_id
         self.base_url = (base_url or DEFAULT_BASE_URL).rstrip("/")
         self.timeout = timeout
         self.max_retries = max_retries
@@ -218,6 +220,8 @@ class Transport:
             "transcodely-version": opts.api_version or self.api_version,
             "accept": content_type,
         }
+        if self.organization_id:
+            headers["x-organization-id"] = self.organization_id
         if idempotency_key:
             headers["idempotency-key"] = idempotency_key
         headers.update(self.default_headers)
