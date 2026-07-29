@@ -541,14 +541,29 @@ class GetJobResponse(_message.Message):
     def __init__(self, job: _Optional[_Union[Job, _Mapping]] = ...) -> None: ...
 
 class ListJobsRequest(_message.Message):
-    __slots__ = ("status", "pagination", "app_id")
+    __slots__ = ("status", "pagination", "app_id", "created_after", "created_before", "statuses", "metadata")
+    class MetadataEntry(_message.Message):
+        __slots__ = ("key", "value")
+        KEY_FIELD_NUMBER: _ClassVar[int]
+        VALUE_FIELD_NUMBER: _ClassVar[int]
+        key: str
+        value: str
+        def __init__(self, key: _Optional[str] = ..., value: _Optional[str] = ...) -> None: ...
     STATUS_FIELD_NUMBER: _ClassVar[int]
     PAGINATION_FIELD_NUMBER: _ClassVar[int]
     APP_ID_FIELD_NUMBER: _ClassVar[int]
+    CREATED_AFTER_FIELD_NUMBER: _ClassVar[int]
+    CREATED_BEFORE_FIELD_NUMBER: _ClassVar[int]
+    STATUSES_FIELD_NUMBER: _ClassVar[int]
+    METADATA_FIELD_NUMBER: _ClassVar[int]
     status: JobStatus
     pagination: _common_pb2.PaginationRequest
     app_id: str
-    def __init__(self, status: _Optional[_Union[JobStatus, str]] = ..., pagination: _Optional[_Union[_common_pb2.PaginationRequest, _Mapping]] = ..., app_id: _Optional[str] = ...) -> None: ...
+    created_after: _timestamp_pb2.Timestamp
+    created_before: _timestamp_pb2.Timestamp
+    statuses: _containers.RepeatedScalarFieldContainer[JobStatus]
+    metadata: _containers.ScalarMap[str, str]
+    def __init__(self, status: _Optional[_Union[JobStatus, str]] = ..., pagination: _Optional[_Union[_common_pb2.PaginationRequest, _Mapping]] = ..., app_id: _Optional[str] = ..., created_after: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., created_before: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., statuses: _Optional[_Iterable[_Union[JobStatus, str]]] = ..., metadata: _Optional[_Mapping[str, str]] = ...) -> None: ...
 
 class ListJobsResponse(_message.Message):
     __slots__ = ("jobs", "pagination")

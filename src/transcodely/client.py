@@ -9,6 +9,7 @@ import httpx
 from ._transport.transport import LogEvent, Transport
 from .resources.api_keys import ApiKeys
 from .resources.apps import Apps
+from .resources.billing import Billing
 from .resources.events import Events
 from .resources.health import Health
 from .resources.jobs import Jobs
@@ -37,6 +38,7 @@ class Transcodely:
         self,
         api_key: str,
         *,
+        organization_id: Optional[str] = None,
         base_url: Optional[str] = None,
         timeout: float = 30.0,
         max_retries: int = 3,
@@ -47,6 +49,7 @@ class Transcodely:
     ) -> None:
         self._transport = Transport(
             api_key,
+            organization_id=organization_id,
             base_url=base_url,
             timeout=timeout,
             max_retries=max_retries,
@@ -67,6 +70,7 @@ class Transcodely:
         self._health: Optional[Health] = None
         self._webhook_endpoints: Optional[WebhookEndpoints] = None
         self._events: Optional[Events] = None
+        self._billing: Optional[Billing] = None
 
     def close(self) -> None:
         self._transport.close()
@@ -153,6 +157,18 @@ class Transcodely:
         if self._events is None:
             self._events = Events(self._transport)
         return self._events
+
+    @property
+    def billing(self) -> Billing:
+        """The organization's invoices.
+
+        Needs a dashboard session token for an organization owner plus
+        ``organization_id`` on the client; API keys are rejected. See
+        :class:`~transcodely.resources.billing.Billing`.
+        """
+        if self._billing is None:
+            self._billing = Billing(self._transport)
+        return self._billing
 
     @property
     def webhooks(self) -> type[Webhooks]:
