@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Optional
+from typing import Any
 
 from .._transport.transport import CallOptions, Transport
 from ..pagination import Page, PageContents
@@ -20,7 +20,7 @@ class Apps:
         req = fill_from_dict(app_pb2.CreateAppRequest(), kwargs)
         return self._t.unary(_SERVICE, "Create", req, app_pb2.CreateAppResponse()).app
 
-    def get(self, id: str, opts: Optional[CallOptions] = None) -> app_pb2.App:
+    def get(self, id: str, opts: CallOptions | None = None) -> app_pb2.App:
         req = app_pb2.GetAppRequest(id=id)
         return self._t.unary(_SERVICE, "Get", req, app_pb2.GetAppResponse(), opts).app
 
@@ -31,10 +31,10 @@ class Apps:
     def list(
         self,
         *,
-        org_id: Optional[str] = None,
-        limit: Optional[int] = None,
-        include_archived: Optional[bool] = None,
-        opts: Optional[CallOptions] = None,
+        org_id: str | None = None,
+        limit: int | None = None,
+        include_archived: bool | None = None,
+        opts: CallOptions | None = None,
     ) -> Page[app_pb2.App]:
         """List apps in an organization.
 
@@ -42,7 +42,7 @@ class Apps:
         by the API. Pass ``include_archived=True`` to include archived apps.
         """
 
-        def fetch(cursor: Optional[str]) -> PageContents[app_pb2.App]:
+        def fetch(cursor: str | None) -> PageContents[app_pb2.App]:
             req = app_pb2.ListAppsRequest()
             if org_id is not None:
                 req.org_id = org_id
@@ -56,7 +56,7 @@ class Apps:
 
         return Page(fetch)
 
-    def archive(self, id: str, opts: Optional[CallOptions] = None) -> app_pb2.App:
+    def archive(self, id: str, opts: CallOptions | None = None) -> app_pb2.App:
         req = app_pb2.ArchiveAppRequest(id=id)
         return self._t.unary(_SERVICE, "Archive", req, app_pb2.ArchiveAppResponse(), opts).app
 
@@ -73,8 +73,8 @@ class Apps:
     def update_spend_limit(
         self,
         app_id: str,
-        monthly_spend_limit_eur: Optional[float] = None,
-        opts: Optional[CallOptions] = None,
+        monthly_spend_limit_eur: float | None = None,
+        opts: CallOptions | None = None,
     ) -> app_pb2.App:
         """Set or clear an app's monthly transcoding spend cap.
 
@@ -92,7 +92,7 @@ class Apps:
         ).app
 
     def set_spend_limit(
-        self, app_id: str, monthly_spend_limit_eur: float, opts: Optional[CallOptions] = None
+        self, app_id: str, monthly_spend_limit_eur: float, opts: CallOptions | None = None
     ) -> app_pb2.App:
         """Set the app's monthly transcoding spend cap in EUR (must be > 0).
 
@@ -102,13 +102,11 @@ class Apps:
         """
         return self.update_spend_limit(app_id, monthly_spend_limit_eur, opts)
 
-    def clear_spend_limit(self, app_id: str, opts: Optional[CallOptions] = None) -> app_pb2.App:
+    def clear_spend_limit(self, app_id: str, opts: CallOptions | None = None) -> app_pb2.App:
         """Clear the app's monthly spend cap, returning it to unlimited (the default)."""
         return self.update_spend_limit(app_id, None, opts)
 
-    def get_spend(
-        self, app_id: str, opts: Optional[CallOptions] = None
-    ) -> app_pb2.GetSpendResponse:
+    def get_spend(self, app_id: str, opts: CallOptions | None = None) -> app_pb2.GetSpendResponse:
         """Get the app's current-period transcoding spend against its limit.
 
         Returns the billing-period bounds, EUR spent so far, the cap (if set), and

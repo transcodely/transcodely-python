@@ -22,7 +22,6 @@ from transcodely._codec.json_codec import (
 )
 from transcodely.v1 import common_pb2, job_pb2, origin_pb2, subtitles_pb2
 
-
 # ---- Helper enum descriptors -------------------------------------------------
 
 JOB_STATUS = job_pb2.JobStatus.DESCRIPTOR

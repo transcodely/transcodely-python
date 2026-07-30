@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
-from typing import Any, Callable, Optional
+from collections.abc import Callable
 
 import httpx
+from typing_extensions import Self
 
 from ._transport.transport import LogEvent, Transport
 from .resources.api_keys import ApiKeys
@@ -38,14 +39,14 @@ class Transcodely:
         self,
         api_key: str,
         *,
-        organization_id: Optional[str] = None,
-        base_url: Optional[str] = None,
+        organization_id: str | None = None,
+        base_url: str | None = None,
         timeout: float = 30.0,
         max_retries: int = 3,
-        api_version: Optional[str] = None,
-        default_headers: Optional[dict[str, str]] = None,
-        http_client: Optional[httpx.Client] = None,
-        logger: Optional[Callable[[LogEvent], None]] = None,
+        api_version: str | None = None,
+        default_headers: dict[str, str] | None = None,
+        http_client: httpx.Client | None = None,
+        logger: Callable[[LogEvent], None] | None = None,
     ) -> None:
         self._transport = Transport(
             api_key,
@@ -58,31 +59,31 @@ class Transcodely:
             http_client=http_client,
             logger=logger,
         )
-        self._jobs: Optional[Jobs] = None
-        self._videos: Optional[Videos] = None
-        self._presets: Optional[Presets] = None
-        self._origins: Optional[Origins] = None
-        self._apps: Optional[Apps] = None
-        self._api_keys: Optional[ApiKeys] = None
-        self._organizations: Optional[Organizations] = None
-        self._memberships: Optional[Memberships] = None
-        self._users: Optional[Users] = None
-        self._health: Optional[Health] = None
-        self._webhook_endpoints: Optional[WebhookEndpoints] = None
-        self._events: Optional[Events] = None
-        self._billing: Optional[Billing] = None
+        self._jobs: Jobs | None = None
+        self._videos: Videos | None = None
+        self._presets: Presets | None = None
+        self._origins: Origins | None = None
+        self._apps: Apps | None = None
+        self._api_keys: ApiKeys | None = None
+        self._organizations: Organizations | None = None
+        self._memberships: Memberships | None = None
+        self._users: Users | None = None
+        self._health: Health | None = None
+        self._webhook_endpoints: WebhookEndpoints | None = None
+        self._events: Events | None = None
+        self._billing: Billing | None = None
 
     def close(self) -> None:
         self._transport.close()
 
-    def __enter__(self) -> "Transcodely":
+    def __enter__(self) -> Self:
         return self
 
-    def __exit__(self, *args: Any) -> None:
+    def __exit__(self, *args: object) -> None:
         self.close()
 
     @property
-    def last_request_id(self) -> Optional[str]:
+    def last_request_id(self) -> str | None:
         """Stripe-style: ID of the most recent successful or failed request."""
         return self._transport.last_request_id
 

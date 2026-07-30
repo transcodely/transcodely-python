@@ -4,7 +4,8 @@ from __future__ import annotations
 
 import random
 import time
-from typing import Callable, Generator, Optional, TypeVar
+from collections.abc import Callable, Generator
+from typing import TypeVar
 
 from .errors import APIConnectionError
 
@@ -14,7 +15,7 @@ T = TypeVar("T")
 def watch(
     factory: Callable[[], Generator[T, None, None]],
     *,
-    is_heartbeat: Optional[Callable[[T], bool]] = None,
+    is_heartbeat: Callable[[T], bool] | None = None,
     include_heartbeats: bool = False,
     max_reconnects: int = 5,
 ) -> Generator[T, None, None]:

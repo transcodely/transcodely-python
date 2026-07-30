@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Optional
+from typing import Any
 
 from .._transport.transport import CallOptions, Transport
 from ..pagination import Page, PageContents
@@ -17,7 +17,7 @@ class Organizations:
         self._t = transport
 
     def check_slug(
-        self, slug: str, opts: Optional[CallOptions] = None
+        self, slug: str, opts: CallOptions | None = None
     ) -> organization_pb2.CheckSlugResponse:
         req = organization_pb2.CheckSlugRequest(slug=slug)
         return self._t.unary(_SERVICE, "CheckSlug", req, organization_pb2.CheckSlugResponse(), opts)
@@ -32,7 +32,7 @@ class Organizations:
         ).organization
 
     def get(
-        self, id_or_slug: str, opts: Optional[CallOptions] = None
+        self, id_or_slug: str, opts: CallOptions | None = None
     ) -> organization_pb2.Organization:
         """Look up by ID (``org_*``) or slug."""
         req = organization_pb2.GetOrganizationRequest(id_or_slug=id_or_slug)
@@ -56,10 +56,10 @@ class Organizations:
     def list(
         self,
         *,
-        limit: Optional[int] = None,
-        opts: Optional[CallOptions] = None,
+        limit: int | None = None,
+        opts: CallOptions | None = None,
     ) -> Page[organization_pb2.Organization]:
-        def fetch(cursor: Optional[str]) -> PageContents[organization_pb2.Organization]:
+        def fetch(cursor: str | None) -> PageContents[organization_pb2.Organization]:
             req = organization_pb2.ListOrganizationsRequest()
             assign_pagination(req.pagination, limit=limit, cursor=cursor)
             res = self._t.unary(

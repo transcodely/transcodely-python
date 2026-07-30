@@ -7,7 +7,8 @@ implied by ``client.webhook_endpoints``.
 
 from __future__ import annotations
 
-from typing import Literal, Mapping, Optional
+from collections.abc import Mapping
+from typing import Literal
 
 from .._transport.transport import CallOptions, Transport
 from ..pagination import Page, PageContents
@@ -23,14 +24,14 @@ class WebhookEndpoints:
     def create(
         self,
         *,
-        app_id: Optional[str] = None,
-        url: Optional[str] = None,
-        enabled_events: Optional[list[str]] = None,
-        description: Optional[str] = None,
-        api_version: Optional[str] = None,
-        metadata: Optional[Mapping[str, str]] = None,
-        request: Optional[webhook_pb2.CreateWebhookEndpointRequest] = None,
-        opts: Optional[CallOptions] = None,
+        app_id: str | None = None,
+        url: str | None = None,
+        enabled_events: list[str] | None = None,
+        description: str | None = None,
+        api_version: str | None = None,
+        metadata: Mapping[str, str] | None = None,
+        request: webhook_pb2.CreateWebhookEndpointRequest | None = None,
+        opts: CallOptions | None = None,
     ) -> webhook_pb2.WebhookEndpoint:
         """Create a webhook endpoint.
 
@@ -64,7 +65,7 @@ class WebhookEndpoints:
         )
         return res.endpoint
 
-    def retrieve(self, id: str, opts: Optional[CallOptions] = None) -> webhook_pb2.WebhookEndpoint:
+    def retrieve(self, id: str, opts: CallOptions | None = None) -> webhook_pb2.WebhookEndpoint:
         req = webhook_pb2.RetrieveWebhookEndpointRequest(id=id)
         res = self._t.unary(
             _SERVICE,
@@ -79,13 +80,13 @@ class WebhookEndpoints:
         self,
         id: str,
         *,
-        url: Optional[str] = None,
-        description: Optional[str] = None,
-        enabled_events: Optional[list[str]] = None,
-        status: Optional[str] = None,
-        metadata: Optional[Mapping[str, str]] = None,
-        request: Optional[webhook_pb2.UpdateWebhookEndpointRequest] = None,
-        opts: Optional[CallOptions] = None,
+        url: str | None = None,
+        description: str | None = None,
+        enabled_events: list[str] | None = None,
+        status: str | None = None,
+        metadata: Mapping[str, str] | None = None,
+        request: webhook_pb2.UpdateWebhookEndpointRequest | None = None,
+        opts: CallOptions | None = None,
     ) -> webhook_pb2.WebhookEndpoint:
         """Update an endpoint. Only provided fields are changed; omit the rest."""
         if request is None:
@@ -112,7 +113,7 @@ class WebhookEndpoints:
         )
         return res.endpoint
 
-    def delete(self, id: str, opts: Optional[CallOptions] = None) -> None:
+    def delete(self, id: str, opts: CallOptions | None = None) -> None:
         req = webhook_pb2.DeleteWebhookEndpointRequest(id=id)
         self._t.unary(
             _SERVICE,
@@ -126,10 +127,10 @@ class WebhookEndpoints:
         self,
         *,
         app_id: str,
-        limit: Optional[int] = None,
-        opts: Optional[CallOptions] = None,
+        limit: int | None = None,
+        opts: CallOptions | None = None,
     ) -> Page[webhook_pb2.WebhookEndpoint]:
-        def fetch(cursor: Optional[str]) -> PageContents[webhook_pb2.WebhookEndpoint]:
+        def fetch(cursor: str | None) -> PageContents[webhook_pb2.WebhookEndpoint]:
             req = webhook_pb2.ListWebhookEndpointsRequest(app_id=app_id)
             pagination = common_pb2.PaginationRequest()
             if limit is not None:
@@ -152,7 +153,7 @@ class WebhookEndpoints:
         return Page(fetch)
 
     def rotate_secret(
-        self, id: str, opts: Optional[CallOptions] = None
+        self, id: str, opts: CallOptions | None = None
     ) -> webhook_pb2.WebhookEndpoint:
         """Rotate the signing secret.
 
@@ -171,7 +172,7 @@ class WebhookEndpoints:
         return res.endpoint
 
     def send_test(
-        self, endpoint_id: str, event_type: str, opts: Optional[CallOptions] = None
+        self, endpoint_id: str, event_type: str, opts: CallOptions | None = None
     ) -> webhook_pb2.WebhookDelivery:
         """Send a synthetic test event to a single endpoint.
 
@@ -189,16 +190,16 @@ class WebhookEndpoints:
     def list_deliveries(
         self,
         *,
-        endpoint_id: Optional[str] = None,
-        event_id: Optional[str] = None,
-        status: Optional[str] = None,
-        limit: Optional[int] = None,
-        opts: Optional[CallOptions] = None,
+        endpoint_id: str | None = None,
+        event_id: str | None = None,
+        status: str | None = None,
+        limit: int | None = None,
+        opts: CallOptions | None = None,
     ) -> Page[webhook_pb2.WebhookDelivery]:
         """List delivery attempts. At least one of ``endpoint_id`` / ``event_id``
         is required server-side."""
 
-        def fetch(cursor: Optional[str]) -> PageContents[webhook_pb2.WebhookDelivery]:
+        def fetch(cursor: str | None) -> PageContents[webhook_pb2.WebhookDelivery]:
             req = webhook_pb2.ListWebhookDeliveriesRequest()
             if endpoint_id is not None:
                 req.endpoint_id = endpoint_id
@@ -229,8 +230,8 @@ class WebhookEndpoints:
     def get_health(
         self,
         endpoint_id: str,
-        window: Optional[Literal["24h", "7d", "30d"]] = None,
-        opts: Optional[CallOptions] = None,
+        window: Literal["24h", "7d", "30d"] | None = None,
+        opts: CallOptions | None = None,
     ) -> webhook_pb2.GetEndpointHealthResponse:
         """Aggregate delivery health for one endpoint over a rolling window.
         Response is cached server-side for ~30 s."""

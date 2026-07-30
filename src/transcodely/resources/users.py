@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Optional, Union, cast
+from typing import Any, cast
 
 from .._transport.transport import CallOptions, Transport
 from ..pagination import Page, PageContents
@@ -16,7 +16,7 @@ class Users:
     def __init__(self, transport: Transport) -> None:
         self._t = transport
 
-    def get_me(self, opts: Optional[CallOptions] = None) -> user_pb2.UserWithOrganizations:
+    def get_me(self, opts: CallOptions | None = None) -> user_pb2.UserWithOrganizations:
         """Returns the authenticated user enriched with org memberships."""
         req = user_pb2.GetMeRequest()
         return self._t.unary(_SERVICE, "GetMe", req, user_pb2.GetMeResponse(), opts).user
@@ -25,16 +25,16 @@ class Users:
         req = fill_from_dict(user_pb2.UpdateMeRequest(), kwargs)
         return self._t.unary(_SERVICE, "UpdateMe", req, user_pb2.UpdateMeResponse()).user
 
-    def get(self, id: str, opts: Optional[CallOptions] = None) -> user_pb2.User:
+    def get(self, id: str, opts: CallOptions | None = None) -> user_pb2.User:
         req = user_pb2.GetUserRequest(id=id)
         return self._t.unary(_SERVICE, "Get", req, user_pb2.GetUserResponse(), opts).user
 
     def list(
         self,
         *,
-        status: Optional[Union[int, str]] = None,
-        limit: Optional[int] = None,
-        opts: Optional[CallOptions] = None,
+        status: int | str | None = None,
+        limit: int | None = None,
+        opts: CallOptions | None = None,
     ) -> Page[user_pb2.User]:
         """List users, optionally filtered by ``status``.
 
@@ -45,7 +45,7 @@ class Users:
             resolve_enum(status, user_pb2.UserStatus.DESCRIPTOR) if status is not None else None
         )
 
-        def fetch(cursor: Optional[str]) -> PageContents[user_pb2.User]:
+        def fetch(cursor: str | None) -> PageContents[user_pb2.User]:
             req = user_pb2.ListUsersRequest()
             if status_value is not None:
                 # resolve_enum returns a plain int; the field is typed as the enum.

@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Any, Mapping, Optional, Union
+from collections.abc import Mapping
+from typing import Any
 
 from google.protobuf import json_format
 from google.protobuf.descriptor import EnumDescriptor
@@ -23,7 +24,7 @@ def fill_from_dict(msg: Message, data: Mapping[str, Any]) -> Message:
     return msg
 
 
-def resolve_enum(value: Union[int, str], enum_desc: EnumDescriptor) -> int:
+def resolve_enum(value: int | str, enum_desc: EnumDescriptor) -> int:
     """Resolve an enum value from either the raw proto int or a string.
 
     Strings may be the simplified lowercase wire form (``"standard"``,
@@ -54,9 +55,9 @@ def resolve_enum(value: Union[int, str], enum_desc: EnumDescriptor) -> int:
 def assign_pagination(
     req_pagination: Any,
     *,
-    limit: Optional[int] = None,
-    cursor: Optional[str] = None,
-    offset: Optional[int] = None,
+    limit: int | None = None,
+    cursor: str | None = None,
+    offset: int | None = None,
 ) -> None:
     if limit is not None:
         req_pagination.limit = limit

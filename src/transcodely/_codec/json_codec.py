@@ -132,9 +132,8 @@ def _transform_field(
             parent[key] = _apply_enum(v, field.enum_type, mode)
         return
 
-    if field.type == FieldDescriptor.TYPE_MESSAGE:
-        if isinstance(v, dict):
-            transform_enums_in_dict(v, field.message_type, mode=mode)
+    if field.type == FieldDescriptor.TYPE_MESSAGE and isinstance(v, dict):
+        transform_enums_in_dict(v, field.message_type, mode=mode)
 
 
 def _apply_enum(value: str, enum_desc: EnumDescriptor, mode: str) -> str:

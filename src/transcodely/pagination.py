@@ -6,8 +6,9 @@ Every ``list`` method returns a :class:`Page` you can iterate manually or via
 
 from __future__ import annotations
 
+from collections.abc import Callable, Generator, Iterator
 from dataclasses import dataclass
-from typing import Callable, Generator, Generic, Iterator, Optional, TypeVar
+from typing import Generic, TypeVar
 
 T = TypeVar("T")
 
@@ -15,22 +16,22 @@ T = TypeVar("T")
 @dataclass
 class PageContents(Generic[T]):
     items: list[T]
-    next_cursor: Optional[str]
+    next_cursor: str | None
 
 
 class Page(Generic[T]):
     """A single page of results plus an opt-in iterator across all pages."""
 
-    def __init__(self, fetcher: Callable[[Optional[str]], PageContents[T]]) -> None:
+    def __init__(self, fetcher: Callable[[str | None], PageContents[T]]) -> None:
         self._fetcher = fetcher
-        self._first: Optional[PageContents[T]] = None
+        self._first: PageContents[T] | None = None
 
     @property
     def items(self) -> list[T]:
         return self._first_page().items
 
     @property
-    def next_cursor(self) -> Optional[str]:
+    def next_cursor(self) -> str | None:
         return self._first_page().next_cursor
 
     def __iter__(self) -> Iterator[T]:
@@ -38,11 +39,10 @@ class Page(Generic[T]):
 
     def auto_paging_iter(self) -> Generator[T, None, None]:
         """Yield every item, transparently fetching subsequent pages."""
-        cursor: Optional[str] = None
+        cursor: str | None = None
         while True:
             page = self._fetcher(cursor)
-            for item in page.items:
-                yield item
+            yield from page.items
             if not page.next_cursor:
                 return
             cursor = page.next_cursor

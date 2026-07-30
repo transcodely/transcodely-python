@@ -20,147 +20,16 @@ that go through the resource helpers' ``fill_from_dict`` path.
 """
 
 # Common: pagination, errors, codec/format/quality enums.
-from transcodely.v1.common_pb2 import (
-    AudioCodec,
-    BitrateMode,
-    Container,
-    ContentType,
-    DeliveryFormat,
-    ErrorDetails,
-    OutputFormat,
-    PaginationRequest,
-    PaginationResponse,
-    QualityTier,
-    Resolution,
-    VideoCodec,
-)
-
-# Jobs.
-from transcodely.v1.job_pb2 import (
-    AudioTrackConfig,
-    CancelJobRequest,
-    CancelJobResponse,
-    ClipConfig,
-    ConfirmJobRequest,
-    ConfirmJobResponse,
-    CreateJobRequest,
-    CreateJobResponse,
-    DASHConfig,
-    ExecutionTiming,
-    GetJobRequest,
-    GetJobResponse,
-    HLSConfig,
-    Job,
-    JobFee,
-    JobOutput,
-    JobPriority,
-    JobStatus,
-    ListJobsRequest,
-    ListJobsResponse,
-    OutputSpec,
-    OutputStatus,
-    OutputVariantResult,
-    PricingSnapshot,
-    SegmentConfig,
-    VariantPricingSnapshot,
-    VideoVariant,
-    WatchEventType,
-    WatchJobRequest,
-    WatchJobResponse,
-)
-
-# Videos.
-from transcodely.v1.video_pb2 import (
-    AbortMultipartUploadRequest,
-    CompleteMultipartUploadRequest,
-    CompleteMultipartUploadResponse,
-    CompletedPart,
-    CompleteUploadRequest,
-    CompleteUploadResponse,
-    CreateFromUrlRequest,
-    CreateFromUrlResponse,
-    CreateMultipartUploadRequest,
-    CreateMultipartUploadResponse,
-    CreateUploadRequest,
-    CreateUploadResponse,
-    DailyUsage,
-    DeleteVideoRequest,
-    GetStatsRequest,
-    GetStatsResponse,
-    GetUploadPartUrlsRequest,
-    GetUploadPartUrlsResponse,
-    GetUsageRequest,
-    GetUsageResponse,
-    GetVideoRequest,
-    GetVideoResponse,
-    ListTopVideosRequest,
-    ListTopVideosResponse,
-    ListVideosRequest,
-    ListVideosResponse,
-    TopVideo,
-    UpdateVideoRequest,
-    UpdateVideoResponse,
-    UploadPart,
-    UsageSummary,
-    Video,
-    VideoRendition,
-    VideoStatsDay,
-    VideoStatsTotals,
-    VideoStatus,
-    VideoTextTrack,
-    VideoVisibility,
-    WatchVideoRequest,
-    WatchVideoResponse,
-)
-
-# Presets.
-from transcodely.v1.preset_pb2 import (
-    ArchivePresetRequest,
-    AudioSettings,
-    CreatePresetRequest,
-    CreatePresetResponse,
-    DuplicatePresetRequest,
-    DuplicatePresetResponse,
-    GetPresetBySlugRequest,
-    GetPresetBySlugResponse,
-    GetPresetRequest,
-    GetPresetResponse,
-    ListPresetsRequest,
-    ListPresetsResponse,
-    Preset,
-    PresetVariant,
-    UpdatePresetRequest,
-    UpdatePresetResponse,
-    VideoSettings,
-)
-
-# Origins.
-from transcodely.v1.origin_pb2 import (
-    ArchiveOriginRequest,
-    CreateOriginRequest,
-    CreateOriginResponse,
-    GcsCredentials,
-    GcsOriginConfig,
-    GetOriginRequest,
-    GetOriginResponse,
-    HttpCredentials,
-    HttpOriginConfig,
-    ListOriginsRequest,
-    ListOriginsResponse,
-    Origin,
-    OriginPermission,
-    OriginProvider,
-    OriginRef,
-    OriginStatus,
-    R2Jurisdiction,
-    R2OriginConfig,
-    S3Credentials,
-    S3OriginConfig,
-    UpdateOriginRequest,
-    UpdateOriginResponse,
-    ValidateOriginRequest,
-    ValidateOriginResponse,
-    ValidationResult,
+# API keys.
+from transcodely.v1.api_key_pb2 import (
+    APIKey,
+    CreateAPIKeyRequest,
+    CreateAPIKeyResponse,
+    GetAPIKeyRequest,
+    GetAPIKeyResponse,
+    ListAPIKeysRequest,
+    ListAPIKeysResponse,
+    RevokeAPIKeyRequest,
 )
 
 # Apps.
@@ -204,17 +73,112 @@ from transcodely.v1.billing_pb2 import (
     ListInvoicesRequest,
     ListInvoicesResponse,
 )
+from transcodely.v1.codec_av1_pb2 import AV1Options
+from transcodely.v1.codec_h264_pb2 import H264Options
+from transcodely.v1.codec_h265_pb2 import H265Options
+from transcodely.v1.codec_vp9_pb2 import VP9Options
+from transcodely.v1.common_pb2 import (
+    AudioCodec,
+    BitrateMode,
+    Container,
+    ContentType,
+    DeliveryFormat,
+    ErrorDetails,
+    OutputFormat,
+    PaginationRequest,
+    PaginationResponse,
+    QualityTier,
+    Resolution,
+    VideoCodec,
+)
 
-# API keys.
-from transcodely.v1.api_key_pb2 import (
-    APIKey,
-    CreateAPIKeyRequest,
-    CreateAPIKeyResponse,
-    GetAPIKeyRequest,
-    GetAPIKeyResponse,
-    ListAPIKeysRequest,
-    ListAPIKeysResponse,
-    RevokeAPIKeyRequest,
+# Content-aware encoding is currently unavailable: the API rejects any job
+# create request that sets ``content_aware`` (per-title or auto-ABR) on an
+# output with InvalidArgument — rule ``parameter_unsupported`` on
+# ``outputs[i].content_aware`` — until worker support ships. These types stay
+# re-exported for forward compatibility.
+# See https://github.com/transcodely/api/issues/167.
+from transcodely.v1.content_aware_pb2 import (
+    AutoABRConfig,
+    ContentAnalysis,
+    ContentAwareConfig,
+    ContentAwareMode,
+)
+
+# Feature configs.
+from transcodely.v1.drm_pb2 import (
+    BYOKConfig,
+    DRMConfig,
+    DRMSystem,
+    EncryptionScheme,
+)
+from transcodely.v1.drm_pb2 import KeyServerConfig as DRMKeyServerConfig
+from transcodely.v1.hdr_pb2 import (
+    HDRConfig,
+    HDRFormat,
+    HDRMode,
+    ToneMapping,
+)
+
+# Health.
+from transcodely.v1.health_pb2 import (
+    ComponentHealth,
+    HealthCheckRequest,
+    HealthCheckResponse,
+)
+
+# Jobs.
+from transcodely.v1.job_pb2 import (
+    AudioTrackConfig,
+    CancelJobRequest,
+    CancelJobResponse,
+    ClipConfig,
+    ConfirmJobRequest,
+    ConfirmJobResponse,
+    CreateJobRequest,
+    CreateJobResponse,
+    DASHConfig,
+    ExecutionTiming,
+    GetJobRequest,
+    GetJobResponse,
+    HLSConfig,
+    Job,
+    JobFee,
+    JobOutput,
+    JobPriority,
+    JobStatus,
+    ListJobsRequest,
+    ListJobsResponse,
+    OutputSpec,
+    OutputStatus,
+    OutputVariantResult,
+    PricingSnapshot,
+    SegmentConfig,
+    VariantPricingSnapshot,
+    VideoVariant,
+    WatchEventType,
+    WatchJobRequest,
+    WatchJobResponse,
+)
+from transcodely.v1.media_pb2 import (
+    AudioStreamInfo,
+    InputMetadata,
+    SubtitleStreamInfo,
+    VideoStreamInfo,
+)
+
+# Memberships.
+from transcodely.v1.membership_pb2 import (
+    GetMembershipRequest,
+    GetMembershipResponse,
+    ListMembershipsRequest,
+    ListMembershipsResponse,
+    Membership,
+    MembershipRole,
+    MembershipWithUser,
+    RemoveMembershipRequest,
+    UpdateMembershipRoleRequest,
+    UpdateMembershipRoleResponse,
 )
 
 # Organizations.
@@ -232,18 +196,75 @@ from transcodely.v1.organization_pb2 import (
     UpdateOrganizationResponse,
 )
 
-# Memberships.
-from transcodely.v1.membership_pb2 import (
-    GetMembershipRequest,
-    GetMembershipResponse,
-    ListMembershipsRequest,
-    ListMembershipsResponse,
-    Membership,
-    MembershipRole,
-    MembershipWithUser,
-    RemoveMembershipRequest,
-    UpdateMembershipRoleRequest,
-    UpdateMembershipRoleResponse,
+# Origins.
+from transcodely.v1.origin_pb2 import (
+    ArchiveOriginRequest,
+    CreateOriginRequest,
+    CreateOriginResponse,
+    GcsCredentials,
+    GcsOriginConfig,
+    GetOriginRequest,
+    GetOriginResponse,
+    HttpCredentials,
+    HttpOriginConfig,
+    ListOriginsRequest,
+    ListOriginsResponse,
+    Origin,
+    OriginPermission,
+    OriginProvider,
+    OriginRef,
+    OriginStatus,
+    R2Jurisdiction,
+    R2OriginConfig,
+    S3Credentials,
+    S3OriginConfig,
+    UpdateOriginRequest,
+    UpdateOriginResponse,
+    ValidateOriginRequest,
+    ValidateOriginResponse,
+    ValidationResult,
+)
+
+# Presets.
+from transcodely.v1.preset_pb2 import (
+    ArchivePresetRequest,
+    AudioSettings,
+    CreatePresetRequest,
+    CreatePresetResponse,
+    DuplicatePresetRequest,
+    DuplicatePresetResponse,
+    GetPresetBySlugRequest,
+    GetPresetBySlugResponse,
+    GetPresetRequest,
+    GetPresetResponse,
+    ListPresetsRequest,
+    ListPresetsResponse,
+    Preset,
+    PresetVariant,
+    UpdatePresetRequest,
+    UpdatePresetResponse,
+    VideoSettings,
+)
+from transcodely.v1.streaming_pb2 import (
+    GOPAlignmentMode,
+    HLSPlaylistType,
+    HLSSegmentFormat,
+    StreamingConfig,
+)
+from transcodely.v1.subtitles_pb2 import (
+    BurnInStyle,
+    ChapterPoint,
+    ChapterResult,
+    SubtitleFormat,
+    SubtitleOperation,
+    SubtitleResult,
+    SubtitleTrack,
+)
+from transcodely.v1.thumbnails_pb2 import (
+    ThumbnailFormat,
+    ThumbnailMode,
+    ThumbnailResult,
+    ThumbnailSpec,
 )
 
 # Users.
@@ -261,83 +282,54 @@ from transcodely.v1.user_pb2 import (
     UserWithOrganizations,
 )
 
-# Health.
-from transcodely.v1.health_pb2 import (
-    ComponentHealth,
-    HealthCheckRequest,
-    HealthCheckResponse,
+# Videos.
+from transcodely.v1.video_pb2 import (
+    AbortMultipartUploadRequest,
+    CompletedPart,
+    CompleteMultipartUploadRequest,
+    CompleteMultipartUploadResponse,
+    CompleteUploadRequest,
+    CompleteUploadResponse,
+    CreateFromUrlRequest,
+    CreateFromUrlResponse,
+    CreateMultipartUploadRequest,
+    CreateMultipartUploadResponse,
+    CreateUploadRequest,
+    CreateUploadResponse,
+    DailyUsage,
+    DeleteVideoRequest,
+    GetStatsRequest,
+    GetStatsResponse,
+    GetUploadPartUrlsRequest,
+    GetUploadPartUrlsResponse,
+    GetUsageRequest,
+    GetUsageResponse,
+    GetVideoRequest,
+    GetVideoResponse,
+    ListTopVideosRequest,
+    ListTopVideosResponse,
+    ListVideosRequest,
+    ListVideosResponse,
+    TopVideo,
+    UpdateVideoRequest,
+    UpdateVideoResponse,
+    UploadPart,
+    UsageSummary,
+    Video,
+    VideoRendition,
+    VideoStatsDay,
+    VideoStatsTotals,
+    VideoStatus,
+    VideoTextTrack,
+    VideoVisibility,
+    WatchVideoRequest,
+    WatchVideoResponse,
 )
-
-# Feature configs.
-from transcodely.v1.drm_pb2 import (
-    BYOKConfig,
-    DRMConfig,
-    DRMSystem,
-    EncryptionScheme,
-)
-from transcodely.v1.drm_pb2 import KeyServerConfig as DRMKeyServerConfig
-
-from transcodely.v1.hdr_pb2 import (
-    HDRConfig,
-    HDRFormat,
-    HDRMode,
-    ToneMapping,
-)
-
-# Content-aware encoding is currently unavailable: the API rejects any job
-# create request that sets ``content_aware`` (per-title or auto-ABR) on an
-# output with InvalidArgument — rule ``parameter_unsupported`` on
-# ``outputs[i].content_aware`` — until worker support ships. These types stay
-# re-exported for forward compatibility.
-# See https://github.com/transcodely/api/issues/167.
-from transcodely.v1.content_aware_pb2 import (
-    AutoABRConfig,
-    ContentAnalysis,
-    ContentAwareConfig,
-    ContentAwareMode,
-)
-
-from transcodely.v1.subtitles_pb2 import (
-    BurnInStyle,
-    ChapterPoint,
-    ChapterResult,
-    SubtitleFormat,
-    SubtitleOperation,
-    SubtitleResult,
-    SubtitleTrack,
-)
-
 from transcodely.v1.watermark_pb2 import (
     WatermarkAnchor,
     WatermarkConfig,
     WatermarkPixelPlacement,
 )
-
-from transcodely.v1.thumbnails_pb2 import (
-    ThumbnailFormat,
-    ThumbnailMode,
-    ThumbnailResult,
-    ThumbnailSpec,
-)
-
-from transcodely.v1.streaming_pb2 import (
-    GOPAlignmentMode,
-    HLSPlaylistType,
-    HLSSegmentFormat,
-    StreamingConfig,
-)
-
-from transcodely.v1.media_pb2 import (
-    AudioStreamInfo,
-    InputMetadata,
-    SubtitleStreamInfo,
-    VideoStreamInfo,
-)
-
-from transcodely.v1.codec_h264_pb2 import H264Options
-from transcodely.v1.codec_h265_pb2 import H265Options
-from transcodely.v1.codec_vp9_pb2 import VP9Options
-from transcodely.v1.codec_av1_pb2 import AV1Options
 
 # Webhooks. The proto ``Event`` (wire shape) is intentionally not surfaced here —
 # the customer-facing event is the unified ``Event`` dataclass below; reach the
@@ -378,8 +370,9 @@ from transcodely.v1.webhook_pb2 import (
 from .webhooks import Event, EventRequest, EventType, WebhookEvent
 
 __all__ = [
-    "AbortMultipartUploadRequest",
     "APIKey",
+    "AV1Options",
+    "AbortMultipartUploadRequest",
     "App",
     "AppStatus",
     "ArchiveAppRequest",
@@ -391,10 +384,9 @@ __all__ = [
     "AudioTrackConfig",
     "AutoABRConfig",
     "AutoProfileDefaults",
-    "AV1Options",
+    "BYOKConfig",
     "BitrateMode",
     "BurnInStyle",
-    "BYOKConfig",
     "CancelJobRequest",
     "CancelJobResponse",
     "ChapterPoint",
@@ -404,9 +396,9 @@ __all__ = [
     "ClipConfig",
     "CompleteMultipartUploadRequest",
     "CompleteMultipartUploadResponse",
-    "CompletedPart",
     "CompleteUploadRequest",
     "CompleteUploadResponse",
+    "CompletedPart",
     "ComponentHealth",
     "ConfirmJobRequest",
     "ConfirmJobResponse",
@@ -435,15 +427,15 @@ __all__ = [
     "CreateUploadResponse",
     "CreateWebhookEndpointRequest",
     "CreateWebhookEndpointResponse",
-    "DailyUsage",
     "DASHConfig",
+    "DRMConfig",
+    "DRMKeyServerConfig",
+    "DRMSystem",
+    "DailyUsage",
     "DeleteVideoRequest",
     "DeleteWebhookEndpointRequest",
     "DeleteWebhookEndpointResponse",
     "DeliveryFormat",
-    "DRMConfig",
-    "DRMKeyServerConfig",
-    "DRMSystem",
     "DuplicatePresetRequest",
     "DuplicatePresetResponse",
     "EnableHostingRequest",
@@ -455,6 +447,7 @@ __all__ = [
     "EventRequest",
     "EventType",
     "ExecutionTiming",
+    "GOPAlignmentMode",
     "GcsCredentials",
     "GcsOriginConfig",
     "GetAPIKeyRequest",
@@ -467,10 +460,10 @@ __all__ = [
     "GetInvoiceResponse",
     "GetJobRequest",
     "GetJobResponse",
-    "GetMembershipRequest",
-    "GetMembershipResponse",
     "GetMeRequest",
     "GetMeResponse",
+    "GetMembershipRequest",
+    "GetMembershipResponse",
     "GetOrganizationRequest",
     "GetOrganizationResponse",
     "GetOriginRequest",
@@ -493,18 +486,17 @@ __all__ = [
     "GetUserResponse",
     "GetVideoRequest",
     "GetVideoResponse",
-    "GOPAlignmentMode",
     "H264Options",
     "H265Options",
     "HDRConfig",
     "HDRFormat",
     "HDRMode",
-    "HealthBucket",
-    "HealthCheckRequest",
-    "HealthCheckResponse",
     "HLSConfig",
     "HLSPlaylistType",
     "HLSSegmentFormat",
+    "HealthBucket",
+    "HealthCheckRequest",
+    "HealthCheckResponse",
     "HostingConfig",
     "HttpCredentials",
     "HttpOriginConfig",
@@ -599,10 +591,10 @@ __all__ = [
     "UpdateAppResponse",
     "UpdateHostingConfigRequest",
     "UpdateHostingConfigResponse",
-    "UpdateMembershipRoleRequest",
-    "UpdateMembershipRoleResponse",
     "UpdateMeRequest",
     "UpdateMeResponse",
+    "UpdateMembershipRoleRequest",
+    "UpdateMembershipRoleResponse",
     "UpdateOrganizationRequest",
     "UpdateOrganizationResponse",
     "UpdateOriginRequest",
@@ -620,6 +612,7 @@ __all__ = [
     "User",
     "UserOrganization",
     "UserWithOrganizations",
+    "VP9Options",
     "ValidateOriginRequest",
     "ValidateOriginResponse",
     "ValidationResult",
@@ -635,7 +628,6 @@ __all__ = [
     "VideoTextTrack",
     "VideoVariant",
     "VideoVisibility",
-    "VP9Options",
     "WatchEventType",
     "WatchJobRequest",
     "WatchJobResponse",

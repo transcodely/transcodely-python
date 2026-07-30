@@ -4,6 +4,10 @@ from __future__ import annotations
 
 import pytest
 
+from transcodely._transport.error_mapping import (
+    connection_error,
+    map_http_error,
+)
 from transcodely.errors import (
     APIConnectionError,
     APIError,
@@ -14,10 +18,6 @@ from transcodely.errors import (
     PermissionError,
     PreconditionError,
     RateLimitError,
-)
-from transcodely._transport.error_mapping import (
-    connection_error,
-    map_http_error,
 )
 
 

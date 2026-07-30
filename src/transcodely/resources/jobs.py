@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Any, Generator, Mapping, Optional, Union, cast
+from collections.abc import Generator, Mapping
+from typing import Any, cast
 
 from .._transport.transport import CallOptions, Transport
 from ..pagination import Page, PageContents
@@ -19,23 +20,23 @@ class Jobs:
 
     def create(
         self,
-        input_url: Optional[str] = None,
-        outputs: Optional[list[Mapping[str, Any]]] = None,
+        input_url: str | None = None,
+        outputs: list[Mapping[str, Any]] | None = None,
         *,
-        output_origin_id: Optional[str] = None,
-        output_path_template: Optional[str] = None,
-        managed: Optional[bool] = None,
-        input_origin_id: Optional[str] = None,
-        input_path: Optional[str] = None,
-        input_video_id: Optional[str] = None,
-        priority: Optional[Union[int, str]] = None,
-        delayed_start: Optional[bool] = None,
-        webhook_url: Optional[str] = None,
-        metadata: Optional[Mapping[str, str]] = None,
-        clip: Optional[Union[job_pb2.ClipConfig, Mapping[str, Any]]] = None,
-        idempotency_key: Optional[str] = None,
-        request: Optional[job_pb2.CreateJobRequest] = None,
-        opts: Optional[CallOptions] = None,
+        output_origin_id: str | None = None,
+        output_path_template: str | None = None,
+        managed: bool | None = None,
+        input_origin_id: str | None = None,
+        input_path: str | None = None,
+        input_video_id: str | None = None,
+        priority: int | str | None = None,
+        delayed_start: bool | None = None,
+        webhook_url: str | None = None,
+        metadata: Mapping[str, str] | None = None,
+        clip: job_pb2.ClipConfig | Mapping[str, Any] | None = None,
+        idempotency_key: str | None = None,
+        request: job_pb2.CreateJobRequest | None = None,
+        opts: CallOptions | None = None,
     ) -> job_pb2.Job:
         """Create a new transcoding job.
 
@@ -63,7 +64,7 @@ class Jobs:
         """
         if request is None:
             payload: dict[str, Any] = {}
-            clip_msg: Optional[job_pb2.ClipConfig] = None
+            clip_msg: job_pb2.ClipConfig | None = None
             if isinstance(clip, job_pb2.ClipConfig):
                 clip_msg = clip
             elif clip is not None:
@@ -105,18 +106,18 @@ class Jobs:
         res = self._t.unary(_SERVICE, "Create", req, job_pb2.CreateJobResponse(), opts)
         return res.job
 
-    def get(self, id: str, opts: Optional[CallOptions] = None) -> job_pb2.Job:
+    def get(self, id: str, opts: CallOptions | None = None) -> job_pb2.Job:
         req = job_pb2.GetJobRequest(id=id)
         return self._t.unary(_SERVICE, "Get", req, job_pb2.GetJobResponse(), opts).job
 
     def list(
         self,
         *,
-        status: Optional[Union[int, str]] = None,
-        limit: Optional[int] = None,
-        offset: Optional[int] = None,
-        pagination: Optional[Mapping[str, Any]] = None,
-        opts: Optional[CallOptions] = None,
+        status: int | str | None = None,
+        limit: int | None = None,
+        offset: int | None = None,
+        pagination: Mapping[str, Any] | None = None,
+        opts: CallOptions | None = None,
     ) -> Page[job_pb2.Job]:
         """List jobs, optionally filtered by ``status``.
 
@@ -133,7 +134,7 @@ class Jobs:
         eff_offset = offset if offset is not None else pag.get("offset")
         start_cursor = pag.get("cursor")
 
-        def fetch(cursor: Optional[str]) -> PageContents[job_pb2.Job]:
+        def fetch(cursor: str | None) -> PageContents[job_pb2.Job]:
             req = job_pb2.ListJobsRequest()
             if status_value is not None:
                 # resolve_enum returns a plain int; the field is typed as the enum.
@@ -152,11 +153,11 @@ class Jobs:
 
         return Page(fetch)
 
-    def cancel(self, id: str, opts: Optional[CallOptions] = None) -> job_pb2.Job:
+    def cancel(self, id: str, opts: CallOptions | None = None) -> job_pb2.Job:
         req = job_pb2.CancelJobRequest(id=id)
         return self._t.unary(_SERVICE, "Cancel", req, job_pb2.CancelJobResponse(), opts).job
 
-    def confirm(self, id: str, opts: Optional[CallOptions] = None) -> job_pb2.Job:
+    def confirm(self, id: str, opts: CallOptions | None = None) -> job_pb2.Job:
         req = job_pb2.ConfirmJobRequest(id=id)
         return self._t.unary(_SERVICE, "Confirm", req, job_pb2.ConfirmJobResponse(), opts).job
 
@@ -166,7 +167,7 @@ class Jobs:
         *,
         include_heartbeats: bool = False,
         max_reconnects: int = 5,
-        opts: Optional[CallOptions] = None,
+        opts: CallOptions | None = None,
     ) -> Generator[job_pb2.WatchJobResponse, None, None]:
         """Stream live job state. Auto-reconnects + filters HEARTBEAT events by default."""
 
