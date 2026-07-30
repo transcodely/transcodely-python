@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Optional, Union, cast
+from typing import Any, cast
 
 from .._transport.transport import CallOptions, Transport
 from ..pagination import Page, PageContents
@@ -19,9 +19,9 @@ class Memberships:
     def list(
         self,
         *,
-        status: Optional[Union[int, str]] = None,
-        limit: Optional[int] = None,
-        opts: Optional[CallOptions] = None,
+        status: int | str | None = None,
+        limit: int | None = None,
+        opts: CallOptions | None = None,
     ) -> Page[membership_pb2.MembershipWithUser]:
         """List memberships, optionally filtered by ``status``.
 
@@ -34,7 +34,7 @@ class Memberships:
             else None
         )
 
-        def fetch(cursor: Optional[str]) -> PageContents[membership_pb2.MembershipWithUser]:
+        def fetch(cursor: str | None) -> PageContents[membership_pb2.MembershipWithUser]:
             req = membership_pb2.ListMembershipsRequest()
             if status_value is not None:
                 # resolve_enum returns a plain int; the field is typed as the enum.
@@ -49,7 +49,7 @@ class Memberships:
 
         return Page(fetch)
 
-    def get(self, id: str, opts: Optional[CallOptions] = None) -> membership_pb2.MembershipWithUser:
+    def get(self, id: str, opts: CallOptions | None = None) -> membership_pb2.MembershipWithUser:
         req = membership_pb2.GetMembershipRequest(id=id)
         return self._t.unary(
             _SERVICE, "Get", req, membership_pb2.GetMembershipResponse(), opts
@@ -64,6 +64,6 @@ class Memberships:
             membership_pb2.UpdateMembershipRoleResponse(),
         ).membership
 
-    def remove(self, id: str, opts: Optional[CallOptions] = None) -> None:
+    def remove(self, id: str, opts: CallOptions | None = None) -> None:
         req = membership_pb2.RemoveMembershipRequest(id=id)
         self._t.unary(_SERVICE, "Remove", req, membership_pb2.RemoveMembershipResponse(), opts)

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Generator, Iterable
+from collections.abc import Generator, Iterable
 
 import pytest
 
@@ -11,13 +11,11 @@ from transcodely.streaming import watch
 
 
 def _gen(items: Iterable[dict]) -> Generator[dict, None, None]:
-    for item in items:
-        yield item
+    yield from items
 
 
 def _gen_then_raise(items: Iterable[dict], err: Exception) -> Generator[dict, None, None]:
-    for item in items:
-        yield item
+    yield from items
     raise err
 
 

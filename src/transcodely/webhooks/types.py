@@ -10,8 +10,9 @@ was pulled from :meth:`Events.retrieve`.
 
 from __future__ import annotations
 
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass
-from typing import Any, Callable, Literal, Mapping, Optional
+from typing import Any, Literal
 
 from google.protobuf.message import Message
 
@@ -52,9 +53,9 @@ class EventRequest:
 
     #: Request ID (``req_*``), or ``None`` for events emitted outside a request
     #: scope (worker-callback events like ``job.succeeded`` and every test send).
-    id: Optional[str]
+    id: str | None
     #: Idempotency key the original request carried, or ``None``.
-    idempotency_key: Optional[str]
+    idempotency_key: str | None
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -114,7 +115,7 @@ RESOURCE_DECODERS: list[tuple[str, Decoder]] = [
 _NOTIFICATION_EVENT_TYPES = frozenset({"app.spend_limit_warning", "app.spend_limit_exceeded"})
 
 
-def decoder_for_type(type: str) -> Optional[Decoder]:
+def decoder_for_type(type: str) -> Decoder | None:
     """Return a resource decoder for ``type``, or ``None`` if the type has none.
 
     Unknown types and the spend-limit notification events (which share the
@@ -130,10 +131,10 @@ def decoder_for_type(type: str) -> Optional[Decoder]:
 
 
 __all__ = [
+    "RESOURCE_DECODERS",
     "Event",
     "EventRequest",
     "EventType",
-    "RESOURCE_DECODERS",
     "WebhookEvent",
     "decoder_for_type",
 ]

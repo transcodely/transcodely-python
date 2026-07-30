@@ -37,12 +37,7 @@ fast = ["orjson>=3.10"]
 dev = [
     "pytest>=8.0",
     "pytest-asyncio>=0.23",
-    # Upper bound is deliberate: ruff 0.16 promoted UP007/UP045 (and others) into
-    # its default rule set, which flags the Optional[...]/Union[...] style used
-    # throughout this repo — 257 findings on an untouched master. Adopting the
-    # new rules is a mechanical `ruff check --fix` sweep that belongs in its own
-    # PR, not in whatever change happens to run CI first after a ruff release.
-    "ruff>=0.5,<0.16",
+    "ruff>=0.16",
     "mypy>=1.10",
 ]
 

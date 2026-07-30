@@ -2,18 +2,16 @@
 
 from __future__ import annotations
 
-from typing import Optional
-
 import pytest
 
 from transcodely.pagination import Page, PageContents
 
 
 def fake_pages(pages: list[PageContents[int]]):  # type: ignore[no-untyped-def]
-    cursors: list[Optional[str]] = []
+    cursors: list[str | None] = []
     i = {"n": 0}
 
-    def fetch(cursor: Optional[str]) -> PageContents[int]:
+    def fetch(cursor: str | None) -> PageContents[int]:
         cursors.append(cursor)
         if i["n"] >= len(pages):
             raise RuntimeError("ran out of pages")
@@ -28,7 +26,7 @@ class TestPage:
     def test_first_page_is_lazy_and_cached(self) -> None:
         calls = {"n": 0}
 
-        def fetch(cursor: Optional[str]) -> PageContents[int]:
+        def fetch(cursor: str | None) -> PageContents[int]:
             calls["n"] += 1
             return PageContents(items=[1, 2, 3], next_cursor=None)
 
@@ -68,7 +66,7 @@ class TestPage:
         assert list(page.auto_paging_iter()) == []
 
     def test_auto_paging_propagates_fetcher_errors(self) -> None:
-        def fetch(cursor: Optional[str]) -> PageContents[int]:
+        def fetch(cursor: str | None) -> PageContents[int]:
             if cursor is None:
                 return PageContents(items=[1], next_cursor="c1")
             raise RuntimeError("boom")

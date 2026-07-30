@@ -8,7 +8,8 @@ against a duck-typed FakeTransport (no live server).
 
 from __future__ import annotations
 
-from typing import Any, Callable, Optional, Union
+from collections.abc import Callable
+from typing import Any
 
 from transcodely.resources.videos import Videos
 from transcodely.v1 import video_pb2
@@ -17,7 +18,7 @@ from transcodely.v1 import video_pb2
 class FakeTransport:
     """Duck-typed stand-in for Transport that returns canned responses per method."""
 
-    def __init__(self, responses: dict[str, Union[Any, Callable[[Any], Any]]]) -> None:
+    def __init__(self, responses: dict[str, Any | Callable[[Any], Any]]) -> None:
         self._responses = responses
         self.calls: list[tuple[str, Any]] = []
 
@@ -27,7 +28,7 @@ class FakeTransport:
         method_name: str,
         request: Any,
         response: Any,
-        opts: Optional[Any] = None,
+        opts: Any | None = None,
     ) -> Any:
         self.calls.append((method_name, request))
         r = self._responses[method_name]

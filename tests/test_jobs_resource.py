@@ -9,7 +9,8 @@ test_events_resource.py.
 
 from __future__ import annotations
 
-from typing import Any, Callable, Optional, Union
+from collections.abc import Callable
+from typing import Any
 
 import pytest
 
@@ -21,7 +22,7 @@ from transcodely.v1 import common_pb2, job_pb2, streaming_pb2, subtitles_pb2
 class FakeTransport:
     """Duck-typed stand-in for Transport that returns canned responses per method."""
 
-    def __init__(self, responses: dict[str, Union[Any, Callable[[Any], Any]]]) -> None:
+    def __init__(self, responses: dict[str, Any | Callable[[Any], Any]]) -> None:
         self._responses = responses
         self.calls: list[tuple[str, Any]] = []
 
@@ -31,7 +32,7 @@ class FakeTransport:
         method_name: str,
         request: Any,
         response: Any,
-        opts: Optional[Any] = None,
+        opts: Any | None = None,
     ) -> Any:
         self.calls.append((method_name, request))
         r = self._responses[method_name]
@@ -52,7 +53,7 @@ def _list_first_request(**kwargs: Any) -> job_pb2.ListJobsRequest:
         pagination=common_pb2.PaginationResponse(next_cursor=""),
     )
     t = FakeTransport({"List": resp})
-    Jobs(t).list(**kwargs).items  # `.items` triggers the first fetch  # type: ignore[arg-type]
+    _ = Jobs(t).list(**kwargs).items  # triggers the first fetch  # type: ignore[arg-type]
     return t.calls[0][1]
 
 

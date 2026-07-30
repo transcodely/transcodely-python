@@ -11,7 +11,7 @@ from __future__ import annotations
 import hashlib
 import hmac
 import time
-from typing import Callable, Optional, Union
+from collections.abc import Callable
 
 from ..errors import WebhookSignatureError, WebhookTimestampError
 
@@ -35,7 +35,7 @@ def _parse_header(header: str) -> tuple[int, list[str]]:
     HMAC-SHA-256. Unknown keys are ignored so future scheme versions don't
     break older receivers.
     """
-    timestamp: Optional[int] = None
+    timestamp: int | None = None
     signatures: list[str] = []
     for part in header.split(","):
         eq = part.find("=")
@@ -62,12 +62,12 @@ def _parse_header(header: str) -> tuple[int, list[str]]:
 
 
 def verify_signature(
-    raw_body: Union[str, bytes],
+    raw_body: str | bytes,
     sig_header: str,
-    secret: Union[str, list[str]],
+    secret: str | list[str],
     *,
     tolerance: int = DEFAULT_TOLERANCE_SECONDS,
-    now: Optional[Callable[[], int]] = None,
+    now: Callable[[], int] | None = None,
 ) -> None:
     """Verify a webhook signature. Raises on failure; returns ``None`` on success.
 
@@ -88,7 +88,7 @@ def verify_signature(
 
     secrets = [secret] if isinstance(secret, str) else secret
     body_bytes = raw_body.encode("utf-8") if isinstance(raw_body, str) else raw_body
-    payload = f"{timestamp}.".encode("utf-8") + body_bytes
+    payload = f"{timestamp}.".encode() + body_bytes
 
     for s in secrets:
         expected = hmac.new(s.encode("utf-8"), payload, hashlib.sha256).hexdigest()

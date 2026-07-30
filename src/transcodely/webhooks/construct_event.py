@@ -7,7 +7,8 @@ from __future__ import annotations
 
 import json
 import math
-from typing import Any, Callable, Mapping, Optional, Union
+from collections.abc import Callable, Mapping
+from typing import Any
 
 from ..errors import WebhookPayloadError
 from .signature import DEFAULT_TOLERANCE_SECONDS, verify_signature
@@ -15,12 +16,12 @@ from .types import Event, EventRequest, decoder_for_type
 
 
 def construct_event(
-    raw_body: Union[str, bytes],
+    raw_body: str | bytes,
     sig_header: str,
-    secret: Union[str, list[str]],
+    secret: str | list[str],
     *,
     tolerance: int = DEFAULT_TOLERANCE_SECONDS,
-    now: Optional[Callable[[], int]] = None,
+    now: Callable[[], int] | None = None,
 ) -> Event:
     """Verify a signed webhook delivery and return the typed :class:`Event`.
 

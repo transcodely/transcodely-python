@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 import json
-from typing import Any, Mapping, Optional
+from collections.abc import Mapping
+from typing import Any
 
 from ..errors import (
     APIConnectionError,
@@ -55,7 +56,7 @@ def map_http_error(*, status: int, body: Any, headers: Mapping[str, str]) -> Tra
         return InvalidRequestError(message, **kwargs)
     if status == 429:
         retry_after = _header(headers, "retry-after")
-        retry_after_ms: Optional[int] = None
+        retry_after_ms: int | None = None
         if retry_after:
             try:
                 retry_after_ms = max(0, int(retry_after) * 1000)
@@ -69,7 +70,7 @@ def map_http_error(*, status: int, body: Any, headers: Mapping[str, str]) -> Tra
     return APIError(message, **kwargs)
 
 
-def connection_error(cause: BaseException, message: Optional[str] = None) -> APIConnectionError:
+def connection_error(cause: BaseException, message: str | None = None) -> APIConnectionError:
     msg = message or str(cause) or "network request failed"
     err = APIConnectionError(msg)
     err.__cause__ = cause
@@ -82,21 +83,21 @@ def _parse_body(body: Any) -> dict[str, Any]:
     if isinstance(body, (bytes, bytearray)):
         try:
             return json.loads(body.decode("utf-8"))
-        except Exception:
+        except (UnicodeDecodeError, json.JSONDecodeError):
             return {"message": body.decode("utf-8", errors="replace")}
     if isinstance(body, str):
         try:
             return json.loads(body)
-        except Exception:
+        except json.JSONDecodeError:
             return {"message": body}
     return {}
 
 
-def _header(headers: Mapping[str, str], key: str) -> Optional[str]:
+def _header(headers: Mapping[str, str], key: str) -> str | None:
     # httpx headers are case-insensitive but expose .get with the lowercase form.
     if hasattr(headers, "get"):
         try:
             return headers.get(key) or headers.get(key.title())
-        except Exception:
+        except Exception:  # noqa: BLE001 — headers may be any duck-typed mapping
             return None
     return None

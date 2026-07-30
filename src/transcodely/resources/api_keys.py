@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Optional
+from typing import Any
 
 from .._transport.transport import CallOptions, Transport
 from ..pagination import Page, PageContents
@@ -21,17 +21,17 @@ class ApiKeys:
         req = fill_from_dict(api_key_pb2.CreateAPIKeyRequest(), kwargs)
         return self._t.unary(_SERVICE, "Create", req, api_key_pb2.CreateAPIKeyResponse())
 
-    def get(self, id: str, opts: Optional[CallOptions] = None) -> api_key_pb2.APIKey:
+    def get(self, id: str, opts: CallOptions | None = None) -> api_key_pb2.APIKey:
         req = api_key_pb2.GetAPIKeyRequest(id=id)
         return self._t.unary(_SERVICE, "Get", req, api_key_pb2.GetAPIKeyResponse(), opts).api_key
 
     def list(
         self,
         *,
-        limit: Optional[int] = None,
-        opts: Optional[CallOptions] = None,
+        limit: int | None = None,
+        opts: CallOptions | None = None,
     ) -> Page[api_key_pb2.APIKey]:
-        def fetch(cursor: Optional[str]) -> PageContents[api_key_pb2.APIKey]:
+        def fetch(cursor: str | None) -> PageContents[api_key_pb2.APIKey]:
             req = api_key_pb2.ListAPIKeysRequest()
             assign_pagination(req.pagination, limit=limit, cursor=cursor)
             res = self._t.unary(_SERVICE, "List", req, api_key_pb2.ListAPIKeysResponse(), opts)
@@ -41,7 +41,7 @@ class ApiKeys:
 
         return Page(fetch)
 
-    def revoke(self, id: str, opts: Optional[CallOptions] = None) -> api_key_pb2.APIKey:
+    def revoke(self, id: str, opts: CallOptions | None = None) -> api_key_pb2.APIKey:
         req = api_key_pb2.RevokeAPIKeyRequest(id=id)
         return self._t.unary(
             _SERVICE, "Revoke", req, api_key_pb2.RevokeAPIKeyResponse(), opts

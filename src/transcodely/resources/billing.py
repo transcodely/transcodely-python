@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from typing import Optional
-
 from .._transport.transport import CallOptions, Transport
 from ..pagination import Page, PageContents
 from ..v1 import billing_pb2
@@ -39,8 +37,8 @@ class Billing:
     def list_invoices(
         self,
         *,
-        limit: Optional[int] = None,
-        opts: Optional[CallOptions] = None,
+        limit: int | None = None,
+        opts: CallOptions | None = None,
     ) -> Page[billing_pb2.Invoice]:
         """Page through finalized invoices, newest period first.
 
@@ -50,7 +48,7 @@ class Billing:
         :meth:`retrieve_upcoming`.
         """
 
-        def fetch(cursor: Optional[str]) -> PageContents[billing_pb2.Invoice]:
+        def fetch(cursor: str | None) -> PageContents[billing_pb2.Invoice]:
             req = billing_pb2.ListInvoicesRequest()
             assign_pagination(req.pagination, limit=limit, cursor=cursor)
             res = self._t.unary(
@@ -63,7 +61,7 @@ class Billing:
 
         return Page(fetch)
 
-    def retrieve(self, invoice_id: str, opts: Optional[CallOptions] = None) -> billing_pb2.Invoice:
+    def retrieve(self, invoice_id: str, opts: CallOptions | None = None) -> billing_pb2.Invoice:
         """Retrieve one invoice by ID (``inv_*``), including its line items."""
         req = billing_pb2.GetInvoiceRequest(id=invoice_id)
         return self._t.unary(
@@ -74,7 +72,7 @@ class Billing:
             opts,
         ).invoice
 
-    def retrieve_upcoming(self, opts: Optional[CallOptions] = None) -> billing_pb2.Invoice:
+    def retrieve_upcoming(self, opts: CallOptions | None = None) -> billing_pb2.Invoice:
         """Retrieve the statement for the period currently accruing.
 
         Computed live from settled jobs rather than stored, so its ``id`` is

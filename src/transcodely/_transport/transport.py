@@ -19,11 +19,13 @@ from __future__ import annotations
 import random
 import struct
 import time
+from collections.abc import Callable, Generator, Iterable
 from dataclasses import dataclass, field
-from typing import Any, Callable, Generator, Iterable, Optional, TypeVar
+from typing import Any, TypeVar
 
 import httpx
 from google.protobuf.message import Message
+from typing_extensions import Self
 
 from .._codec import json_codec
 from ..errors import RateLimitError, TranscodelyError
@@ -39,10 +41,10 @@ TRes = TypeVar("TRes", bound=Message)
 class CallOptions:
     """Per-call overrides for timeout, retries, idempotency, headers."""
 
-    timeout: Optional[float] = None
-    max_retries: Optional[int] = None
-    idempotency_key: Optional[str] = None
-    api_version: Optional[str] = None
+    timeout: float | None = None
+    max_retries: int | None = None
+    idempotency_key: str | None = None
+    api_version: str | None = None
     headers: dict[str, str] = field(default_factory=dict)
 
 
@@ -52,9 +54,9 @@ class LogEvent:
     method: str
     duration_ms: int
     attempt: int
-    status: Optional[int] = None
-    request_id: Optional[str] = None
-    error: Optional[TranscodelyError] = None
+    status: int | None = None
+    request_id: str | None = None
+    error: TranscodelyError | None = None
 
 
 _WRITE_PREFIXES = ("Create", "Update", "Delete", "Cancel", "Confirm", "Revoke", "Archive", "Enable")
@@ -71,14 +73,14 @@ class Transport:
         self,
         api_key: str,
         *,
-        organization_id: Optional[str] = None,
-        base_url: Optional[str] = None,
+        organization_id: str | None = None,
+        base_url: str | None = None,
         timeout: float = 30.0,
         max_retries: int = 3,
-        api_version: Optional[str] = None,
-        default_headers: Optional[dict[str, str]] = None,
-        http_client: Optional[httpx.Client] = None,
-        logger: Optional[Callable[[LogEvent], None]] = None,
+        api_version: str | None = None,
+        default_headers: dict[str, str] | None = None,
+        http_client: httpx.Client | None = None,
+        logger: Callable[[LogEvent], None] | None = None,
     ) -> None:
         if not api_key:
             raise ValueError("Transcodely: api_key is required")
@@ -93,16 +95,16 @@ class Transport:
         self._owns_client = http_client is None
         self._logger = logger
         #: ID of the most recent successful or failed request, Stripe-style.
-        self.last_request_id: Optional[str] = None
+        self.last_request_id: str | None = None
 
     def close(self) -> None:
         if self._owns_client:
             self._client.close()
 
-    def __enter__(self) -> "Transport":
+    def __enter__(self) -> Self:
         return self
 
-    def __exit__(self, *args: Any) -> None:
+    def __exit__(self, *args: object) -> None:
         self.close()
 
     # ---------- unary ----------
@@ -113,7 +115,7 @@ class Transport:
         method_name: str,
         request: Message,
         response: TRes,
-        opts: Optional[CallOptions] = None,
+        opts: CallOptions | None = None,
     ) -> TRes:
         opts = opts or CallOptions()
         url = f"{self.base_url}/{service_name}/{method_name}"
@@ -163,7 +165,7 @@ class Transport:
         method_name: str,
         request: Message,
         response_factory: Callable[[], TRes],
-        opts: Optional[CallOptions] = None,
+        opts: CallOptions | None = None,
     ) -> Generator[TRes, None, None]:
         opts = opts or CallOptions()
         url = f"{self.base_url}/{service_name}/{method_name}"
@@ -209,7 +211,7 @@ class Transport:
         self,
         opts: CallOptions,
         content_type: str,
-        idempotency_key: Optional[str] = None,
+        idempotency_key: str | None = None,
     ) -> dict[str, str]:
         headers = {
             "content-type": content_type,
@@ -232,7 +234,7 @@ class Transport:
         if self._logger is not None:
             try:
                 self._logger(event)
-            except Exception:
+            except Exception:  # noqa: BLE001, S110 — a caller's logger must never break requests
                 pass
 
     def _with_retry(
@@ -243,7 +245,7 @@ class Transport:
         fn: Callable[[int], TRes],
     ) -> TRes:
         max_retries = opts.max_retries if opts.max_retries is not None else self.max_retries
-        last_error: Optional[BaseException] = None
+        last_error: BaseException | None = None
         for attempt in range(1, max_retries + 2):
             try:
                 return fn(attempt)
@@ -264,9 +266,7 @@ def _is_retryable(exc: BaseException) -> bool:
         return True
     if exc.__class__.__name__ == "APIConnectionError":
         return True
-    if exc.http_status is not None and exc.http_status >= 500:
-        return True
-    return False
+    return exc.http_status is not None and exc.http_status >= 500
 
 
 def _sleep_backoff(attempt: int, exc: BaseException) -> None:
@@ -312,5 +312,5 @@ def _try_json(data: bytes) -> Any:
         import json
 
         return json.loads(data.decode("utf-8"))
-    except Exception:
+    except (UnicodeDecodeError, json.JSONDecodeError):
         return data.decode("utf-8", errors="replace")

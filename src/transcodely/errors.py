@@ -8,7 +8,7 @@ error handling. Mirrors the TypeScript and Go SDK error classes.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Optional
+from typing import Any
 
 
 @dataclass(frozen=True)
@@ -26,19 +26,19 @@ class TranscodelyError(Exception):
         self,
         message: str,
         *,
-        code: Optional[str] = None,
-        type: Optional[str] = None,
-        errors: Optional[list[FieldViolation]] = None,
-        http_status: Optional[int] = None,
-        request_id: Optional[str] = None,
+        code: str | None = None,
+        type: str | None = None,
+        errors: list[FieldViolation] | None = None,
+        http_status: int | None = None,
+        request_id: str | None = None,
         raw: Any = None,
     ) -> None:
         super().__init__(message)
-        self.code: Optional[str] = code
-        self.type: Optional[str] = type
+        self.code: str | None = code
+        self.type: str | None = type
         self.errors: list[FieldViolation] = errors or []
-        self.http_status: Optional[int] = http_status
-        self.request_id: Optional[str] = request_id
+        self.http_status: int | None = http_status
+        self.request_id: str | None = request_id
         self.raw: Any = raw
 
     def __repr__(self) -> str:
@@ -79,11 +79,11 @@ class RateLimitError(TranscodelyError):
         self,
         message: str,
         *,
-        retry_after_ms: Optional[int] = None,
+        retry_after_ms: int | None = None,
         **kwargs: Any,
     ) -> None:
         super().__init__(message, **kwargs)
-        self.retry_after_ms: Optional[int] = retry_after_ms
+        self.retry_after_ms: int | None = retry_after_ms
 
 
 class InvalidRequestError(TranscodelyError):

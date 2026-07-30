@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Any, Generator, Optional
+from collections.abc import Generator
+from typing import Any
 
 from .._transport.transport import CallOptions, Transport
 from ..pagination import Page, PageContents
@@ -72,18 +73,18 @@ class Videos:
             video_pb2.AbortMultipartUploadResponse(),
         )
 
-    def get(self, id: str, opts: Optional[CallOptions] = None) -> video_pb2.Video:
+    def get(self, id: str, opts: CallOptions | None = None) -> video_pb2.Video:
         req = video_pb2.GetVideoRequest(id=id)
         return self._t.unary(_SERVICE, "Get", req, video_pb2.GetVideoResponse(), opts).video
 
     def list(
         self,
         *,
-        page_size: Optional[int] = None,
-        status: Optional[str] = None,
-        opts: Optional[CallOptions] = None,
+        page_size: int | None = None,
+        status: str | None = None,
+        opts: CallOptions | None = None,
     ) -> Page[video_pb2.Video]:
-        def fetch(cursor: Optional[str]) -> PageContents[video_pb2.Video]:
+        def fetch(cursor: str | None) -> PageContents[video_pb2.Video]:
             req = video_pb2.ListVideosRequest()
             if page_size is not None:
                 req.page_size = page_size
@@ -100,7 +101,7 @@ class Videos:
         req = fill_from_dict(video_pb2.UpdateVideoRequest(), kwargs)
         return self._t.unary(_SERVICE, "Update", req, video_pb2.UpdateVideoResponse()).video
 
-    def delete(self, id: str, opts: Optional[CallOptions] = None) -> None:
+    def delete(self, id: str, opts: CallOptions | None = None) -> None:
         req = video_pb2.DeleteVideoRequest(id=id)
         self._t.unary(_SERVICE, "Delete", req, video_pb2.DeleteVideoResponse(), opts)
 
@@ -110,7 +111,7 @@ class Videos:
         *,
         include_heartbeats: bool = False,
         max_reconnects: int = 5,
-        opts: Optional[CallOptions] = None,
+        opts: CallOptions | None = None,
     ) -> Generator[video_pb2.WatchVideoResponse, None, None]:
         def factory() -> Generator[video_pb2.WatchVideoResponse, None, None]:
             req = video_pb2.WatchVideoRequest(id=id)

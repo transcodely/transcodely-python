@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import json
 from datetime import datetime
-from typing import Any, Optional
+from typing import Any
 
 from .._transport.transport import CallOptions, Transport
 from ..pagination import Page, PageContents
@@ -26,7 +26,7 @@ class Events:
     def __init__(self, transport: Transport) -> None:
         self._t = transport
 
-    def retrieve(self, id: str, opts: Optional[CallOptions] = None) -> Event:
+    def retrieve(self, id: str, opts: CallOptions | None = None) -> Event:
         req = webhook_pb2.RetrieveEventRequest(id=id)
         res = self._t.unary(
             _SERVICE, "RetrieveEvent", req, webhook_pb2.RetrieveEventResponse(), opts
@@ -37,8 +37,8 @@ class Events:
         self,
         id: str,
         *,
-        endpoint_ids: Optional[list[str]] = None,
-        opts: Optional[CallOptions] = None,
+        endpoint_ids: list[str] | None = None,
+        opts: CallOptions | None = None,
     ) -> list[webhook_pb2.WebhookDelivery]:
         """Resend an existing event, creating new pending delivery records — one
         per target endpoint. When ``endpoint_ids`` is omitted, resends to every
@@ -53,13 +53,13 @@ class Events:
         self,
         *,
         app_id: str,
-        type: Optional[str] = None,
-        created_after: Optional[datetime] = None,
-        created_before: Optional[datetime] = None,
-        limit: Optional[int] = None,
-        opts: Optional[CallOptions] = None,
+        type: str | None = None,
+        created_after: datetime | None = None,
+        created_before: datetime | None = None,
+        limit: int | None = None,
+        opts: CallOptions | None = None,
     ) -> Page[Event]:
-        def fetch(cursor: Optional[str]) -> PageContents[Event]:
+        def fetch(cursor: str | None) -> PageContents[Event]:
             req = webhook_pb2.ListEventsRequest(app_id=app_id)
             if type is not None:
                 req.type = type
