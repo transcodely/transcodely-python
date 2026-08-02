@@ -22,6 +22,7 @@ class ThumbnailFormat(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     THUMBNAIL_FORMAT_JPEG: _ClassVar[ThumbnailFormat]
     THUMBNAIL_FORMAT_PNG: _ClassVar[ThumbnailFormat]
     THUMBNAIL_FORMAT_WEBP: _ClassVar[ThumbnailFormat]
+    THUMBNAIL_FORMAT_MP4: _ClassVar[ThumbnailFormat]
 THUMBNAIL_MODE_UNSPECIFIED: ThumbnailMode
 THUMBNAIL_MODE_SINGLE: ThumbnailMode
 THUMBNAIL_MODE_INTERVAL: ThumbnailMode
@@ -32,6 +33,7 @@ THUMBNAIL_FORMAT_UNSPECIFIED: ThumbnailFormat
 THUMBNAIL_FORMAT_JPEG: ThumbnailFormat
 THUMBNAIL_FORMAT_PNG: ThumbnailFormat
 THUMBNAIL_FORMAT_WEBP: ThumbnailFormat
+THUMBNAIL_FORMAT_MP4: ThumbnailFormat
 
 class ThumbnailSpec(_message.Message):
     __slots__ = ("mode", "format", "width", "height", "quality", "timestamp", "interval_seconds", "timestamps", "sprite_columns", "path_template", "duration_seconds", "fps", "start_offsets")
