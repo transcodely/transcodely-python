@@ -4,6 +4,13 @@ All notable changes to the Transcodely Python SDK will be documented in this fil
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Breaking changes are allowed on minor bumps until 1.0.0.
 
+## [0.3.4](https://github.com/transcodely/transcodely-python/compare/v0.3.3...v0.3.4) (2026-08-02)
+
+
+### Features
+
+* **client:** animated preview fps up to 30 + mp4-only format ([06f47a3](https://github.com/transcodely/transcodely-python/commit/06f47a30a0774dd6ec648feaa8b3f3b96c2bbfe0))
+
 ## [0.3.3](https://github.com/transcodely/transcodely-python/compare/v0.3.2...v0.3.3) (2026-08-02)
 
 
