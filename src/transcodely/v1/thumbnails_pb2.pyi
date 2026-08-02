@@ -64,7 +64,7 @@ class ThumbnailSpec(_message.Message):
     def __init__(self, mode: _Optional[_Union[ThumbnailMode, str]] = ..., format: _Optional[_Union[ThumbnailFormat, str]] = ..., width: _Optional[int] = ..., height: _Optional[int] = ..., quality: _Optional[int] = ..., timestamp: _Optional[float] = ..., interval_seconds: _Optional[float] = ..., timestamps: _Optional[_Iterable[float]] = ..., sprite_columns: _Optional[int] = ..., path_template: _Optional[str] = ..., duration_seconds: _Optional[float] = ..., fps: _Optional[int] = ..., start_offsets: _Optional[_Iterable[float]] = ...) -> None: ...
 
 class ThumbnailResult(_message.Message):
-    __slots__ = ("storage_key", "url", "mode", "format", "width", "height", "index")
+    __slots__ = ("storage_key", "url", "mode", "format", "width", "height", "index", "signed_url")
     STORAGE_KEY_FIELD_NUMBER: _ClassVar[int]
     URL_FIELD_NUMBER: _ClassVar[int]
     MODE_FIELD_NUMBER: _ClassVar[int]
@@ -72,6 +72,7 @@ class ThumbnailResult(_message.Message):
     WIDTH_FIELD_NUMBER: _ClassVar[int]
     HEIGHT_FIELD_NUMBER: _ClassVar[int]
     INDEX_FIELD_NUMBER: _ClassVar[int]
+    SIGNED_URL_FIELD_NUMBER: _ClassVar[int]
     storage_key: str
     url: str
     mode: str
@@ -79,4 +80,5 @@ class ThumbnailResult(_message.Message):
     width: int
     height: int
     index: int
-    def __init__(self, storage_key: _Optional[str] = ..., url: _Optional[str] = ..., mode: _Optional[str] = ..., format: _Optional[str] = ..., width: _Optional[int] = ..., height: _Optional[int] = ..., index: _Optional[int] = ...) -> None: ...
+    signed_url: str
+    def __init__(self, storage_key: _Optional[str] = ..., url: _Optional[str] = ..., mode: _Optional[str] = ..., format: _Optional[str] = ..., width: _Optional[int] = ..., height: _Optional[int] = ..., index: _Optional[int] = ..., signed_url: _Optional[str] = ...) -> None: ...

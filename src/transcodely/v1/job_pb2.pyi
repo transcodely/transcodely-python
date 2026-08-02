@@ -253,7 +253,7 @@ class VariantPricingSnapshot(_message.Message):
     def __init__(self, index: _Optional[int] = ..., codec: _Optional[_Union[_common_pb2.VideoCodec, str]] = ..., resolution: _Optional[_Union[_common_pb2.Resolution, str]] = ..., framerate: _Optional[int] = ..., quality: _Optional[_Union[_common_pb2.QualityTier, str]] = ..., width: _Optional[int] = ..., height: _Optional[int] = ..., base_price: _Optional[float] = ..., codec_multiplier: _Optional[float] = ..., resolution_multiplier: _Optional[float] = ..., framerate_multiplier: _Optional[float] = ..., quality_multiplier: _Optional[float] = ..., resolution_tier: _Optional[_Union[_common_pb2.Resolution, str]] = ..., actual_framerate: _Optional[float] = ..., pixel_count: _Optional[int] = ..., estimated_cost: _Optional[float] = ..., actual_cost: _Optional[float] = ..., status: _Optional[str] = ..., progress: _Optional[int] = ..., feature_multiplier: _Optional[float] = ...) -> None: ...
 
 class JobOutput(_message.Message):
-    __slots__ = ("id", "spec", "status", "progress", "output_url", "output_size_bytes", "duration_seconds", "pricing", "estimated_duration_seconds", "estimated_cost", "actual_cost", "error_code", "error_message", "started_at", "completed_at", "preset_id", "preset_slug", "variant_pricing", "object", "width", "height", "average_bitrate_kbps", "variant_results")
+    __slots__ = ("id", "spec", "status", "progress", "output_url", "output_size_bytes", "duration_seconds", "pricing", "estimated_duration_seconds", "estimated_cost", "actual_cost", "error_code", "error_message", "started_at", "completed_at", "preset_id", "preset_slug", "variant_pricing", "object", "width", "height", "average_bitrate_kbps", "variant_results", "signed_url")
     ID_FIELD_NUMBER: _ClassVar[int]
     SPEC_FIELD_NUMBER: _ClassVar[int]
     STATUS_FIELD_NUMBER: _ClassVar[int]
@@ -277,6 +277,7 @@ class JobOutput(_message.Message):
     HEIGHT_FIELD_NUMBER: _ClassVar[int]
     AVERAGE_BITRATE_KBPS_FIELD_NUMBER: _ClassVar[int]
     VARIANT_RESULTS_FIELD_NUMBER: _ClassVar[int]
+    SIGNED_URL_FIELD_NUMBER: _ClassVar[int]
     id: str
     spec: OutputSpec
     status: OutputStatus
@@ -300,7 +301,8 @@ class JobOutput(_message.Message):
     height: int
     average_bitrate_kbps: int
     variant_results: _containers.RepeatedCompositeFieldContainer[OutputVariantResult]
-    def __init__(self, id: _Optional[str] = ..., spec: _Optional[_Union[OutputSpec, _Mapping]] = ..., status: _Optional[_Union[OutputStatus, str]] = ..., progress: _Optional[int] = ..., output_url: _Optional[str] = ..., output_size_bytes: _Optional[int] = ..., duration_seconds: _Optional[int] = ..., pricing: _Optional[_Union[PricingSnapshot, _Mapping]] = ..., estimated_duration_seconds: _Optional[int] = ..., estimated_cost: _Optional[float] = ..., actual_cost: _Optional[float] = ..., error_code: _Optional[str] = ..., error_message: _Optional[str] = ..., started_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., completed_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., preset_id: _Optional[str] = ..., preset_slug: _Optional[str] = ..., variant_pricing: _Optional[_Iterable[_Union[VariantPricingSnapshot, _Mapping]]] = ..., object: _Optional[str] = ..., width: _Optional[int] = ..., height: _Optional[int] = ..., average_bitrate_kbps: _Optional[int] = ..., variant_results: _Optional[_Iterable[_Union[OutputVariantResult, _Mapping]]] = ...) -> None: ...
+    signed_url: str
+    def __init__(self, id: _Optional[str] = ..., spec: _Optional[_Union[OutputSpec, _Mapping]] = ..., status: _Optional[_Union[OutputStatus, str]] = ..., progress: _Optional[int] = ..., output_url: _Optional[str] = ..., output_size_bytes: _Optional[int] = ..., duration_seconds: _Optional[int] = ..., pricing: _Optional[_Union[PricingSnapshot, _Mapping]] = ..., estimated_duration_seconds: _Optional[int] = ..., estimated_cost: _Optional[float] = ..., actual_cost: _Optional[float] = ..., error_code: _Optional[str] = ..., error_message: _Optional[str] = ..., started_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., completed_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., preset_id: _Optional[str] = ..., preset_slug: _Optional[str] = ..., variant_pricing: _Optional[_Iterable[_Union[VariantPricingSnapshot, _Mapping]]] = ..., object: _Optional[str] = ..., width: _Optional[int] = ..., height: _Optional[int] = ..., average_bitrate_kbps: _Optional[int] = ..., variant_results: _Optional[_Iterable[_Union[OutputVariantResult, _Mapping]]] = ..., signed_url: _Optional[str] = ...) -> None: ...
 
 class OutputVariantResult(_message.Message):
     __slots__ = ("index", "width", "height", "average_bitrate_kbps", "size_bytes")
