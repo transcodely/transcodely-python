@@ -104,7 +104,7 @@ class ChapterResult(_message.Message):
     def __init__(self, output_id: _Optional[str] = ..., language: _Optional[str] = ..., storage_key: _Optional[str] = ..., url: _Optional[str] = ..., chapters: _Optional[_Iterable[_Union[ChapterPoint, _Mapping]]] = ...) -> None: ...
 
 class SubtitleResult(_message.Message):
-    __slots__ = ("output_id", "operation", "format", "language", "label", "auto_generated", "storage_key", "url", "transcript_storage_key", "transcript_url")
+    __slots__ = ("output_id", "operation", "format", "language", "label", "auto_generated", "storage_key", "url", "transcript_storage_key", "transcript_url", "signed_url", "transcript_signed_url")
     OUTPUT_ID_FIELD_NUMBER: _ClassVar[int]
     OPERATION_FIELD_NUMBER: _ClassVar[int]
     FORMAT_FIELD_NUMBER: _ClassVar[int]
@@ -115,6 +115,8 @@ class SubtitleResult(_message.Message):
     URL_FIELD_NUMBER: _ClassVar[int]
     TRANSCRIPT_STORAGE_KEY_FIELD_NUMBER: _ClassVar[int]
     TRANSCRIPT_URL_FIELD_NUMBER: _ClassVar[int]
+    SIGNED_URL_FIELD_NUMBER: _ClassVar[int]
+    TRANSCRIPT_SIGNED_URL_FIELD_NUMBER: _ClassVar[int]
     output_id: str
     operation: SubtitleOperation
     format: SubtitleFormat
@@ -125,4 +127,6 @@ class SubtitleResult(_message.Message):
     url: str
     transcript_storage_key: str
     transcript_url: str
-    def __init__(self, output_id: _Optional[str] = ..., operation: _Optional[_Union[SubtitleOperation, str]] = ..., format: _Optional[_Union[SubtitleFormat, str]] = ..., language: _Optional[str] = ..., label: _Optional[str] = ..., auto_generated: bool = ..., storage_key: _Optional[str] = ..., url: _Optional[str] = ..., transcript_storage_key: _Optional[str] = ..., transcript_url: _Optional[str] = ...) -> None: ...
+    signed_url: str
+    transcript_signed_url: str
+    def __init__(self, output_id: _Optional[str] = ..., operation: _Optional[_Union[SubtitleOperation, str]] = ..., format: _Optional[_Union[SubtitleFormat, str]] = ..., language: _Optional[str] = ..., label: _Optional[str] = ..., auto_generated: bool = ..., storage_key: _Optional[str] = ..., url: _Optional[str] = ..., transcript_storage_key: _Optional[str] = ..., transcript_url: _Optional[str] = ..., signed_url: _Optional[str] = ..., transcript_signed_url: _Optional[str] = ...) -> None: ...
