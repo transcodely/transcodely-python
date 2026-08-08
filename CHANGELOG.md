@@ -4,6 +4,13 @@ All notable changes to the Transcodely Python SDK will be documented in this fil
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Breaking changes are allowed on minor bumps until 1.0.0.
 
+## [0.3.6](https://github.com/transcodely/transcodely-python/compare/v0.3.5...v0.3.6) (2026-08-08)
+
+
+### Features
+
+* job cost breakdown + video_id from api 4.9.0 ([#39](https://github.com/transcodely/transcodely-python/issues/39)) ([b35ea94](https://github.com/transcodely/transcodely-python/commit/b35ea94d517286aa64834a1eadccdaa34470fa60))
+
 ## [0.3.5](https://github.com/transcodely/transcodely-python/compare/v0.3.4...v0.3.5) (2026-08-02)
 
 
