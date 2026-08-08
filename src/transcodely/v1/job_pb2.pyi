@@ -58,6 +58,14 @@ class WatchEventType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     WATCH_EVENT_TYPE_STATUS_CHANGE: _ClassVar[WatchEventType]
     WATCH_EVENT_TYPE_COMPLETED: _ClassVar[WatchEventType]
     WATCH_EVENT_TYPE_HEARTBEAT: _ClassVar[WatchEventType]
+
+class JobCostLineType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    JOB_COST_LINE_TYPE_UNSPECIFIED: _ClassVar[JobCostLineType]
+    JOB_COST_LINE_TYPE_OUTPUT: _ClassVar[JobCostLineType]
+    JOB_COST_LINE_TYPE_MINIMUM_CHARGE: _ClassVar[JobCostLineType]
+    JOB_COST_LINE_TYPE_FEE: _ClassVar[JobCostLineType]
+    JOB_COST_LINE_TYPE_ADJUSTMENT: _ClassVar[JobCostLineType]
 JOB_STATUS_UNSPECIFIED: JobStatus
 JOB_STATUS_PENDING: JobStatus
 JOB_STATUS_PROBING: JobStatus
@@ -83,6 +91,11 @@ WATCH_EVENT_TYPE_PROGRESS: WatchEventType
 WATCH_EVENT_TYPE_STATUS_CHANGE: WatchEventType
 WATCH_EVENT_TYPE_COMPLETED: WatchEventType
 WATCH_EVENT_TYPE_HEARTBEAT: WatchEventType
+JOB_COST_LINE_TYPE_UNSPECIFIED: JobCostLineType
+JOB_COST_LINE_TYPE_OUTPUT: JobCostLineType
+JOB_COST_LINE_TYPE_MINIMUM_CHARGE: JobCostLineType
+JOB_COST_LINE_TYPE_FEE: JobCostLineType
+JOB_COST_LINE_TYPE_ADJUSTMENT: JobCostLineType
 
 class AudioTrackConfig(_message.Message):
     __slots__ = ("language", "label", "source_track", "is_default")
@@ -371,7 +384,7 @@ class ExecutionTiming(_message.Message):
     def __init__(self, instance_id: _Optional[str] = ..., instance_type: _Optional[str] = ..., instance_location: _Optional[str] = ..., vcpu_count: _Optional[int] = ..., memory_mb: _Optional[int] = ..., boot_duration_ms: _Optional[int] = ..., download_duration_ms: _Optional[int] = ..., probe_duration_ms: _Optional[int] = ..., encode_duration_ms: _Optional[int] = ..., upload_duration_ms: _Optional[int] = ..., packaging_duration_ms: _Optional[int] = ..., total_duration_ms: _Optional[int] = ..., download_bytes: _Optional[int] = ..., download_speed_mbps: _Optional[float] = ..., upload_bytes: _Optional[int] = ..., upload_speed_mbps: _Optional[float] = ..., avg_cpu_percent: _Optional[float] = ..., peak_cpu_percent: _Optional[float] = ..., avg_memory_mb: _Optional[int] = ..., peak_memory_mb: _Optional[int] = ..., chunk_count: _Optional[int] = ..., chunk_strategy: _Optional[str] = ..., exit_code: _Optional[int] = ..., exit_reason: _Optional[str] = ...) -> None: ...
 
 class Job(_message.Message):
-    __slots__ = ("id", "app_id", "input_url", "input_origin", "output_origin", "status", "progress", "priority", "input_metadata", "outputs", "total_estimated_cost", "total_actual_cost", "error_code", "error_message", "webhook_url", "metadata", "created_at", "updated_at", "probed_at", "started_at", "completed_at", "delayed_start", "confirmed_at", "currency", "execution", "thumbnails", "thumbnail_results", "subtitle_results", "output_path_template", "object", "minimum_charge_eur", "minimum_charge_applied", "fees", "input_video_id", "chapter_results", "clip")
+    __slots__ = ("id", "app_id", "input_url", "input_origin", "output_origin", "status", "progress", "priority", "input_metadata", "outputs", "total_estimated_cost", "total_actual_cost", "error_code", "error_message", "webhook_url", "metadata", "created_at", "updated_at", "probed_at", "started_at", "completed_at", "delayed_start", "confirmed_at", "currency", "execution", "thumbnails", "thumbnail_results", "subtitle_results", "output_path_template", "object", "minimum_charge_eur", "minimum_charge_applied", "fees", "input_video_id", "chapter_results", "clip", "video_id", "cost_breakdown")
     class MetadataEntry(_message.Message):
         __slots__ = ("key", "value")
         KEY_FIELD_NUMBER: _ClassVar[int]
@@ -415,6 +428,8 @@ class Job(_message.Message):
     INPUT_VIDEO_ID_FIELD_NUMBER: _ClassVar[int]
     CHAPTER_RESULTS_FIELD_NUMBER: _ClassVar[int]
     CLIP_FIELD_NUMBER: _ClassVar[int]
+    VIDEO_ID_FIELD_NUMBER: _ClassVar[int]
+    COST_BREAKDOWN_FIELD_NUMBER: _ClassVar[int]
     id: str
     app_id: str
     input_url: str
@@ -451,10 +466,12 @@ class Job(_message.Message):
     input_video_id: str
     chapter_results: _containers.RepeatedCompositeFieldContainer[_subtitles_pb2.ChapterResult]
     clip: ClipConfig
-    def __init__(self, id: _Optional[str] = ..., app_id: _Optional[str] = ..., input_url: _Optional[str] = ..., input_origin: _Optional[_Union[_origin_pb2.OriginRef, _Mapping]] = ..., output_origin: _Optional[_Union[_origin_pb2.OriginRef, _Mapping]] = ..., status: _Optional[_Union[JobStatus, str]] = ..., progress: _Optional[int] = ..., priority: _Optional[_Union[JobPriority, str]] = ..., input_metadata: _Optional[_Union[_media_pb2.InputMetadata, _Mapping]] = ..., outputs: _Optional[_Iterable[_Union[JobOutput, _Mapping]]] = ..., total_estimated_cost: _Optional[float] = ..., total_actual_cost: _Optional[float] = ..., error_code: _Optional[str] = ..., error_message: _Optional[str] = ..., webhook_url: _Optional[str] = ..., metadata: _Optional[_Mapping[str, str]] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., probed_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., started_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., completed_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., delayed_start: bool = ..., confirmed_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., currency: _Optional[str] = ..., execution: _Optional[_Union[ExecutionTiming, _Mapping]] = ..., thumbnails: _Optional[_Iterable[_Union[_thumbnails_pb2.ThumbnailSpec, _Mapping]]] = ..., thumbnail_results: _Optional[_Iterable[_Union[_thumbnails_pb2.ThumbnailResult, _Mapping]]] = ..., subtitle_results: _Optional[_Iterable[_Union[_subtitles_pb2.SubtitleResult, _Mapping]]] = ..., output_path_template: _Optional[str] = ..., object: _Optional[str] = ..., minimum_charge_eur: _Optional[float] = ..., minimum_charge_applied: bool = ..., fees: _Optional[_Iterable[_Union[JobFee, _Mapping]]] = ..., input_video_id: _Optional[str] = ..., chapter_results: _Optional[_Iterable[_Union[_subtitles_pb2.ChapterResult, _Mapping]]] = ..., clip: _Optional[_Union[ClipConfig, _Mapping]] = ...) -> None: ...
+    video_id: str
+    cost_breakdown: JobCostBreakdown
+    def __init__(self, id: _Optional[str] = ..., app_id: _Optional[str] = ..., input_url: _Optional[str] = ..., input_origin: _Optional[_Union[_origin_pb2.OriginRef, _Mapping]] = ..., output_origin: _Optional[_Union[_origin_pb2.OriginRef, _Mapping]] = ..., status: _Optional[_Union[JobStatus, str]] = ..., progress: _Optional[int] = ..., priority: _Optional[_Union[JobPriority, str]] = ..., input_metadata: _Optional[_Union[_media_pb2.InputMetadata, _Mapping]] = ..., outputs: _Optional[_Iterable[_Union[JobOutput, _Mapping]]] = ..., total_estimated_cost: _Optional[float] = ..., total_actual_cost: _Optional[float] = ..., error_code: _Optional[str] = ..., error_message: _Optional[str] = ..., webhook_url: _Optional[str] = ..., metadata: _Optional[_Mapping[str, str]] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., probed_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., started_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., completed_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., delayed_start: bool = ..., confirmed_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., currency: _Optional[str] = ..., execution: _Optional[_Union[ExecutionTiming, _Mapping]] = ..., thumbnails: _Optional[_Iterable[_Union[_thumbnails_pb2.ThumbnailSpec, _Mapping]]] = ..., thumbnail_results: _Optional[_Iterable[_Union[_thumbnails_pb2.ThumbnailResult, _Mapping]]] = ..., subtitle_results: _Optional[_Iterable[_Union[_subtitles_pb2.SubtitleResult, _Mapping]]] = ..., output_path_template: _Optional[str] = ..., object: _Optional[str] = ..., minimum_charge_eur: _Optional[float] = ..., minimum_charge_applied: bool = ..., fees: _Optional[_Iterable[_Union[JobFee, _Mapping]]] = ..., input_video_id: _Optional[str] = ..., chapter_results: _Optional[_Iterable[_Union[_subtitles_pb2.ChapterResult, _Mapping]]] = ..., clip: _Optional[_Union[ClipConfig, _Mapping]] = ..., video_id: _Optional[str] = ..., cost_breakdown: _Optional[_Union[JobCostBreakdown, _Mapping]] = ...) -> None: ...
 
 class JobFee(_message.Message):
-    __slots__ = ("fee_type", "description", "unit", "quantity", "rate", "amount", "currency")
+    __slots__ = ("fee_type", "description", "unit", "quantity", "rate", "amount", "currency", "id")
     FEE_TYPE_FIELD_NUMBER: _ClassVar[int]
     DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
     UNIT_FIELD_NUMBER: _ClassVar[int]
@@ -462,6 +479,7 @@ class JobFee(_message.Message):
     RATE_FIELD_NUMBER: _ClassVar[int]
     AMOUNT_FIELD_NUMBER: _ClassVar[int]
     CURRENCY_FIELD_NUMBER: _ClassVar[int]
+    ID_FIELD_NUMBER: _ClassVar[int]
     fee_type: str
     description: str
     unit: str
@@ -469,7 +487,32 @@ class JobFee(_message.Message):
     rate: float
     amount: float
     currency: str
-    def __init__(self, fee_type: _Optional[str] = ..., description: _Optional[str] = ..., unit: _Optional[str] = ..., quantity: _Optional[float] = ..., rate: _Optional[float] = ..., amount: _Optional[float] = ..., currency: _Optional[str] = ...) -> None: ...
+    id: str
+    def __init__(self, fee_type: _Optional[str] = ..., description: _Optional[str] = ..., unit: _Optional[str] = ..., quantity: _Optional[float] = ..., rate: _Optional[float] = ..., amount: _Optional[float] = ..., currency: _Optional[str] = ..., id: _Optional[str] = ...) -> None: ...
+
+class JobCostLine(_message.Message):
+    __slots__ = ("type", "reference_id", "description", "estimated_amount_eur", "actual_amount_eur")
+    TYPE_FIELD_NUMBER: _ClassVar[int]
+    REFERENCE_ID_FIELD_NUMBER: _ClassVar[int]
+    DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
+    ESTIMATED_AMOUNT_EUR_FIELD_NUMBER: _ClassVar[int]
+    ACTUAL_AMOUNT_EUR_FIELD_NUMBER: _ClassVar[int]
+    type: JobCostLineType
+    reference_id: str
+    description: str
+    estimated_amount_eur: float
+    actual_amount_eur: float
+    def __init__(self, type: _Optional[_Union[JobCostLineType, str]] = ..., reference_id: _Optional[str] = ..., description: _Optional[str] = ..., estimated_amount_eur: _Optional[float] = ..., actual_amount_eur: _Optional[float] = ...) -> None: ...
+
+class JobCostBreakdown(_message.Message):
+    __slots__ = ("lines", "total_estimated_cost", "total_actual_cost")
+    LINES_FIELD_NUMBER: _ClassVar[int]
+    TOTAL_ESTIMATED_COST_FIELD_NUMBER: _ClassVar[int]
+    TOTAL_ACTUAL_COST_FIELD_NUMBER: _ClassVar[int]
+    lines: _containers.RepeatedCompositeFieldContainer[JobCostLine]
+    total_estimated_cost: float
+    total_actual_cost: float
+    def __init__(self, lines: _Optional[_Iterable[_Union[JobCostLine, _Mapping]]] = ..., total_estimated_cost: _Optional[float] = ..., total_actual_cost: _Optional[float] = ...) -> None: ...
 
 class ClipConfig(_message.Message):
     __slots__ = ("start_seconds", "end_seconds")
