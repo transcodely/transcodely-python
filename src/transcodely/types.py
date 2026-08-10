@@ -61,7 +61,20 @@ from transcodely.v1.app_pb2 import (
 # token for an organization owner plus ``organization_id`` — an API key is
 # scoped to one app, while an invoice settles a whole organization, so API keys
 # are rejected.
+#
+# ``BillingProfile`` reports whether the payment provider holds a chargeable
+# method; a portal session is the only place a card is added or replaced, so
+# card details never reach this SDK. Branch on ``PaymentMethodState``, not on
+# the card fields — ``brand`` and ``last4`` are frequently absent even for a
+# working card.
 from transcodely.v1.billing_pb2 import (
+    BillingPaymentMethod,
+    BillingPortalSession,
+    BillingProfile,
+    CreateBillingPortalSessionRequest,
+    CreateBillingPortalSessionResponse,
+    GetBillingProfileRequest,
+    GetBillingProfileResponse,
     GetInvoiceRequest,
     GetInvoiceResponse,
     GetUpcomingInvoiceRequest,
@@ -72,6 +85,7 @@ from transcodely.v1.billing_pb2 import (
     InvoiceStatus,
     ListInvoicesRequest,
     ListInvoicesResponse,
+    PaymentMethodState,
 )
 from transcodely.v1.codec_av1_pb2 import AV1Options
 from transcodely.v1.codec_h264_pb2 import H264Options
@@ -388,6 +402,9 @@ __all__ = [
     "AutoABRConfig",
     "AutoProfileDefaults",
     "BYOKConfig",
+    "BillingPaymentMethod",
+    "BillingPortalSession",
+    "BillingProfile",
     "BitrateMode",
     "BurnInStyle",
     "CancelJobRequest",
@@ -414,6 +431,8 @@ __all__ = [
     "CreateAPIKeyResponse",
     "CreateAppRequest",
     "CreateAppResponse",
+    "CreateBillingPortalSessionRequest",
+    "CreateBillingPortalSessionResponse",
     "CreateFromUrlRequest",
     "CreateFromUrlResponse",
     "CreateJobRequest",
@@ -457,6 +476,8 @@ __all__ = [
     "GetAPIKeyResponse",
     "GetAppRequest",
     "GetAppResponse",
+    "GetBillingProfileRequest",
+    "GetBillingProfileResponse",
     "GetEndpointHealthRequest",
     "GetEndpointHealthResponse",
     "GetInvoiceRequest",
@@ -559,6 +580,7 @@ __all__ = [
     "OutputVariantResult",
     "PaginationRequest",
     "PaginationResponse",
+    "PaymentMethodState",
     "Preset",
     "PresetVariant",
     "PricingSnapshot",

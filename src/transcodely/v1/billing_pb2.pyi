@@ -25,6 +25,12 @@ class InvoiceLineType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     INVOICE_LINE_TYPE_FEE: _ClassVar[InvoiceLineType]
     INVOICE_LINE_TYPE_MIN_CHARGE: _ClassVar[InvoiceLineType]
     INVOICE_LINE_TYPE_ADJUSTMENT: _ClassVar[InvoiceLineType]
+
+class PaymentMethodState(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    PAYMENT_METHOD_STATE_UNSPECIFIED: _ClassVar[PaymentMethodState]
+    PAYMENT_METHOD_STATE_NONE: _ClassVar[PaymentMethodState]
+    PAYMENT_METHOD_STATE_ON_FILE: _ClassVar[PaymentMethodState]
 INVOICE_STATUS_UNSPECIFIED: InvoiceStatus
 INVOICE_STATUS_DRAFT: InvoiceStatus
 INVOICE_STATUS_OPEN: InvoiceStatus
@@ -36,6 +42,9 @@ INVOICE_LINE_TYPE_USAGE: InvoiceLineType
 INVOICE_LINE_TYPE_FEE: InvoiceLineType
 INVOICE_LINE_TYPE_MIN_CHARGE: InvoiceLineType
 INVOICE_LINE_TYPE_ADJUSTMENT: InvoiceLineType
+PAYMENT_METHOD_STATE_UNSPECIFIED: PaymentMethodState
+PAYMENT_METHOD_STATE_NONE: PaymentMethodState
+PAYMENT_METHOD_STATE_ON_FILE: PaymentMethodState
 
 class Invoice(_message.Message):
     __slots__ = ("id", "object", "org_id", "status", "period_start", "period_end", "currency", "subtotal_cents", "total_cents", "provider_invoice_number", "finalized_at", "paid_at", "line_items", "created_at")
@@ -94,6 +103,48 @@ class InvoiceLineItem(_message.Message):
     dimensions: _containers.ScalarMap[str, str]
     def __init__(self, id: _Optional[str] = ..., line_type: _Optional[_Union[InvoiceLineType, str]] = ..., description: _Optional[str] = ..., quantity: _Optional[float] = ..., unit: _Optional[str] = ..., amount_cents: _Optional[int] = ..., dimensions: _Optional[_Mapping[str, str]] = ...) -> None: ...
 
+class BillingProfile(_message.Message):
+    __slots__ = ("object", "org_id", "payment_method_state", "payment_methods", "billing_email")
+    OBJECT_FIELD_NUMBER: _ClassVar[int]
+    ORG_ID_FIELD_NUMBER: _ClassVar[int]
+    PAYMENT_METHOD_STATE_FIELD_NUMBER: _ClassVar[int]
+    PAYMENT_METHODS_FIELD_NUMBER: _ClassVar[int]
+    BILLING_EMAIL_FIELD_NUMBER: _ClassVar[int]
+    object: str
+    org_id: str
+    payment_method_state: PaymentMethodState
+    payment_methods: _containers.RepeatedCompositeFieldContainer[BillingPaymentMethod]
+    billing_email: str
+    def __init__(self, object: _Optional[str] = ..., org_id: _Optional[str] = ..., payment_method_state: _Optional[_Union[PaymentMethodState, str]] = ..., payment_methods: _Optional[_Iterable[_Union[BillingPaymentMethod, _Mapping]]] = ..., billing_email: _Optional[str] = ...) -> None: ...
+
+class BillingPaymentMethod(_message.Message):
+    __slots__ = ("id", "type", "brand", "last4", "exp_month", "exp_year", "is_default")
+    ID_FIELD_NUMBER: _ClassVar[int]
+    TYPE_FIELD_NUMBER: _ClassVar[int]
+    BRAND_FIELD_NUMBER: _ClassVar[int]
+    LAST4_FIELD_NUMBER: _ClassVar[int]
+    EXP_MONTH_FIELD_NUMBER: _ClassVar[int]
+    EXP_YEAR_FIELD_NUMBER: _ClassVar[int]
+    IS_DEFAULT_FIELD_NUMBER: _ClassVar[int]
+    id: str
+    type: str
+    brand: str
+    last4: str
+    exp_month: int
+    exp_year: int
+    is_default: bool
+    def __init__(self, id: _Optional[str] = ..., type: _Optional[str] = ..., brand: _Optional[str] = ..., last4: _Optional[str] = ..., exp_month: _Optional[int] = ..., exp_year: _Optional[int] = ..., is_default: bool = ...) -> None: ...
+
+class BillingPortalSession(_message.Message):
+    __slots__ = ("object", "url", "expires_at")
+    OBJECT_FIELD_NUMBER: _ClassVar[int]
+    URL_FIELD_NUMBER: _ClassVar[int]
+    EXPIRES_AT_FIELD_NUMBER: _ClassVar[int]
+    object: str
+    url: str
+    expires_at: _timestamp_pb2.Timestamp
+    def __init__(self, object: _Optional[str] = ..., url: _Optional[str] = ..., expires_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+
 class ListInvoicesRequest(_message.Message):
     __slots__ = ("pagination",)
     PAGINATION_FIELD_NUMBER: _ClassVar[int]
@@ -129,3 +180,23 @@ class GetUpcomingInvoiceResponse(_message.Message):
     INVOICE_FIELD_NUMBER: _ClassVar[int]
     invoice: Invoice
     def __init__(self, invoice: _Optional[_Union[Invoice, _Mapping]] = ...) -> None: ...
+
+class GetBillingProfileRequest(_message.Message):
+    __slots__ = ()
+    def __init__(self) -> None: ...
+
+class GetBillingProfileResponse(_message.Message):
+    __slots__ = ("profile",)
+    PROFILE_FIELD_NUMBER: _ClassVar[int]
+    profile: BillingProfile
+    def __init__(self, profile: _Optional[_Union[BillingProfile, _Mapping]] = ...) -> None: ...
+
+class CreateBillingPortalSessionRequest(_message.Message):
+    __slots__ = ()
+    def __init__(self) -> None: ...
+
+class CreateBillingPortalSessionResponse(_message.Message):
+    __slots__ = ("session",)
+    SESSION_FIELD_NUMBER: _ClassVar[int]
+    session: BillingPortalSession
+    def __init__(self, session: _Optional[_Union[BillingPortalSession, _Mapping]] = ...) -> None: ...
