@@ -119,6 +119,59 @@ class TestRetrieveUpcoming:
         assert got.status == billing_pb2.INVOICE_STATUS_DRAFT
 
 
+class TestRetrieveProfile:
+    def test_on_file_for_a_card_the_provider_will_not_describe(self) -> None:
+        # A method with no card metadata is still chargeable: the state is the
+        # signal, not the digits.
+        profile = billing_pb2.BillingProfile(
+            object="billing_profile",
+            org_id="org_f6g7h8i9j0",
+            payment_method_state=billing_pb2.PAYMENT_METHOD_STATE_ON_FILE,
+            payment_methods=[billing_pb2.BillingPaymentMethod(id="pm_1", type="card")],
+        )
+        t = FakeTransport(
+            {"GetBillingProfile": billing_pb2.GetBillingProfileResponse(profile=profile)}
+        )
+        got = Billing(t).retrieve_profile()  # type: ignore[arg-type]
+
+        assert t.calls[0][0] == "GetBillingProfile"
+        assert got.payment_method_state == billing_pb2.PAYMENT_METHOD_STATE_ON_FILE
+        assert len(got.payment_methods) == 1
+        assert got.payment_methods[0].brand == ""
+        assert got.payment_methods[0].last4 == ""
+
+    def test_none_for_an_org_that_has_never_touched_billing(self) -> None:
+        profile = billing_pb2.BillingProfile(
+            payment_method_state=billing_pb2.PAYMENT_METHOD_STATE_NONE
+        )
+        t = FakeTransport(
+            {"GetBillingProfile": billing_pb2.GetBillingProfileResponse(profile=profile)}
+        )
+        got = Billing(t).retrieve_profile()  # type: ignore[arg-type]
+
+        assert got.payment_method_state == billing_pb2.PAYMENT_METHOD_STATE_NONE
+        assert len(got.payment_methods) == 0
+
+
+class TestCreatePortalSession:
+    def test_returns_the_provider_session_url(self) -> None:
+        session = billing_pb2.BillingPortalSession(
+            object="billing_portal_session",
+            url="https://portal.example/session/abc",
+        )
+        t = FakeTransport(
+            {
+                "CreateBillingPortalSession": billing_pb2.CreateBillingPortalSessionResponse(
+                    session=session
+                )
+            }
+        )
+        got = Billing(t).create_portal_session()  # type: ignore[arg-type]
+
+        assert t.calls[0][0] == "CreateBillingPortalSession"
+        assert got.url == "https://portal.example/session/abc"
+
+
 class TestOrganizationHeader:
     """The header goes out on the real request, not just into a builder."""
 

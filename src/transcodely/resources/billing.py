@@ -88,3 +88,51 @@ class Billing:
             billing_pb2.GetUpcomingInvoiceResponse(),
             opts,
         ).invoice
+
+    def retrieve_profile(self, opts: CallOptions | None = None) -> billing_pb2.BillingProfile:
+        """Retrieve the organization's payment standing.
+
+        Reports whether the payment provider holds a chargeable method, and
+        whatever it will say about that method for display. Read-only and
+        side-effect free — it never creates provider resources. An organization
+        that has never touched billing reports ``PAYMENT_METHOD_STATE_NONE``
+        and no payment methods.
+
+        ``payment_method_state`` is the only reliable signal. A method's
+        ``brand`` and ``last4`` are frequently absent even for a working card,
+        because the provider does not always expose card metadata; render such
+        a method as "Card on file" rather than treating the missing digits as
+        an error.
+        """
+        req = billing_pb2.GetBillingProfileRequest()
+        return self._t.unary(
+            _SERVICE,
+            "GetBillingProfile",
+            req,
+            billing_pb2.GetBillingProfileResponse(),
+            opts,
+        ).profile
+
+    def create_portal_session(
+        self, opts: CallOptions | None = None
+    ) -> billing_pb2.BillingPortalSession:
+        """Create a session for the payment provider's hosted billing portal.
+
+        The portal is where a payment method is added or replaced and where
+        receipts live — card details never touch this SDK.
+
+        The first call for an organization also links it to the payment
+        provider, so the returned portal is already attached to this
+        organization's billing account. Safe to call repeatedly.
+
+        The session is single-use and expires; request a fresh one per visit
+        rather than storing the URL.
+        """
+        req = billing_pb2.CreateBillingPortalSessionRequest()
+        return self._t.unary(
+            _SERVICE,
+            "CreateBillingPortalSession",
+            req,
+            billing_pb2.CreateBillingPortalSessionResponse(),
+            opts,
+        ).session

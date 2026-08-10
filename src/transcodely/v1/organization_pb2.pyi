@@ -21,7 +21,7 @@ ORGANIZATION_STATUS_SUSPENDED: OrganizationStatus
 ORGANIZATION_STATUS_DELETED: OrganizationStatus
 
 class Organization(_message.Message):
-    __slots__ = ("id", "slug", "display_name", "billing_email", "currency", "status", "created_at", "updated_at")
+    __slots__ = ("id", "slug", "display_name", "billing_email", "currency", "status", "created_at", "updated_at", "plan_id", "plan_name", "payment_method_required", "grandfathered_at")
     ID_FIELD_NUMBER: _ClassVar[int]
     SLUG_FIELD_NUMBER: _ClassVar[int]
     DISPLAY_NAME_FIELD_NUMBER: _ClassVar[int]
@@ -30,6 +30,10 @@ class Organization(_message.Message):
     STATUS_FIELD_NUMBER: _ClassVar[int]
     CREATED_AT_FIELD_NUMBER: _ClassVar[int]
     UPDATED_AT_FIELD_NUMBER: _ClassVar[int]
+    PLAN_ID_FIELD_NUMBER: _ClassVar[int]
+    PLAN_NAME_FIELD_NUMBER: _ClassVar[int]
+    PAYMENT_METHOD_REQUIRED_FIELD_NUMBER: _ClassVar[int]
+    GRANDFATHERED_AT_FIELD_NUMBER: _ClassVar[int]
     id: str
     slug: str
     display_name: str
@@ -38,7 +42,11 @@ class Organization(_message.Message):
     status: OrganizationStatus
     created_at: _timestamp_pb2.Timestamp
     updated_at: _timestamp_pb2.Timestamp
-    def __init__(self, id: _Optional[str] = ..., slug: _Optional[str] = ..., display_name: _Optional[str] = ..., billing_email: _Optional[str] = ..., currency: _Optional[str] = ..., status: _Optional[_Union[OrganizationStatus, str]] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+    plan_id: str
+    plan_name: str
+    payment_method_required: bool
+    grandfathered_at: _timestamp_pb2.Timestamp
+    def __init__(self, id: _Optional[str] = ..., slug: _Optional[str] = ..., display_name: _Optional[str] = ..., billing_email: _Optional[str] = ..., currency: _Optional[str] = ..., status: _Optional[_Union[OrganizationStatus, str]] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., plan_id: _Optional[str] = ..., plan_name: _Optional[str] = ..., payment_method_required: bool = ..., grandfathered_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
 class CheckSlugRequest(_message.Message):
     __slots__ = ("slug",)
