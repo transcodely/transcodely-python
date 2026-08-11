@@ -104,18 +104,26 @@ class InvoiceLineItem(_message.Message):
     def __init__(self, id: _Optional[str] = ..., line_type: _Optional[_Union[InvoiceLineType, str]] = ..., description: _Optional[str] = ..., quantity: _Optional[float] = ..., unit: _Optional[str] = ..., amount_cents: _Optional[int] = ..., dimensions: _Optional[_Mapping[str, str]] = ...) -> None: ...
 
 class BillingProfile(_message.Message):
-    __slots__ = ("object", "org_id", "payment_method_state", "payment_methods", "billing_email")
+    __slots__ = ("object", "org_id", "payment_method_state", "payment_methods", "billing_email", "standing", "grace_until", "standing_reason", "payment_method_required")
     OBJECT_FIELD_NUMBER: _ClassVar[int]
     ORG_ID_FIELD_NUMBER: _ClassVar[int]
     PAYMENT_METHOD_STATE_FIELD_NUMBER: _ClassVar[int]
     PAYMENT_METHODS_FIELD_NUMBER: _ClassVar[int]
     BILLING_EMAIL_FIELD_NUMBER: _ClassVar[int]
+    STANDING_FIELD_NUMBER: _ClassVar[int]
+    GRACE_UNTIL_FIELD_NUMBER: _ClassVar[int]
+    STANDING_REASON_FIELD_NUMBER: _ClassVar[int]
+    PAYMENT_METHOD_REQUIRED_FIELD_NUMBER: _ClassVar[int]
     object: str
     org_id: str
     payment_method_state: PaymentMethodState
     payment_methods: _containers.RepeatedCompositeFieldContainer[BillingPaymentMethod]
     billing_email: str
-    def __init__(self, object: _Optional[str] = ..., org_id: _Optional[str] = ..., payment_method_state: _Optional[_Union[PaymentMethodState, str]] = ..., payment_methods: _Optional[_Iterable[_Union[BillingPaymentMethod, _Mapping]]] = ..., billing_email: _Optional[str] = ...) -> None: ...
+    standing: _common_pb2.BillingStanding
+    grace_until: _timestamp_pb2.Timestamp
+    standing_reason: str
+    payment_method_required: bool
+    def __init__(self, object: _Optional[str] = ..., org_id: _Optional[str] = ..., payment_method_state: _Optional[_Union[PaymentMethodState, str]] = ..., payment_methods: _Optional[_Iterable[_Union[BillingPaymentMethod, _Mapping]]] = ..., billing_email: _Optional[str] = ..., standing: _Optional[_Union[_common_pb2.BillingStanding, str]] = ..., grace_until: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., standing_reason: _Optional[str] = ..., payment_method_required: bool = ...) -> None: ...
 
 class BillingPaymentMethod(_message.Message):
     __slots__ = ("id", "type", "brand", "last4", "exp_month", "exp_year", "is_default")

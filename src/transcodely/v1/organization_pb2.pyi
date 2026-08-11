@@ -21,7 +21,7 @@ ORGANIZATION_STATUS_SUSPENDED: OrganizationStatus
 ORGANIZATION_STATUS_DELETED: OrganizationStatus
 
 class Organization(_message.Message):
-    __slots__ = ("id", "slug", "display_name", "billing_email", "currency", "status", "created_at", "updated_at", "plan_id", "plan_name", "payment_method_required", "grandfathered_at")
+    __slots__ = ("id", "slug", "display_name", "billing_email", "currency", "status", "created_at", "updated_at", "plan_id", "plan_name", "payment_method_required", "grandfathered_at", "billing_standing", "grace_until", "standing_reason", "in_dunning", "consecutive_dunned_cycles")
     ID_FIELD_NUMBER: _ClassVar[int]
     SLUG_FIELD_NUMBER: _ClassVar[int]
     DISPLAY_NAME_FIELD_NUMBER: _ClassVar[int]
@@ -34,6 +34,11 @@ class Organization(_message.Message):
     PLAN_NAME_FIELD_NUMBER: _ClassVar[int]
     PAYMENT_METHOD_REQUIRED_FIELD_NUMBER: _ClassVar[int]
     GRANDFATHERED_AT_FIELD_NUMBER: _ClassVar[int]
+    BILLING_STANDING_FIELD_NUMBER: _ClassVar[int]
+    GRACE_UNTIL_FIELD_NUMBER: _ClassVar[int]
+    STANDING_REASON_FIELD_NUMBER: _ClassVar[int]
+    IN_DUNNING_FIELD_NUMBER: _ClassVar[int]
+    CONSECUTIVE_DUNNED_CYCLES_FIELD_NUMBER: _ClassVar[int]
     id: str
     slug: str
     display_name: str
@@ -46,7 +51,12 @@ class Organization(_message.Message):
     plan_name: str
     payment_method_required: bool
     grandfathered_at: _timestamp_pb2.Timestamp
-    def __init__(self, id: _Optional[str] = ..., slug: _Optional[str] = ..., display_name: _Optional[str] = ..., billing_email: _Optional[str] = ..., currency: _Optional[str] = ..., status: _Optional[_Union[OrganizationStatus, str]] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., plan_id: _Optional[str] = ..., plan_name: _Optional[str] = ..., payment_method_required: bool = ..., grandfathered_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+    billing_standing: _common_pb2.BillingStanding
+    grace_until: _timestamp_pb2.Timestamp
+    standing_reason: str
+    in_dunning: bool
+    consecutive_dunned_cycles: int
+    def __init__(self, id: _Optional[str] = ..., slug: _Optional[str] = ..., display_name: _Optional[str] = ..., billing_email: _Optional[str] = ..., currency: _Optional[str] = ..., status: _Optional[_Union[OrganizationStatus, str]] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., plan_id: _Optional[str] = ..., plan_name: _Optional[str] = ..., payment_method_required: bool = ..., grandfathered_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., billing_standing: _Optional[_Union[_common_pb2.BillingStanding, str]] = ..., grace_until: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., standing_reason: _Optional[str] = ..., in_dunning: bool = ..., consecutive_dunned_cycles: _Optional[int] = ...) -> None: ...
 
 class CheckSlugRequest(_message.Message):
     __slots__ = ("slug",)
