@@ -4,6 +4,14 @@ All notable changes to the Transcodely Python SDK will be documented in this fil
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Breaking changes are allowed on minor bumps until 1.0.0.
 
+## [0.3.7](https://github.com/transcodely/transcodely-python/compare/v0.3.6...v0.3.7) (2026-08-11)
+
+
+### Features
+
+* billing profile + portal sessions from api 4.13.0 ([#42](https://github.com/transcodely/transcodely-python/issues/42)) ([bbed840](https://github.com/transcodely/transcodely-python/commit/bbed8404df06c2d2d2e015dc51099361de44e1a7))
+* billing standing from api 4.15.0 ([#44](https://github.com/transcodely/transcodely-python/issues/44)) ([4ee7cce](https://github.com/transcodely/transcodely-python/commit/4ee7cceeb66ebd434c5ab5dd63cd7bfec8131d71))
+
 ## [0.3.6](https://github.com/transcodely/transcodely-python/compare/v0.3.5...v0.3.6) (2026-08-08)
 
 
