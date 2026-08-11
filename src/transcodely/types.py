@@ -91,8 +91,15 @@ from transcodely.v1.codec_av1_pb2 import AV1Options
 from transcodely.v1.codec_h264_pb2 import H264Options
 from transcodely.v1.codec_h265_pb2 import H265Options
 from transcodely.v1.codec_vp9_pb2 import VP9Options
+
+# ``BillingStanding`` is ``BillingProfile.standing`` — derived from the
+# organization's billing facts rather than assigned, so there is nothing to set.
+# ``FREE`` and ``DELINQUENT`` both resolve usage limits to the free tier's, but
+# ``DELINQUENT`` still bills; neither is a suspension. An organization exempt
+# from the payment-method requirement always reports ``ACTIVE``.
 from transcodely.v1.common_pb2 import (
     AudioCodec,
+    BillingStanding,
     BitrateMode,
     Container,
     ContentType,
@@ -405,6 +412,7 @@ __all__ = [
     "BillingPaymentMethod",
     "BillingPortalSession",
     "BillingProfile",
+    "BillingStanding",
     "BitrateMode",
     "BurnInStyle",
     "CancelJobRequest",

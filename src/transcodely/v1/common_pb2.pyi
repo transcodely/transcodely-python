@@ -83,6 +83,14 @@ class BitrateMode(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     BITRATE_MODE_CRF: _ClassVar[BitrateMode]
     BITRATE_MODE_CBR: _ClassVar[BitrateMode]
     BITRATE_MODE_VBR: _ClassVar[BitrateMode]
+
+class BillingStanding(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    BILLING_STANDING_UNSPECIFIED: _ClassVar[BillingStanding]
+    BILLING_STANDING_FREE: _ClassVar[BillingStanding]
+    BILLING_STANDING_ACTIVE: _ClassVar[BillingStanding]
+    BILLING_STANDING_GRACE: _ClassVar[BillingStanding]
+    BILLING_STANDING_DELINQUENT: _ClassVar[BillingStanding]
 VIDEO_CODEC_UNSPECIFIED: VideoCodec
 VIDEO_CODEC_H264: VideoCodec
 VIDEO_CODEC_H265: VideoCodec
@@ -133,6 +141,11 @@ BITRATE_MODE_UNSPECIFIED: BitrateMode
 BITRATE_MODE_CRF: BitrateMode
 BITRATE_MODE_CBR: BitrateMode
 BITRATE_MODE_VBR: BitrateMode
+BILLING_STANDING_UNSPECIFIED: BillingStanding
+BILLING_STANDING_FREE: BillingStanding
+BILLING_STANDING_ACTIVE: BillingStanding
+BILLING_STANDING_GRACE: BillingStanding
+BILLING_STANDING_DELINQUENT: BillingStanding
 
 class PaginationRequest(_message.Message):
     __slots__ = ("limit", "cursor", "offset")
