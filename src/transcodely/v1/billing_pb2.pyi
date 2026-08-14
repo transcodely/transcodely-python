@@ -25,6 +25,7 @@ class InvoiceLineType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     INVOICE_LINE_TYPE_FEE: _ClassVar[InvoiceLineType]
     INVOICE_LINE_TYPE_MIN_CHARGE: _ClassVar[InvoiceLineType]
     INVOICE_LINE_TYPE_ADJUSTMENT: _ClassVar[InvoiceLineType]
+    INVOICE_LINE_TYPE_HOSTING: _ClassVar[InvoiceLineType]
 
 class PaymentMethodState(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
@@ -42,6 +43,7 @@ INVOICE_LINE_TYPE_USAGE: InvoiceLineType
 INVOICE_LINE_TYPE_FEE: InvoiceLineType
 INVOICE_LINE_TYPE_MIN_CHARGE: InvoiceLineType
 INVOICE_LINE_TYPE_ADJUSTMENT: InvoiceLineType
+INVOICE_LINE_TYPE_HOSTING: InvoiceLineType
 PAYMENT_METHOD_STATE_UNSPECIFIED: PaymentMethodState
 PAYMENT_METHOD_STATE_NONE: PaymentMethodState
 PAYMENT_METHOD_STATE_ON_FILE: PaymentMethodState
@@ -144,14 +146,16 @@ class BillingPaymentMethod(_message.Message):
     def __init__(self, id: _Optional[str] = ..., type: _Optional[str] = ..., brand: _Optional[str] = ..., last4: _Optional[str] = ..., exp_month: _Optional[int] = ..., exp_year: _Optional[int] = ..., is_default: bool = ...) -> None: ...
 
 class BillingPortalSession(_message.Message):
-    __slots__ = ("object", "url", "expires_at")
+    __slots__ = ("object", "url", "expires_at", "session_token")
     OBJECT_FIELD_NUMBER: _ClassVar[int]
     URL_FIELD_NUMBER: _ClassVar[int]
     EXPIRES_AT_FIELD_NUMBER: _ClassVar[int]
+    SESSION_TOKEN_FIELD_NUMBER: _ClassVar[int]
     object: str
     url: str
     expires_at: _timestamp_pb2.Timestamp
-    def __init__(self, object: _Optional[str] = ..., url: _Optional[str] = ..., expires_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+    session_token: str
+    def __init__(self, object: _Optional[str] = ..., url: _Optional[str] = ..., expires_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., session_token: _Optional[str] = ...) -> None: ...
 
 class ListInvoicesRequest(_message.Message):
     __slots__ = ("pagination",)
