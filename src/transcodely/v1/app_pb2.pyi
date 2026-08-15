@@ -21,7 +21,7 @@ APP_STATUS_ARCHIVED: AppStatus
 APP_STATUS_SUSPENDED: AppStatus
 
 class App(_message.Message):
-    __slots__ = ("id", "org_id", "name", "description", "status", "created_at", "updated_at", "archived_at", "hosting_enabled", "hosting_status", "cdn_hostname", "hosting_config", "object", "monthly_spend_limit_eur")
+    __slots__ = ("id", "org_id", "name", "description", "status", "created_at", "updated_at", "archived_at", "hosting_enabled", "hosting_status", "cdn_hostname", "hosting_config", "object", "monthly_spend_limit_eur", "player_config")
     ID_FIELD_NUMBER: _ClassVar[int]
     ORG_ID_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
@@ -36,6 +36,7 @@ class App(_message.Message):
     HOSTING_CONFIG_FIELD_NUMBER: _ClassVar[int]
     OBJECT_FIELD_NUMBER: _ClassVar[int]
     MONTHLY_SPEND_LIMIT_EUR_FIELD_NUMBER: _ClassVar[int]
+    PLAYER_CONFIG_FIELD_NUMBER: _ClassVar[int]
     id: str
     org_id: str
     name: str
@@ -50,7 +51,40 @@ class App(_message.Message):
     hosting_config: HostingConfig
     object: str
     monthly_spend_limit_eur: float
-    def __init__(self, id: _Optional[str] = ..., org_id: _Optional[str] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., status: _Optional[_Union[AppStatus, str]] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., archived_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., hosting_enabled: bool = ..., hosting_status: _Optional[str] = ..., cdn_hostname: _Optional[str] = ..., hosting_config: _Optional[_Union[HostingConfig, _Mapping]] = ..., object: _Optional[str] = ..., monthly_spend_limit_eur: _Optional[float] = ...) -> None: ...
+    player_config: PlayerConfig
+    def __init__(self, id: _Optional[str] = ..., org_id: _Optional[str] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., status: _Optional[_Union[AppStatus, str]] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., archived_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., hosting_enabled: bool = ..., hosting_status: _Optional[str] = ..., cdn_hostname: _Optional[str] = ..., hosting_config: _Optional[_Union[HostingConfig, _Mapping]] = ..., object: _Optional[str] = ..., monthly_spend_limit_eur: _Optional[float] = ..., player_config: _Optional[_Union[PlayerConfig, _Mapping]] = ...) -> None: ...
+
+class PlayerConfig(_message.Message):
+    __slots__ = ("captions",)
+    CAPTIONS_FIELD_NUMBER: _ClassVar[int]
+    captions: CaptionStyle
+    def __init__(self, captions: _Optional[_Union[CaptionStyle, _Mapping]] = ...) -> None: ...
+
+class CaptionStyle(_message.Message):
+    __slots__ = ("background_color", "background_opacity", "text_color", "font_scale")
+    BACKGROUND_COLOR_FIELD_NUMBER: _ClassVar[int]
+    BACKGROUND_OPACITY_FIELD_NUMBER: _ClassVar[int]
+    TEXT_COLOR_FIELD_NUMBER: _ClassVar[int]
+    FONT_SCALE_FIELD_NUMBER: _ClassVar[int]
+    background_color: str
+    background_opacity: float
+    text_color: str
+    font_scale: float
+    def __init__(self, background_color: _Optional[str] = ..., background_opacity: _Optional[float] = ..., text_color: _Optional[str] = ..., font_scale: _Optional[float] = ...) -> None: ...
+
+class UpdatePlayerConfigRequest(_message.Message):
+    __slots__ = ("id", "player_config")
+    ID_FIELD_NUMBER: _ClassVar[int]
+    PLAYER_CONFIG_FIELD_NUMBER: _ClassVar[int]
+    id: str
+    player_config: PlayerConfig
+    def __init__(self, id: _Optional[str] = ..., player_config: _Optional[_Union[PlayerConfig, _Mapping]] = ...) -> None: ...
+
+class UpdatePlayerConfigResponse(_message.Message):
+    __slots__ = ("app",)
+    APP_FIELD_NUMBER: _ClassVar[int]
+    app: App
+    def __init__(self, app: _Optional[_Union[App, _Mapping]] = ...) -> None: ...
 
 class CreateAppRequest(_message.Message):
     __slots__ = ("org_id", "name", "description", "enable_hosting")
