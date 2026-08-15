@@ -25,7 +25,7 @@ _sym_db = _symbol_database.Default()
 from buf.validate import validate_pb2 as buf_dot_validate_dot_validate__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1etranscodely/v1/streaming.proto\x12\x0etranscodely.v1\x1a\x1b\x62uf/validate/validate.proto\"\xab\x06\n\x0fStreamingConfig\x12H\n\x18segment_duration_seconds\x18\x01 \x01(\x05\x42\t\xbaH\x06\x1a\x04\x18\x1e(\x01H\x00R\x16segmentDurationSeconds\x88\x01\x01\x12X\n\x12hls_segment_format\x18\x02 \x01(\x0e\x32 .transcodely.v1.HLSSegmentFormatB\x08\xbaH\x05\x82\x01\x02\x10\x01R\x10hlsSegmentFormat\x12O\n\rgop_alignment\x18\x03 \x01(\x0e\x32 .transcodely.v1.GOPAlignmentModeB\x08\xbaH\x05\x82\x01\x02\x10\x01R\x0cgopAlignment\x12\x38\n\x10gop_size_seconds\x18\x04 \x01(\x05\x42\t\xbaH\x06\x1a\x04\x18\n(\x01H\x01R\x0egopSizeSeconds\x88\x01\x01\x12\x31\n\x12multi_codec_master\x18\x05 \x01(\x08H\x02R\x10multiCodecMaster\x88\x01\x01\x12U\n\x11hls_playlist_type\x18\x06 \x01(\x0e\x32\x1f.transcodely.v1.HLSPlaylistTypeB\x08\xbaH\x05\x82\x01\x02\x10\x01R\x0fhlsPlaylistType\x12\x46\n\x0fhls_master_name\x18\n \x01(\tB\x19\xbaH\x16r\x14\x18@2\x10^[a-zA-Z0-9_-]+$H\x03R\rhlsMasterName\x88\x01\x01\x12L\n\x12\x64\x61sh_manifest_name\x18\x0b \x01(\tB\x19\xbaH\x16r\x14\x18@2\x10^[a-zA-Z0-9_-]+$H\x04R\x10\x64\x61shManifestName\x88\x01\x01\x12=\n\x13hls_variant_pattern\x18\x0c \x01(\tB\x08\xbaH\x05r\x03\x18\x80\x01H\x05R\x11hlsVariantPattern\x88\x01\x01\x42\x1b\n\x19_segment_duration_secondsB\x13\n\x11_gop_size_secondsB\x15\n\x13_multi_codec_masterB\x12\n\x10_hls_master_nameB\x15\n\x13_dash_manifest_nameB\x16\n\x14_hls_variant_pattern*n\n\x10HLSSegmentFormat\x12\"\n\x1eHLS_SEGMENT_FORMAT_UNSPECIFIED\x10\x00\x12\x1b\n\x17HLS_SEGMENT_FORMAT_FMP4\x10\x01\x12\x19\n\x15HLS_SEGMENT_FORMAT_TS\x10\x02*t\n\x10GOPAlignmentMode\x12\"\n\x1eGOP_ALIGNMENT_MODE_UNSPECIFIED\x10\x00\x12\x1e\n\x1aGOP_ALIGNMENT_MODE_ALIGNED\x10\x01\x12\x1c\n\x18GOP_ALIGNMENT_MODE_FIXED\x10\x02*l\n\x0fHLSPlaylistType\x12!\n\x1dHLS_PLAYLIST_TYPE_UNSPECIFIED\x10\x00\x12\x19\n\x15HLS_PLAYLIST_TYPE_VOD\x10\x01\x12\x1b\n\x17HLS_PLAYLIST_TYPE_EVENT\x10\x02\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1etranscodely/v1/streaming.proto\x12\x0etranscodely.v1\x1a\x1b\x62uf/validate/validate.proto\"\xb2\x07\n\x0fStreamingConfig\x12H\n\x18segment_duration_seconds\x18\x01 \x01(\x05\x42\t\xbaH\x06\x1a\x04\x18\x1e(\x01H\x00R\x16segmentDurationSeconds\x88\x01\x01\x12X\n\x12hls_segment_format\x18\x02 \x01(\x0e\x32 .transcodely.v1.HLSSegmentFormatB\x08\xbaH\x05\x82\x01\x02\x10\x01R\x10hlsSegmentFormat\x12O\n\rgop_alignment\x18\x03 \x01(\x0e\x32 .transcodely.v1.GOPAlignmentModeB\x08\xbaH\x05\x82\x01\x02\x10\x01R\x0cgopAlignment\x12\x38\n\x10gop_size_seconds\x18\x04 \x01(\x05\x42\t\xbaH\x06\x1a\x04\x18\n(\x01H\x01R\x0egopSizeSeconds\x88\x01\x01\x12\x31\n\x12multi_codec_master\x18\x05 \x01(\x08H\x02R\x10multiCodecMaster\x88\x01\x01\x12U\n\x11hls_playlist_type\x18\x06 \x01(\x0e\x32\x1f.transcodely.v1.HLSPlaylistTypeB\x08\xbaH\x05\x82\x01\x02\x10\x01R\x0fhlsPlaylistType\x12\x46\n\x0fhls_master_name\x18\n \x01(\tB\x19\xbaH\x16r\x14\x18@2\x10^[a-zA-Z0-9_-]+$H\x03R\rhlsMasterName\x88\x01\x01\x12L\n\x12\x64\x61sh_manifest_name\x18\x0b \x01(\tB\x19\xbaH\x16r\x14\x18@2\x10^[a-zA-Z0-9_-]+$H\x04R\x10\x64\x61shManifestName\x88\x01\x01\x12\xc3\x01\n\x13hls_variant_pattern\x18\x0c \x01(\tB\x8d\x01\xbaH\x89\x01r\x18\x18\x80\x01\x32\x13^[a-zA-Z0-9_.{}-]+$\xba\x01l\n)streaming_config.hls_variant_pattern_safe\x12)hls_variant_pattern must not contain `..`\x1a\x14!this.contains(\'..\')H\x05R\x11hlsVariantPattern\x88\x01\x01\x42\x1b\n\x19_segment_duration_secondsB\x13\n\x11_gop_size_secondsB\x15\n\x13_multi_codec_masterB\x12\n\x10_hls_master_nameB\x15\n\x13_dash_manifest_nameB\x16\n\x14_hls_variant_pattern*n\n\x10HLSSegmentFormat\x12\"\n\x1eHLS_SEGMENT_FORMAT_UNSPECIFIED\x10\x00\x12\x1b\n\x17HLS_SEGMENT_FORMAT_FMP4\x10\x01\x12\x19\n\x15HLS_SEGMENT_FORMAT_TS\x10\x02*t\n\x10GOPAlignmentMode\x12\"\n\x1eGOP_ALIGNMENT_MODE_UNSPECIFIED\x10\x00\x12\x1e\n\x1aGOP_ALIGNMENT_MODE_ALIGNED\x10\x01\x12\x1c\n\x18GOP_ALIGNMENT_MODE_FIXED\x10\x02*l\n\x0fHLSPlaylistType\x12!\n\x1dHLS_PLAYLIST_TYPE_UNSPECIFIED\x10\x00\x12\x19\n\x15HLS_PLAYLIST_TYPE_VOD\x10\x01\x12\x1b\n\x17HLS_PLAYLIST_TYPE_EVENT\x10\x02\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -47,13 +47,13 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_STREAMINGCONFIG'].fields_by_name['dash_manifest_name']._loaded_options = None
   _globals['_STREAMINGCONFIG'].fields_by_name['dash_manifest_name']._serialized_options = b'\272H\026r\024\030@2\020^[a-zA-Z0-9_-]+$'
   _globals['_STREAMINGCONFIG'].fields_by_name['hls_variant_pattern']._loaded_options = None
-  _globals['_STREAMINGCONFIG'].fields_by_name['hls_variant_pattern']._serialized_options = b'\272H\005r\003\030\200\001'
-  _globals['_HLSSEGMENTFORMAT']._serialized_start=893
-  _globals['_HLSSEGMENTFORMAT']._serialized_end=1003
-  _globals['_GOPALIGNMENTMODE']._serialized_start=1005
-  _globals['_GOPALIGNMENTMODE']._serialized_end=1121
-  _globals['_HLSPLAYLISTTYPE']._serialized_start=1123
-  _globals['_HLSPLAYLISTTYPE']._serialized_end=1231
+  _globals['_STREAMINGCONFIG'].fields_by_name['hls_variant_pattern']._serialized_options = b'\272H\211\001r\030\030\200\0012\023^[a-zA-Z0-9_.{}-]+$\272\001l\n)streaming_config.hls_variant_pattern_safe\022)hls_variant_pattern must not contain `..`\032\024!this.contains(\'..\')'
+  _globals['_HLSSEGMENTFORMAT']._serialized_start=1028
+  _globals['_HLSSEGMENTFORMAT']._serialized_end=1138
+  _globals['_GOPALIGNMENTMODE']._serialized_start=1140
+  _globals['_GOPALIGNMENTMODE']._serialized_end=1256
+  _globals['_HLSPLAYLISTTYPE']._serialized_start=1258
+  _globals['_HLSPLAYLISTTYPE']._serialized_end=1366
   _globals['_STREAMINGCONFIG']._serialized_start=80
-  _globals['_STREAMINGCONFIG']._serialized_end=891
+  _globals['_STREAMINGCONFIG']._serialized_end=1026
 # @@protoc_insertion_point(module_scope)
