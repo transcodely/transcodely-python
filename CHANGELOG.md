@@ -4,6 +4,14 @@ All notable changes to the Transcodely Python SDK will be documented in this fil
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Breaking changes are allowed on minor bumps until 1.0.0.
 
+## [0.3.8](https://github.com/transcodely/transcodely-python/compare/v0.3.7...v0.3.8) (2026-08-16)
+
+
+### Features
+
+* **billing:** budget, outstanding balance and mid-cycle settlement ([#49](https://github.com/transcodely/transcodely-python/issues/49)) ([ca106d6](https://github.com/transcodely/transcodely-python/commit/ca106d6179ec60dd6cdbc58aa22d08903c35fe4c))
+* sync protos from api 5.5.0 — player config + caption styling ([#46](https://github.com/transcodely/transcodely-python/issues/46)) ([5aa0e83](https://github.com/transcodely/transcodely-python/commit/5aa0e837744d028449f96509254206b6a5a19cc1))
+
 ## [0.3.7](https://github.com/transcodely/transcodely-python/compare/v0.3.6...v0.3.7) (2026-08-11)
 
 
