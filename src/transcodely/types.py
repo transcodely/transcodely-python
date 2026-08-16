@@ -67,16 +67,28 @@ from transcodely.v1.app_pb2 import (
 # card details never reach this SDK. Branch on ``PaymentMethodState``, not on
 # the card fields — ``brand`` and ``last4`` are frequently absent even for a
 # working card.
+#
+# ``Budget`` and ``OutstandingBalance`` are three different numbers away from
+# each other and from an invoice: a budget notifies and never enforces, an
+# upcoming invoice is what the CURRENT PERIOD has accrued, and an outstanding
+# balance is what is UNSETTLED — the one that decides whether new jobs are
+# admitted.
 from transcodely.v1.billing_pb2 import (
     BillingPaymentMethod,
     BillingPortalSession,
     BillingProfile,
+    Budget,
     CreateBillingPortalSessionRequest,
     CreateBillingPortalSessionResponse,
+    ExposureThresholdSource,
     GetBillingProfileRequest,
     GetBillingProfileResponse,
+    GetBudgetRequest,
+    GetBudgetResponse,
     GetInvoiceRequest,
     GetInvoiceResponse,
+    GetOutstandingBalanceRequest,
+    GetOutstandingBalanceResponse,
     GetUpcomingInvoiceRequest,
     GetUpcomingInvoiceResponse,
     Invoice,
@@ -85,7 +97,14 @@ from transcodely.v1.billing_pb2 import (
     InvoiceStatus,
     ListInvoicesRequest,
     ListInvoicesResponse,
+    OutstandingBalance,
     PaymentMethodState,
+    Settlement,
+    SettleOutstandingBalanceRequest,
+    SettleOutstandingBalanceResponse,
+    TrustTier,
+    UpdateBudgetRequest,
+    UpdateBudgetResponse,
 )
 from transcodely.v1.codec_av1_pb2 import AV1Options
 from transcodely.v1.codec_h264_pb2 import H264Options
@@ -97,9 +116,17 @@ from transcodely.v1.codec_vp9_pb2 import VP9Options
 # ``FREE`` and ``DELINQUENT`` both resolve usage limits to the free tier's, but
 # ``DELINQUENT`` still bills; neither is a suspension. An organization exempt
 # from the payment-method requirement always reports ``ACTIVE``.
+#
+# ``BillingTreatment`` is ``Organization.billing_treatment`` — orthogonal to
+# standing, and assigned rather than derived: standing is a fact about payment
+# health, treatment is the decision about whether automation may act on it. It
+# is populated on admin reads only. ``DunningStage`` belongs to the same wave
+# but reaches no message this SDK can receive, so it stays unexported; reach it
+# at ``transcodely.v1.common_pb2.DunningStage`` if you are decoding admin JSON.
 from transcodely.v1.common_pb2 import (
     AudioCodec,
     BillingStanding,
+    BillingTreatment,
     BitrateMode,
     Container,
     ContentType,
@@ -413,7 +440,9 @@ __all__ = [
     "BillingPortalSession",
     "BillingProfile",
     "BillingStanding",
+    "BillingTreatment",
     "BitrateMode",
+    "Budget",
     "BurnInStyle",
     "CancelJobRequest",
     "CancelJobResponse",
@@ -477,6 +506,7 @@ __all__ = [
     "EventRequest",
     "EventType",
     "ExecutionTiming",
+    "ExposureThresholdSource",
     "GOPAlignmentMode",
     "GcsCredentials",
     "GcsOriginConfig",
@@ -486,6 +516,8 @@ __all__ = [
     "GetAppResponse",
     "GetBillingProfileRequest",
     "GetBillingProfileResponse",
+    "GetBudgetRequest",
+    "GetBudgetResponse",
     "GetEndpointHealthRequest",
     "GetEndpointHealthResponse",
     "GetInvoiceRequest",
@@ -500,6 +532,8 @@ __all__ = [
     "GetOrganizationResponse",
     "GetOriginRequest",
     "GetOriginResponse",
+    "GetOutstandingBalanceRequest",
+    "GetOutstandingBalanceResponse",
     "GetPresetBySlugRequest",
     "GetPresetBySlugResponse",
     "GetPresetRequest",
@@ -586,6 +620,7 @@ __all__ = [
     "OutputSpec",
     "OutputStatus",
     "OutputVariantResult",
+    "OutstandingBalance",
     "PaginationRequest",
     "PaginationResponse",
     "PaymentMethodState",
@@ -611,6 +646,9 @@ __all__ = [
     "SegmentConfig",
     "SendTestWebhookRequest",
     "SendTestWebhookResponse",
+    "SettleOutstandingBalanceRequest",
+    "SettleOutstandingBalanceResponse",
+    "Settlement",
     "StreamingConfig",
     "SubtitleFormat",
     "SubtitleOperation",
@@ -623,8 +661,11 @@ __all__ = [
     "ThumbnailSpec",
     "ToneMapping",
     "TopVideo",
+    "TrustTier",
     "UpdateAppRequest",
     "UpdateAppResponse",
+    "UpdateBudgetRequest",
+    "UpdateBudgetResponse",
     "UpdateHostingConfigRequest",
     "UpdateHostingConfigResponse",
     "UpdateMeRequest",

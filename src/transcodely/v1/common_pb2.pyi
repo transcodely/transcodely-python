@@ -91,6 +91,24 @@ class BillingStanding(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     BILLING_STANDING_ACTIVE: _ClassVar[BillingStanding]
     BILLING_STANDING_GRACE: _ClassVar[BillingStanding]
     BILLING_STANDING_DELINQUENT: _ClassVar[BillingStanding]
+
+class BillingTreatment(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    BILLING_TREATMENT_UNSPECIFIED: _ClassVar[BillingTreatment]
+    BILLING_TREATMENT_NORMAL: _ClassVar[BillingTreatment]
+    BILLING_TREATMENT_TRUSTED: _ClassVar[BillingTreatment]
+    BILLING_TREATMENT_EXEMPT: _ClassVar[BillingTreatment]
+
+class DunningStage(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    DUNNING_STAGE_UNSPECIFIED: _ClassVar[DunningStage]
+    DUNNING_STAGE_NONE: _ClassVar[DunningStage]
+    DUNNING_STAGE_PAST_DUE: _ClassVar[DunningStage]
+    DUNNING_STAGE_WARNED: _ClassVar[DunningStage]
+    DUNNING_STAGE_SOFT_LIMITED: _ClassVar[DunningStage]
+    DUNNING_STAGE_SUSPENDED: _ClassVar[DunningStage]
+    DUNNING_STAGE_DELETION_WARNED: _ClassVar[DunningStage]
+    DUNNING_STAGE_WRITTEN_OFF: _ClassVar[DunningStage]
 VIDEO_CODEC_UNSPECIFIED: VideoCodec
 VIDEO_CODEC_H264: VideoCodec
 VIDEO_CODEC_H265: VideoCodec
@@ -146,6 +164,18 @@ BILLING_STANDING_FREE: BillingStanding
 BILLING_STANDING_ACTIVE: BillingStanding
 BILLING_STANDING_GRACE: BillingStanding
 BILLING_STANDING_DELINQUENT: BillingStanding
+BILLING_TREATMENT_UNSPECIFIED: BillingTreatment
+BILLING_TREATMENT_NORMAL: BillingTreatment
+BILLING_TREATMENT_TRUSTED: BillingTreatment
+BILLING_TREATMENT_EXEMPT: BillingTreatment
+DUNNING_STAGE_UNSPECIFIED: DunningStage
+DUNNING_STAGE_NONE: DunningStage
+DUNNING_STAGE_PAST_DUE: DunningStage
+DUNNING_STAGE_WARNED: DunningStage
+DUNNING_STAGE_SOFT_LIMITED: DunningStage
+DUNNING_STAGE_SUSPENDED: DunningStage
+DUNNING_STAGE_DELETION_WARNED: DunningStage
+DUNNING_STAGE_WRITTEN_OFF: DunningStage
 
 class PaginationRequest(_message.Message):
     __slots__ = ("limit", "cursor", "offset")

@@ -27,6 +27,22 @@ class InvoiceLineType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     INVOICE_LINE_TYPE_ADJUSTMENT: _ClassVar[InvoiceLineType]
     INVOICE_LINE_TYPE_HOSTING: _ClassVar[InvoiceLineType]
 
+class TrustTier(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    TRUST_TIER_UNSPECIFIED: _ClassVar[TrustTier]
+    TRUST_TIER_NEW: _ClassVar[TrustTier]
+    TRUST_TIER_ESTABLISHED: _ClassVar[TrustTier]
+    TRUST_TIER_PROVEN: _ClassVar[TrustTier]
+
+class ExposureThresholdSource(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    EXPOSURE_THRESHOLD_SOURCE_UNSPECIFIED: _ClassVar[ExposureThresholdSource]
+    EXPOSURE_THRESHOLD_SOURCE_OVERRIDE: _ClassVar[ExposureThresholdSource]
+    EXPOSURE_THRESHOLD_SOURCE_TRUST_TIER: _ClassVar[ExposureThresholdSource]
+    EXPOSURE_THRESHOLD_SOURCE_ORG_PLAN: _ClassVar[ExposureThresholdSource]
+    EXPOSURE_THRESHOLD_SOURCE_PLATFORM_DEFAULT: _ClassVar[ExposureThresholdSource]
+    EXPOSURE_THRESHOLD_SOURCE_UNBOUNDED: _ClassVar[ExposureThresholdSource]
+
 class PaymentMethodState(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
     PAYMENT_METHOD_STATE_UNSPECIFIED: _ClassVar[PaymentMethodState]
@@ -44,6 +60,16 @@ INVOICE_LINE_TYPE_FEE: InvoiceLineType
 INVOICE_LINE_TYPE_MIN_CHARGE: InvoiceLineType
 INVOICE_LINE_TYPE_ADJUSTMENT: InvoiceLineType
 INVOICE_LINE_TYPE_HOSTING: InvoiceLineType
+TRUST_TIER_UNSPECIFIED: TrustTier
+TRUST_TIER_NEW: TrustTier
+TRUST_TIER_ESTABLISHED: TrustTier
+TRUST_TIER_PROVEN: TrustTier
+EXPOSURE_THRESHOLD_SOURCE_UNSPECIFIED: ExposureThresholdSource
+EXPOSURE_THRESHOLD_SOURCE_OVERRIDE: ExposureThresholdSource
+EXPOSURE_THRESHOLD_SOURCE_TRUST_TIER: ExposureThresholdSource
+EXPOSURE_THRESHOLD_SOURCE_ORG_PLAN: ExposureThresholdSource
+EXPOSURE_THRESHOLD_SOURCE_PLATFORM_DEFAULT: ExposureThresholdSource
+EXPOSURE_THRESHOLD_SOURCE_UNBOUNDED: ExposureThresholdSource
 PAYMENT_METHOD_STATE_UNSPECIFIED: PaymentMethodState
 PAYMENT_METHOD_STATE_NONE: PaymentMethodState
 PAYMENT_METHOD_STATE_ON_FILE: PaymentMethodState
@@ -157,6 +183,78 @@ class BillingPortalSession(_message.Message):
     session_token: str
     def __init__(self, object: _Optional[str] = ..., url: _Optional[str] = ..., expires_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., session_token: _Optional[str] = ...) -> None: ...
 
+class Budget(_message.Message):
+    __slots__ = ("object", "org_id", "amount_eur", "spent_eur", "used_percent", "period_start", "period_end", "alert_steps", "notified_steps", "currency")
+    OBJECT_FIELD_NUMBER: _ClassVar[int]
+    ORG_ID_FIELD_NUMBER: _ClassVar[int]
+    AMOUNT_EUR_FIELD_NUMBER: _ClassVar[int]
+    SPENT_EUR_FIELD_NUMBER: _ClassVar[int]
+    USED_PERCENT_FIELD_NUMBER: _ClassVar[int]
+    PERIOD_START_FIELD_NUMBER: _ClassVar[int]
+    PERIOD_END_FIELD_NUMBER: _ClassVar[int]
+    ALERT_STEPS_FIELD_NUMBER: _ClassVar[int]
+    NOTIFIED_STEPS_FIELD_NUMBER: _ClassVar[int]
+    CURRENCY_FIELD_NUMBER: _ClassVar[int]
+    object: str
+    org_id: str
+    amount_eur: float
+    spent_eur: float
+    used_percent: float
+    period_start: _timestamp_pb2.Timestamp
+    period_end: _timestamp_pb2.Timestamp
+    alert_steps: _containers.RepeatedScalarFieldContainer[int]
+    notified_steps: _containers.RepeatedScalarFieldContainer[int]
+    currency: str
+    def __init__(self, object: _Optional[str] = ..., org_id: _Optional[str] = ..., amount_eur: _Optional[float] = ..., spent_eur: _Optional[float] = ..., used_percent: _Optional[float] = ..., period_start: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., period_end: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., alert_steps: _Optional[_Iterable[int]] = ..., notified_steps: _Optional[_Iterable[int]] = ..., currency: _Optional[str] = ...) -> None: ...
+
+class OutstandingBalance(_message.Message):
+    __slots__ = ("object", "org_id", "outstanding_cents", "tier", "settled_payments", "threshold_cents", "threshold_source", "hard_stop_cents", "blocked", "used_percent", "alert_steps", "notified_steps", "currency", "settlement_available")
+    OBJECT_FIELD_NUMBER: _ClassVar[int]
+    ORG_ID_FIELD_NUMBER: _ClassVar[int]
+    OUTSTANDING_CENTS_FIELD_NUMBER: _ClassVar[int]
+    TIER_FIELD_NUMBER: _ClassVar[int]
+    SETTLED_PAYMENTS_FIELD_NUMBER: _ClassVar[int]
+    THRESHOLD_CENTS_FIELD_NUMBER: _ClassVar[int]
+    THRESHOLD_SOURCE_FIELD_NUMBER: _ClassVar[int]
+    HARD_STOP_CENTS_FIELD_NUMBER: _ClassVar[int]
+    BLOCKED_FIELD_NUMBER: _ClassVar[int]
+    USED_PERCENT_FIELD_NUMBER: _ClassVar[int]
+    ALERT_STEPS_FIELD_NUMBER: _ClassVar[int]
+    NOTIFIED_STEPS_FIELD_NUMBER: _ClassVar[int]
+    CURRENCY_FIELD_NUMBER: _ClassVar[int]
+    SETTLEMENT_AVAILABLE_FIELD_NUMBER: _ClassVar[int]
+    object: str
+    org_id: str
+    outstanding_cents: int
+    tier: TrustTier
+    settled_payments: int
+    threshold_cents: int
+    threshold_source: ExposureThresholdSource
+    hard_stop_cents: int
+    blocked: bool
+    used_percent: float
+    alert_steps: _containers.RepeatedScalarFieldContainer[int]
+    notified_steps: _containers.RepeatedScalarFieldContainer[int]
+    currency: str
+    settlement_available: bool
+    def __init__(self, object: _Optional[str] = ..., org_id: _Optional[str] = ..., outstanding_cents: _Optional[int] = ..., tier: _Optional[_Union[TrustTier, str]] = ..., settled_payments: _Optional[int] = ..., threshold_cents: _Optional[int] = ..., threshold_source: _Optional[_Union[ExposureThresholdSource, str]] = ..., hard_stop_cents: _Optional[int] = ..., blocked: bool = ..., used_percent: _Optional[float] = ..., alert_steps: _Optional[_Iterable[int]] = ..., notified_steps: _Optional[_Iterable[int]] = ..., currency: _Optional[str] = ..., settlement_available: bool = ...) -> None: ...
+
+class Settlement(_message.Message):
+    __slots__ = ("object", "invoice_id", "amount_cents", "period_start", "period_end", "currency")
+    OBJECT_FIELD_NUMBER: _ClassVar[int]
+    INVOICE_ID_FIELD_NUMBER: _ClassVar[int]
+    AMOUNT_CENTS_FIELD_NUMBER: _ClassVar[int]
+    PERIOD_START_FIELD_NUMBER: _ClassVar[int]
+    PERIOD_END_FIELD_NUMBER: _ClassVar[int]
+    CURRENCY_FIELD_NUMBER: _ClassVar[int]
+    object: str
+    invoice_id: str
+    amount_cents: int
+    period_start: _timestamp_pb2.Timestamp
+    period_end: _timestamp_pb2.Timestamp
+    currency: str
+    def __init__(self, object: _Optional[str] = ..., invoice_id: _Optional[str] = ..., amount_cents: _Optional[int] = ..., period_start: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., period_end: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., currency: _Optional[str] = ...) -> None: ...
+
 class ListInvoicesRequest(_message.Message):
     __slots__ = ("pagination",)
     PAGINATION_FIELD_NUMBER: _ClassVar[int]
@@ -212,3 +310,47 @@ class CreateBillingPortalSessionResponse(_message.Message):
     SESSION_FIELD_NUMBER: _ClassVar[int]
     session: BillingPortalSession
     def __init__(self, session: _Optional[_Union[BillingPortalSession, _Mapping]] = ...) -> None: ...
+
+class GetBudgetRequest(_message.Message):
+    __slots__ = ()
+    def __init__(self) -> None: ...
+
+class GetBudgetResponse(_message.Message):
+    __slots__ = ("budget",)
+    BUDGET_FIELD_NUMBER: _ClassVar[int]
+    budget: Budget
+    def __init__(self, budget: _Optional[_Union[Budget, _Mapping]] = ...) -> None: ...
+
+class UpdateBudgetRequest(_message.Message):
+    __slots__ = ("amount_eur",)
+    AMOUNT_EUR_FIELD_NUMBER: _ClassVar[int]
+    amount_eur: float
+    def __init__(self, amount_eur: _Optional[float] = ...) -> None: ...
+
+class UpdateBudgetResponse(_message.Message):
+    __slots__ = ("budget",)
+    BUDGET_FIELD_NUMBER: _ClassVar[int]
+    budget: Budget
+    def __init__(self, budget: _Optional[_Union[Budget, _Mapping]] = ...) -> None: ...
+
+class GetOutstandingBalanceRequest(_message.Message):
+    __slots__ = ()
+    def __init__(self) -> None: ...
+
+class GetOutstandingBalanceResponse(_message.Message):
+    __slots__ = ("balance",)
+    BALANCE_FIELD_NUMBER: _ClassVar[int]
+    balance: OutstandingBalance
+    def __init__(self, balance: _Optional[_Union[OutstandingBalance, _Mapping]] = ...) -> None: ...
+
+class SettleOutstandingBalanceRequest(_message.Message):
+    __slots__ = ()
+    def __init__(self) -> None: ...
+
+class SettleOutstandingBalanceResponse(_message.Message):
+    __slots__ = ("settlement", "balance")
+    SETTLEMENT_FIELD_NUMBER: _ClassVar[int]
+    BALANCE_FIELD_NUMBER: _ClassVar[int]
+    settlement: Settlement
+    balance: OutstandingBalance
+    def __init__(self, settlement: _Optional[_Union[Settlement, _Mapping]] = ..., balance: _Optional[_Union[OutstandingBalance, _Mapping]] = ...) -> None: ...

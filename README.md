@@ -85,6 +85,9 @@ client.origins         # create / get / list / update / validate / archive
 client.apps            # create / get / list / update / archive / enable_hosting
 client.api_keys        # create / get / list / revoke
 client.organizations   # create / get / list / update / check_slug
+client.billing         # list_invoices / retrieve / retrieve_upcoming / retrieve_profile / create_portal_session
+                       #   + retrieve_budget / set_budget / clear_budget
+                       #   + retrieve_outstanding_balance / settle_outstanding_balance
 client.memberships     # list / get / update_role / remove
 client.users           # get_me / get / list / update_me
 client.health          # check
@@ -228,6 +231,54 @@ r2 = {
 ```
 
 Provide either `account_id` or `endpoint`, never both. `jurisdiction` only applies when `account_id` is set.
+
+## Billing
+
+Billing settles a whole organization, so `client.billing` needs a dashboard session token for an
+organization **owner** plus the organization it is for — an API key is scoped to one app and is
+rejected outright:
+
+```python
+client = Transcodely("tk_session_token", organization_id="org_f6g7h8i9j0")
+
+client.billing.retrieve_upcoming()  # what the current period has accrued
+client.billing.list_invoices(limit=12)
+```
+
+Three numbers live here and they are not interchangeable:
+
+| Call | What it answers | Enforces? |
+|---|---|---|
+| `billing.retrieve_upcoming()` | What the **current period** has accrued | No |
+| `billing.retrieve_budget()` | Spend against the org's own monthly budget | No — emails only |
+| `billing.retrieve_outstanding_balance()` | What is **unsettled**, incl. earlier periods | Yes, at the hard stop |
+| `apps.set_spend_limit(app_id, eur)` | One app's monthly cap | Yes, at 100% |
+
+Budgets notify; limits block:
+
+```python
+client.billing.set_budget(500.0)  # emails at 50% / 80% / 100%, restricts nothing
+client.billing.clear_budget()  # turns the alerts off
+```
+
+The outstanding balance is the platform's own exposure control. Reminder emails go out at 80%,
+100%, 125%, 150% and 175% of `threshold_cents` and restrict nothing; only at `hard_stop_cents`
+(twice the threshold) are **new** jobs refused with code `outstanding_balance_exceeded` — queued
+and running work still finishes and videos keep playing. Paying lifts the block on the next
+request:
+
+```python
+balance = client.billing.retrieve_outstanding_balance()
+if balance.blocked and balance.settlement_available:
+    result = client.billing.settle_outstanding_balance()
+    print(result.settlement.invoice_id, result.balance.outstanding_cents)  # → 0
+```
+
+Check `settlement_available` before offering a "pay now" action: settlement raises
+`PreconditionError` with code `settlement_unavailable` where the rail is switched off, and
+`nothing_outstanding` when there is nothing to pay. Job creates refused for money reasons carry
+`billing_past_due` (a statement is unpaid) or `outstanding_balance_exceeded` (too much unbilled
+usage) — neither clears by retrying, so back-off is the wrong response to both.
 
 ## Errors
 

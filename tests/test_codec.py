@@ -20,7 +20,14 @@ from transcodely._codec.json_codec import (
     simplify_enum_value,
     transform_enums_in_dict,
 )
-from transcodely.v1 import common_pb2, job_pb2, origin_pb2, subtitles_pb2
+from transcodely.v1 import (
+    billing_pb2,
+    common_pb2,
+    job_pb2,
+    organization_pb2,
+    origin_pb2,
+    subtitles_pb2,
+)
 
 # ---- Helper enum descriptors -------------------------------------------------
 
@@ -31,6 +38,10 @@ RESOLUTION = common_pb2.Resolution.DESCRIPTOR
 OUTPUT_FORMAT = common_pb2.OutputFormat.DESCRIPTOR
 ORIGIN_PROVIDER = origin_pb2.OriginProvider.DESCRIPTOR
 R2_JURISDICTION = origin_pb2.R2Jurisdiction.DESCRIPTOR
+TRUST_TIER = billing_pb2.TrustTier.DESCRIPTOR
+THRESHOLD_SOURCE = billing_pb2.ExposureThresholdSource.DESCRIPTOR
+BILLING_TREATMENT = common_pb2.BillingTreatment.DESCRIPTOR
+DUNNING_STAGE = common_pb2.DunningStage.DESCRIPTOR
 
 
 # ---- camel_to_screaming_snake -----------------------------------------------
@@ -316,6 +327,18 @@ class TestRoundTrip:
         ("R2_JURISDICTION_DEFAULT", R2_JURISDICTION, "default"),
         ("R2_JURISDICTION_EU", R2_JURISDICTION, "eu"),
         ("R2_JURISDICTION_FEDRAMP", R2_JURISDICTION, "fedramp"),
+        ("TRUST_TIER_NEW", TRUST_TIER, "new"),
+        ("TRUST_TIER_ESTABLISHED", TRUST_TIER, "established"),
+        ("TRUST_TIER_PROVEN", TRUST_TIER, "proven"),
+        ("EXPOSURE_THRESHOLD_SOURCE_OVERRIDE", THRESHOLD_SOURCE, "override"),
+        ("EXPOSURE_THRESHOLD_SOURCE_TRUST_TIER", THRESHOLD_SOURCE, "trust_tier"),
+        ("EXPOSURE_THRESHOLD_SOURCE_ORG_PLAN", THRESHOLD_SOURCE, "org_plan"),
+        ("EXPOSURE_THRESHOLD_SOURCE_UNBOUNDED", THRESHOLD_SOURCE, "unbounded"),
+        ("BILLING_TREATMENT_NORMAL", BILLING_TREATMENT, "normal"),
+        ("BILLING_TREATMENT_TRUSTED", BILLING_TREATMENT, "trusted"),
+        ("BILLING_TREATMENT_EXEMPT", BILLING_TREATMENT, "exempt"),
+        ("DUNNING_STAGE_SOFT_LIMITED", DUNNING_STAGE, "soft_limited"),
+        ("DUNNING_STAGE_WRITTEN_OFF", DUNNING_STAGE, "written_off"),
     ],
 )
 def test_canonical_to_simplified_round_trip(value: str, enum_desc, wire: str) -> None:  # type: ignore[no-untyped-def]
@@ -401,3 +424,80 @@ class TestR2OriginJsonWireFormat:
         assert decoded.r2.endpoint == "https://media.example.com"
         assert decoded.r2.account_id == ""
         assert decoded.r2.jurisdiction == origin_pb2.R2_JURISDICTION_UNSPECIFIED
+
+
+# ---- Money-loop wire format ---------------------------------------------------
+
+
+class TestOutstandingBalanceJsonWireFormat:
+    """The exposure numbers a billing page reads, over the wire.
+
+    Cent amounts are int64 and therefore JSON *strings* per the protobuf 64-bit
+    mapping, while the budget is a plain double — a page that parses one like
+    the other gets it wrong, so both forms are pinned here.
+    """
+
+    def test_int64_cents_are_strings_and_absent_thresholds_stay_absent(self) -> None:
+        balance = billing_pb2.OutstandingBalance(
+            object="outstanding_balance",
+            org_id="org_f6g7h8i9j0",
+            outstanding_cents=9000,
+            tier=billing_pb2.TRUST_TIER_ESTABLISHED,
+            settled_payments=2,
+            threshold_source=billing_pb2.EXPOSURE_THRESHOLD_SOURCE_UNBOUNDED,
+            currency="EUR",
+        )
+        obj = json.loads(serialize(balance).decode())
+        assert obj["outstanding_cents"] == "9000"
+        assert obj["settled_payments"] == "2"
+        assert obj["tier"] == "established"
+        assert obj["threshold_source"] == "unbounded"
+        # No threshold applies: the fields are omitted, not zeroed — a 0 would
+        # read as "no headroom at all" instead of "no ceiling".
+        assert "threshold_cents" not in obj
+        assert "hard_stop_cents" not in obj
+        assert "used_percent" not in obj
+
+    def test_round_trips_a_blocked_balance(self) -> None:
+        balance = billing_pb2.OutstandingBalance(
+            outstanding_cents=10000,
+            tier=billing_pb2.TRUST_TIER_NEW,
+            threshold_cents=5000,
+            threshold_source=billing_pb2.EXPOSURE_THRESHOLD_SOURCE_TRUST_TIER,
+            hard_stop_cents=10000,
+            blocked=True,
+            used_percent=200.0,
+            alert_steps=[80, 100, 125, 150, 175, 200],
+            notified_steps=[80, 100, 125, 150, 175, 200],
+            settlement_available=True,
+        )
+        decoded = deserialize(serialize(balance), billing_pb2.OutstandingBalance())
+        assert decoded.blocked is True
+        assert decoded.hard_stop_cents == 10000
+        assert decoded.threshold_source == billing_pb2.EXPOSURE_THRESHOLD_SOURCE_TRUST_TIER
+        assert list(decoded.notified_steps) == [80, 100, 125, 150, 175, 200]
+        assert decoded.settlement_available is True
+
+    def test_budget_amount_is_a_plain_double_and_clears_by_absence(self) -> None:
+        obj = json.loads(serialize(billing_pb2.Budget(amount_eur=50.0, spent_eur=12.5)).decode())
+        assert obj["amount_eur"] == 50.0
+        assert obj["spent_eur"] == 12.5
+
+        cleared = json.loads(serialize(billing_pb2.UpdateBudgetRequest()).decode())
+        assert "amount_eur" not in cleared
+
+    def test_organization_billing_treatment_is_orthogonal_to_standing(self) -> None:
+        # A trusted org can report DELINQUENT and still be untouched by every
+        # automated path, so the two fields must decode independently.
+        org = organization_pb2.Organization(
+            id="org_f6g7h8i9j0",
+            billing_standing=common_pb2.BILLING_STANDING_DELINQUENT,
+            billing_treatment=common_pb2.BILLING_TREATMENT_TRUSTED,
+        )
+        obj = json.loads(serialize(org).decode())
+        assert obj["billing_standing"] == "delinquent"
+        assert obj["billing_treatment"] == "trusted"
+
+        decoded = deserialize(serialize(org), organization_pb2.Organization())
+        assert decoded.billing_standing == common_pb2.BILLING_STANDING_DELINQUENT
+        assert decoded.billing_treatment == common_pb2.BILLING_TREATMENT_TRUSTED

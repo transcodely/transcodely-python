@@ -153,6 +153,137 @@ class TestRetrieveProfile:
         assert len(got.payment_methods) == 0
 
 
+class TestBudget:
+    def test_retrieve_returns_spend_even_with_no_budget_set(self) -> None:
+        # An org that has never set a budget still gets one back, so a card can
+        # show current-period spend before a budget exists.
+        budget = billing_pb2.Budget(
+            object="budget",
+            org_id="org_f6g7h8i9j0",
+            spent_eur=12.5,
+            currency="EUR",
+            alert_steps=[50, 80, 100],
+        )
+        t = FakeTransport({"GetBudget": billing_pb2.GetBudgetResponse(budget=budget)})
+        got = Billing(t).retrieve_budget()  # type: ignore[arg-type]
+
+        assert t.calls[0][0] == "GetBudget"
+        assert not got.HasField("amount_eur")
+        assert not got.HasField("used_percent")
+        assert got.spent_eur == 12.5
+
+    def test_set_marks_amount_present(self) -> None:
+        t = FakeTransport(
+            {
+                "UpdateBudget": lambda req: billing_pb2.UpdateBudgetResponse(
+                    budget=billing_pb2.Budget(amount_eur=req.amount_eur, spent_eur=30.0)
+                )
+            }
+        )
+        got = Billing(t).set_budget(50.0)  # type: ignore[arg-type]
+
+        method, req = t.calls[0]
+        assert method == "UpdateBudget"
+        assert req.HasField("amount_eur")
+        assert req.amount_eur == 50.0
+        assert got.amount_eur == 50.0
+
+    def test_clear_omits_amount_entirely(self) -> None:
+        # Absence is the clear signal — a zero would be rejected by the server's
+        # `> 0` rule rather than read as "turn the alerts off".
+        t = FakeTransport({"UpdateBudget": billing_pb2.UpdateBudgetResponse()})
+        Billing(t).clear_budget()  # type: ignore[arg-type]
+
+        req = t.calls[0][1]
+        assert not req.HasField("amount_eur")
+
+    def test_used_percent_is_not_capped_at_100(self) -> None:
+        budget = billing_pb2.Budget(amount_eur=50.0, spent_eur=120.0, used_percent=240.0)
+        t = FakeTransport({"GetBudget": billing_pb2.GetBudgetResponse(budget=budget)})
+        assert Billing(t).retrieve_budget().used_percent == 240.0  # type: ignore[arg-type]
+
+
+class TestOutstandingBalance:
+    def test_retrieve_reports_tier_source_and_block_state(self) -> None:
+        balance = billing_pb2.OutstandingBalance(
+            object="outstanding_balance",
+            org_id="org_f6g7h8i9j0",
+            outstanding_cents=9000,
+            tier=billing_pb2.TRUST_TIER_NEW,
+            settled_payments=0,
+            threshold_cents=5000,
+            threshold_source=billing_pb2.EXPOSURE_THRESHOLD_SOURCE_TRUST_TIER,
+            hard_stop_cents=10000,
+            blocked=False,
+            used_percent=180.0,
+            alert_steps=[80, 100, 125, 150, 175, 200],
+            notified_steps=[80, 100, 125, 150],
+            currency="EUR",
+            settlement_available=True,
+        )
+        t = FakeTransport(
+            {"GetOutstandingBalance": billing_pb2.GetOutstandingBalanceResponse(balance=balance)}
+        )
+        got = Billing(t).retrieve_outstanding_balance()  # type: ignore[arg-type]
+
+        assert t.calls[0][0] == "GetOutstandingBalance"
+        assert got.tier == billing_pb2.TRUST_TIER_NEW
+        assert got.threshold_source == billing_pb2.EXPOSURE_THRESHOLD_SOURCE_TRUST_TIER
+        # Past the threshold and past three reminders, still serving: only
+        # hard_stop_cents refuses new jobs.
+        assert got.outstanding_cents > got.threshold_cents
+        assert got.blocked is False
+        assert got.hard_stop_cents == 2 * got.threshold_cents
+
+    def test_unbounded_org_has_no_threshold_at_all(self) -> None:
+        # The intended destination of the ladder: absent threshold, absent hard
+        # stop, absent percentage — not a zero, which would read as "no credit".
+        balance = billing_pb2.OutstandingBalance(
+            outstanding_cents=42000,
+            tier=billing_pb2.TRUST_TIER_PROVEN,
+            settled_payments=7,
+            threshold_source=billing_pb2.EXPOSURE_THRESHOLD_SOURCE_UNBOUNDED,
+        )
+        t = FakeTransport(
+            {"GetOutstandingBalance": billing_pb2.GetOutstandingBalanceResponse(balance=balance)}
+        )
+        got = Billing(t).retrieve_outstanding_balance()  # type: ignore[arg-type]
+
+        assert not got.HasField("threshold_cents")
+        assert not got.HasField("hard_stop_cents")
+        assert not got.HasField("used_percent")
+        assert got.blocked is False
+
+
+class TestSettleOutstandingBalance:
+    def test_returns_the_statement_and_the_cleared_balance(self) -> None:
+        resp = billing_pb2.SettleOutstandingBalanceResponse(
+            settlement=billing_pb2.Settlement(
+                object="settlement",
+                invoice_id="inv_a1b2c3d4e5f6",
+                amount_cents=9000,
+                currency="EUR",
+            ),
+            balance=billing_pb2.OutstandingBalance(
+                outstanding_cents=0,
+                blocked=False,
+                threshold_cents=5000,
+                hard_stop_cents=10000,
+                used_percent=0.0,
+            ),
+        )
+        t = FakeTransport({"SettleOutstandingBalance": resp})
+        got = Billing(t).settle_outstanding_balance()  # type: ignore[arg-type]
+
+        method, req = t.calls[0]
+        assert method == "SettleOutstandingBalance"
+        # No amount on the request, by design: the ledger names the figure.
+        assert req.SerializeToString() == b""
+        assert got.settlement.invoice_id == "inv_a1b2c3d4e5f6"
+        assert got.balance.outstanding_cents == 0
+        assert got.balance.blocked is False
+
+
 class TestCreatePortalSession:
     def test_returns_the_provider_session_url(self) -> None:
         session = billing_pb2.BillingPortalSession(
