@@ -5,13 +5,15 @@ build-backend = "hatchling.build"
 [project]
 name = "transcodely"
 version = "0.3.8"
-description = "Official Python SDK for the Transcodely video transcoding API"
+description = "Official Python SDK for Transcodely — encode video to HLS, DASH and MP4 into your own S3, GCS or R2 bucket, with DRM and signed playback."
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
 authors = [{ name = "Transcodely" }]
 requires-python = ">=3.10"
-keywords = ["transcodely", "video", "transcoding", "encoding", "hls", "dash", "streaming", "connect-rpc"]
+keywords = ["transcodely", "video", "transcoding", "encoding", "hls", "dash", "cmaf",
+            "drm", "widevine", "fairplay", "abr", "ffmpeg", "s3", "r2", "signed-urls",
+            "video-hosting", "streaming", "connect-rpc"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -42,8 +44,8 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://transcodely.com"
-Documentation = "https://transcodely.com/docs"
+Homepage = "https://www.transcodely.com"
+Documentation = "https://www.transcodely.com/docs"
 Repository = "https://github.com/transcodely/transcodely-python"
 Issues = "https://github.com/transcodely/transcodely-python/issues"
 

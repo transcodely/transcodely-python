@@ -1,6 +1,8 @@
 # transcodely
 
-Official Python SDK for the [Transcodely](https://transcodely.com) video transcoding API.
+Official Python SDK for [Transcodely](https://www.transcodely.com) — encode video into
+HLS, DASH and MP4 and write it to your own S3, GCS or R2 bucket, with DRM, signed
+playback and deterministic output paths. Or let Transcodely host and deliver it.
 
 ```bash
 pip install transcodely
