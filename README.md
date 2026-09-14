@@ -40,6 +40,42 @@ with Transcodely(api_key=os.environ["TRANSCODELY_API_KEY"]) as client:
 
 The simplified-string form (`"hls"`, `"h264"`, `"1080p"`) is what the API actually emits over the wire — the SDK round-trips it transparently to and from the proto enum integers.
 
+## Read the output report
+
+Every completed output carries a report of what the produced file actually
+turned out to be — measured from the encoded file rather than copied from the
+request — plus the verdict of comparing those measurements against what was
+asked for.
+
+```python
+from transcodely.types import OutputReport
+
+done = client.jobs.get(job.id)
+
+for output in done.outputs:
+    if not output.HasField("report"):
+        continue  # not measured — never "nothing wrong"
+
+    report: OutputReport = output.report
+    print(
+        output.id,
+        report.video.codec,
+        f"{report.video.width}x{report.video.height}",
+        f"{report.duration_seconds}s",
+    )
+
+    if not report.verdict.matches_request:
+        for m in report.verdict.mismatches:
+            print(f"  {m.field}: asked for {m.expected}, got {m.actual}")
+```
+
+Check `output.HasField("report")` rather than truthiness: an absent report means
+"not measured", which is not the same as a report that found nothing wrong.
+Branch on `m.field` — it comes from a fixed vocabulary (`video.codec`,
+`video.resolution`, `duration_seconds`, …) — rather than on the values beside
+it. For an ABR ladder the facts describe the highest-resolution rendition, the
+same one the verdict judges; per-rendition detail stays in `variant_results`.
+
 ## AI captions
 
 Add auto-generated captions to any output with a `generate` subtitle track. Leave `language` empty (or set `"auto"`) to auto-detect the spoken language, or pass an ISO 639-2 code to force one. A per-job fee is metered by source minute and surfaced on `job.fees`; produced captions appear on `job.subtitle_results` with `auto_generated=True`.

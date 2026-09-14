@@ -266,7 +266,7 @@ class VariantPricingSnapshot(_message.Message):
     def __init__(self, index: _Optional[int] = ..., codec: _Optional[_Union[_common_pb2.VideoCodec, str]] = ..., resolution: _Optional[_Union[_common_pb2.Resolution, str]] = ..., framerate: _Optional[int] = ..., quality: _Optional[_Union[_common_pb2.QualityTier, str]] = ..., width: _Optional[int] = ..., height: _Optional[int] = ..., base_price: _Optional[float] = ..., codec_multiplier: _Optional[float] = ..., resolution_multiplier: _Optional[float] = ..., framerate_multiplier: _Optional[float] = ..., quality_multiplier: _Optional[float] = ..., resolution_tier: _Optional[_Union[_common_pb2.Resolution, str]] = ..., actual_framerate: _Optional[float] = ..., pixel_count: _Optional[int] = ..., estimated_cost: _Optional[float] = ..., actual_cost: _Optional[float] = ..., status: _Optional[str] = ..., progress: _Optional[int] = ..., feature_multiplier: _Optional[float] = ...) -> None: ...
 
 class JobOutput(_message.Message):
-    __slots__ = ("id", "spec", "status", "progress", "output_url", "output_size_bytes", "duration_seconds", "pricing", "estimated_duration_seconds", "estimated_cost", "actual_cost", "error_code", "error_message", "started_at", "completed_at", "preset_id", "preset_slug", "variant_pricing", "object", "width", "height", "average_bitrate_kbps", "variant_results", "signed_url")
+    __slots__ = ("id", "spec", "status", "progress", "output_url", "output_size_bytes", "duration_seconds", "pricing", "estimated_duration_seconds", "estimated_cost", "actual_cost", "error_code", "error_message", "started_at", "completed_at", "preset_id", "preset_slug", "variant_pricing", "object", "width", "height", "average_bitrate_kbps", "variant_results", "signed_url", "report")
     ID_FIELD_NUMBER: _ClassVar[int]
     SPEC_FIELD_NUMBER: _ClassVar[int]
     STATUS_FIELD_NUMBER: _ClassVar[int]
@@ -291,6 +291,7 @@ class JobOutput(_message.Message):
     AVERAGE_BITRATE_KBPS_FIELD_NUMBER: _ClassVar[int]
     VARIANT_RESULTS_FIELD_NUMBER: _ClassVar[int]
     SIGNED_URL_FIELD_NUMBER: _ClassVar[int]
+    REPORT_FIELD_NUMBER: _ClassVar[int]
     id: str
     spec: OutputSpec
     status: OutputStatus
@@ -315,7 +316,92 @@ class JobOutput(_message.Message):
     average_bitrate_kbps: int
     variant_results: _containers.RepeatedCompositeFieldContainer[OutputVariantResult]
     signed_url: str
-    def __init__(self, id: _Optional[str] = ..., spec: _Optional[_Union[OutputSpec, _Mapping]] = ..., status: _Optional[_Union[OutputStatus, str]] = ..., progress: _Optional[int] = ..., output_url: _Optional[str] = ..., output_size_bytes: _Optional[int] = ..., duration_seconds: _Optional[int] = ..., pricing: _Optional[_Union[PricingSnapshot, _Mapping]] = ..., estimated_duration_seconds: _Optional[int] = ..., estimated_cost: _Optional[float] = ..., actual_cost: _Optional[float] = ..., error_code: _Optional[str] = ..., error_message: _Optional[str] = ..., started_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., completed_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., preset_id: _Optional[str] = ..., preset_slug: _Optional[str] = ..., variant_pricing: _Optional[_Iterable[_Union[VariantPricingSnapshot, _Mapping]]] = ..., object: _Optional[str] = ..., width: _Optional[int] = ..., height: _Optional[int] = ..., average_bitrate_kbps: _Optional[int] = ..., variant_results: _Optional[_Iterable[_Union[OutputVariantResult, _Mapping]]] = ..., signed_url: _Optional[str] = ...) -> None: ...
+    report: OutputReport
+    def __init__(self, id: _Optional[str] = ..., spec: _Optional[_Union[OutputSpec, _Mapping]] = ..., status: _Optional[_Union[OutputStatus, str]] = ..., progress: _Optional[int] = ..., output_url: _Optional[str] = ..., output_size_bytes: _Optional[int] = ..., duration_seconds: _Optional[int] = ..., pricing: _Optional[_Union[PricingSnapshot, _Mapping]] = ..., estimated_duration_seconds: _Optional[int] = ..., estimated_cost: _Optional[float] = ..., actual_cost: _Optional[float] = ..., error_code: _Optional[str] = ..., error_message: _Optional[str] = ..., started_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., completed_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., preset_id: _Optional[str] = ..., preset_slug: _Optional[str] = ..., variant_pricing: _Optional[_Iterable[_Union[VariantPricingSnapshot, _Mapping]]] = ..., object: _Optional[str] = ..., width: _Optional[int] = ..., height: _Optional[int] = ..., average_bitrate_kbps: _Optional[int] = ..., variant_results: _Optional[_Iterable[_Union[OutputVariantResult, _Mapping]]] = ..., signed_url: _Optional[str] = ..., report: _Optional[_Union[OutputReport, _Mapping]] = ...) -> None: ...
+
+class OutputReport(_message.Message):
+    __slots__ = ("container", "video", "audio", "duration_seconds", "verdict", "checked_at")
+    CONTAINER_FIELD_NUMBER: _ClassVar[int]
+    VIDEO_FIELD_NUMBER: _ClassVar[int]
+    AUDIO_FIELD_NUMBER: _ClassVar[int]
+    DURATION_SECONDS_FIELD_NUMBER: _ClassVar[int]
+    VERDICT_FIELD_NUMBER: _ClassVar[int]
+    CHECKED_AT_FIELD_NUMBER: _ClassVar[int]
+    container: str
+    video: OutputReportVideo
+    audio: _containers.RepeatedCompositeFieldContainer[OutputReportAudio]
+    duration_seconds: float
+    verdict: OutputReportVerdict
+    checked_at: _timestamp_pb2.Timestamp
+    def __init__(self, container: _Optional[str] = ..., video: _Optional[_Union[OutputReportVideo, _Mapping]] = ..., audio: _Optional[_Iterable[_Union[OutputReportAudio, _Mapping]]] = ..., duration_seconds: _Optional[float] = ..., verdict: _Optional[_Union[OutputReportVerdict, _Mapping]] = ..., checked_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+
+class OutputReportVideo(_message.Message):
+    __slots__ = ("codec", "profile", "level", "pix_fmt", "width", "height", "frame_rate", "bitrate_kbps", "color", "hdr_format")
+    CODEC_FIELD_NUMBER: _ClassVar[int]
+    PROFILE_FIELD_NUMBER: _ClassVar[int]
+    LEVEL_FIELD_NUMBER: _ClassVar[int]
+    PIX_FMT_FIELD_NUMBER: _ClassVar[int]
+    WIDTH_FIELD_NUMBER: _ClassVar[int]
+    HEIGHT_FIELD_NUMBER: _ClassVar[int]
+    FRAME_RATE_FIELD_NUMBER: _ClassVar[int]
+    BITRATE_KBPS_FIELD_NUMBER: _ClassVar[int]
+    COLOR_FIELD_NUMBER: _ClassVar[int]
+    HDR_FORMAT_FIELD_NUMBER: _ClassVar[int]
+    codec: str
+    profile: str
+    level: str
+    pix_fmt: str
+    width: int
+    height: int
+    frame_rate: float
+    bitrate_kbps: int
+    color: OutputReportColor
+    hdr_format: str
+    def __init__(self, codec: _Optional[str] = ..., profile: _Optional[str] = ..., level: _Optional[str] = ..., pix_fmt: _Optional[str] = ..., width: _Optional[int] = ..., height: _Optional[int] = ..., frame_rate: _Optional[float] = ..., bitrate_kbps: _Optional[int] = ..., color: _Optional[_Union[OutputReportColor, _Mapping]] = ..., hdr_format: _Optional[str] = ...) -> None: ...
+
+class OutputReportColor(_message.Message):
+    __slots__ = ("primaries", "transfer", "matrix", "range")
+    PRIMARIES_FIELD_NUMBER: _ClassVar[int]
+    TRANSFER_FIELD_NUMBER: _ClassVar[int]
+    MATRIX_FIELD_NUMBER: _ClassVar[int]
+    RANGE_FIELD_NUMBER: _ClassVar[int]
+    primaries: str
+    transfer: str
+    matrix: str
+    range: str
+    def __init__(self, primaries: _Optional[str] = ..., transfer: _Optional[str] = ..., matrix: _Optional[str] = ..., range: _Optional[str] = ...) -> None: ...
+
+class OutputReportAudio(_message.Message):
+    __slots__ = ("codec", "channels", "sample_rate_hz", "bitrate_kbps", "language")
+    CODEC_FIELD_NUMBER: _ClassVar[int]
+    CHANNELS_FIELD_NUMBER: _ClassVar[int]
+    SAMPLE_RATE_HZ_FIELD_NUMBER: _ClassVar[int]
+    BITRATE_KBPS_FIELD_NUMBER: _ClassVar[int]
+    LANGUAGE_FIELD_NUMBER: _ClassVar[int]
+    codec: str
+    channels: int
+    sample_rate_hz: int
+    bitrate_kbps: int
+    language: str
+    def __init__(self, codec: _Optional[str] = ..., channels: _Optional[int] = ..., sample_rate_hz: _Optional[int] = ..., bitrate_kbps: _Optional[int] = ..., language: _Optional[str] = ...) -> None: ...
+
+class OutputReportVerdict(_message.Message):
+    __slots__ = ("matches_request", "mismatches")
+    MATCHES_REQUEST_FIELD_NUMBER: _ClassVar[int]
+    MISMATCHES_FIELD_NUMBER: _ClassVar[int]
+    matches_request: bool
+    mismatches: _containers.RepeatedCompositeFieldContainer[OutputReportMismatch]
+    def __init__(self, matches_request: bool = ..., mismatches: _Optional[_Iterable[_Union[OutputReportMismatch, _Mapping]]] = ...) -> None: ...
+
+class OutputReportMismatch(_message.Message):
+    __slots__ = ("field", "expected", "actual")
+    FIELD_FIELD_NUMBER: _ClassVar[int]
+    EXPECTED_FIELD_NUMBER: _ClassVar[int]
+    ACTUAL_FIELD_NUMBER: _ClassVar[int]
+    field: str
+    expected: str
+    actual: str
+    def __init__(self, field: _Optional[str] = ..., expected: _Optional[str] = ..., actual: _Optional[str] = ...) -> None: ...
 
 class OutputVariantResult(_message.Message):
     __slots__ = ("index", "width", "height", "average_bitrate_kbps", "size_bytes")
