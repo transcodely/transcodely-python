@@ -81,6 +81,7 @@ def test_report_types_are_reexported_from_the_facade() -> None:
         "OutputReportAudio",
         "OutputReportVerdict",
         "OutputReportMismatch",
+        "OutputReportContentAware",
     ):
         assert name in types.__all__, f"{name} missing from transcodely.types.__all__"
         assert getattr(types, name) is getattr(job_pb2, name)
@@ -120,3 +121,48 @@ def test_an_unmeasured_output_has_no_report() -> None:
     """Absence means "not measured", so it must stay distinguishable from an empty report."""
     resp = _decode({"job": {"id": "job_abc123def456", "outputs": [{"id": "out_abc123def4567"}]}})
     assert not resp.job.outputs[0].HasField("report")
+
+
+def test_report_carries_what_the_per_title_search_decided() -> None:
+    """An output encoded with per-title analysis reports the search that shaped it."""
+    resp = _decode(
+        {
+            "job": {
+                "id": "job_abc123def456",
+                "outputs": [
+                    {
+                        "id": "out_abc123def4567",
+                        "report": {
+                            "container": "mp4",
+                            "content_aware": {
+                                "mode": "per_title",
+                                "vmaf_target": 95,
+                                "vmaf_achieved": 95.4,
+                                "crf_chosen": 24,
+                            },
+                        },
+                    }
+                ],
+            }
+        }
+    )
+
+    report = resp.job.outputs[0].report
+    assert report.HasField("content_aware")
+    assert report.content_aware.mode == "per_title"
+    assert report.content_aware.vmaf_target == 95
+    assert report.content_aware.vmaf_achieved == 95.4
+    assert report.content_aware.crf_chosen == 24
+
+
+def test_an_ordinary_output_reports_no_content_aware_block() -> None:
+    """Absence is the honest reading: no search shaped that encode."""
+    resp = _decode(
+        {
+            "job": {
+                "id": "job_abc123def456",
+                "outputs": [{"id": "out_abc123def4567", "report": {"container": "mp4"}}],
+            }
+        }
+    )
+    assert not resp.job.outputs[0].report.HasField("content_aware")

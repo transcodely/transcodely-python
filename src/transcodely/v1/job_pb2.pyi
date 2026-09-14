@@ -320,20 +320,34 @@ class JobOutput(_message.Message):
     def __init__(self, id: _Optional[str] = ..., spec: _Optional[_Union[OutputSpec, _Mapping]] = ..., status: _Optional[_Union[OutputStatus, str]] = ..., progress: _Optional[int] = ..., output_url: _Optional[str] = ..., output_size_bytes: _Optional[int] = ..., duration_seconds: _Optional[int] = ..., pricing: _Optional[_Union[PricingSnapshot, _Mapping]] = ..., estimated_duration_seconds: _Optional[int] = ..., estimated_cost: _Optional[float] = ..., actual_cost: _Optional[float] = ..., error_code: _Optional[str] = ..., error_message: _Optional[str] = ..., started_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., completed_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., preset_id: _Optional[str] = ..., preset_slug: _Optional[str] = ..., variant_pricing: _Optional[_Iterable[_Union[VariantPricingSnapshot, _Mapping]]] = ..., object: _Optional[str] = ..., width: _Optional[int] = ..., height: _Optional[int] = ..., average_bitrate_kbps: _Optional[int] = ..., variant_results: _Optional[_Iterable[_Union[OutputVariantResult, _Mapping]]] = ..., signed_url: _Optional[str] = ..., report: _Optional[_Union[OutputReport, _Mapping]] = ...) -> None: ...
 
 class OutputReport(_message.Message):
-    __slots__ = ("container", "video", "audio", "duration_seconds", "verdict", "checked_at")
+    __slots__ = ("container", "video", "audio", "duration_seconds", "verdict", "checked_at", "content_aware")
     CONTAINER_FIELD_NUMBER: _ClassVar[int]
     VIDEO_FIELD_NUMBER: _ClassVar[int]
     AUDIO_FIELD_NUMBER: _ClassVar[int]
     DURATION_SECONDS_FIELD_NUMBER: _ClassVar[int]
     VERDICT_FIELD_NUMBER: _ClassVar[int]
     CHECKED_AT_FIELD_NUMBER: _ClassVar[int]
+    CONTENT_AWARE_FIELD_NUMBER: _ClassVar[int]
     container: str
     video: OutputReportVideo
     audio: _containers.RepeatedCompositeFieldContainer[OutputReportAudio]
     duration_seconds: float
     verdict: OutputReportVerdict
     checked_at: _timestamp_pb2.Timestamp
-    def __init__(self, container: _Optional[str] = ..., video: _Optional[_Union[OutputReportVideo, _Mapping]] = ..., audio: _Optional[_Iterable[_Union[OutputReportAudio, _Mapping]]] = ..., duration_seconds: _Optional[float] = ..., verdict: _Optional[_Union[OutputReportVerdict, _Mapping]] = ..., checked_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+    content_aware: OutputReportContentAware
+    def __init__(self, container: _Optional[str] = ..., video: _Optional[_Union[OutputReportVideo, _Mapping]] = ..., audio: _Optional[_Iterable[_Union[OutputReportAudio, _Mapping]]] = ..., duration_seconds: _Optional[float] = ..., verdict: _Optional[_Union[OutputReportVerdict, _Mapping]] = ..., checked_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., content_aware: _Optional[_Union[OutputReportContentAware, _Mapping]] = ...) -> None: ...
+
+class OutputReportContentAware(_message.Message):
+    __slots__ = ("mode", "vmaf_target", "vmaf_achieved", "crf_chosen")
+    MODE_FIELD_NUMBER: _ClassVar[int]
+    VMAF_TARGET_FIELD_NUMBER: _ClassVar[int]
+    VMAF_ACHIEVED_FIELD_NUMBER: _ClassVar[int]
+    CRF_CHOSEN_FIELD_NUMBER: _ClassVar[int]
+    mode: str
+    vmaf_target: float
+    vmaf_achieved: float
+    crf_chosen: int
+    def __init__(self, mode: _Optional[str] = ..., vmaf_target: _Optional[float] = ..., vmaf_achieved: _Optional[float] = ..., crf_chosen: _Optional[int] = ...) -> None: ...
 
 class OutputReportVideo(_message.Message):
     __slots__ = ("codec", "profile", "level", "pix_fmt", "width", "height", "frame_rate", "bitrate_kbps", "color", "hdr_format")
