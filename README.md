@@ -76,6 +76,13 @@ Branch on `m.field` — it comes from a fixed vocabulary (`video.codec`,
 it. For an ABR ladder the facts describe the highest-resolution rendition, the
 same one the verdict judges; per-rendition detail stays in `variant_results`.
 
+An output encoded with per-title content-aware analysis also carries
+`report.content_aware`: the VMAF target the search aimed at, the score it reached
+on its samples, and the CRF it chose. It describes the SEARCH, not the delivered
+file — `vmaf_achieved` scores short samples taken before the real encode, which
+is never scored itself. Check `report.HasField("content_aware")`; an ordinary
+output has none.
+
 ## AI captions
 
 Add auto-generated captions to any output with a `generate` subtitle track. Leave `language` empty (or set `"auto"`) to auto-detect the spoken language, or pass an ISO 639-2 code to force one. A per-job fee is metered by source minute and surfaced on `job.fees`; produced captions appear on `job.subtitle_results` with `auto_generated=True`.
