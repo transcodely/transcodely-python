@@ -13,6 +13,7 @@ from .resources.apps import Apps
 from .resources.billing import Billing
 from .resources.events import Events
 from .resources.health import Health
+from .resources.ingest_rules import IngestRules
 from .resources.jobs import Jobs
 from .resources.memberships import Memberships
 from .resources.organizations import Organizations
@@ -63,6 +64,7 @@ class Transcodely:
         self._videos: Videos | None = None
         self._presets: Presets | None = None
         self._origins: Origins | None = None
+        self._ingest_rules: IngestRules | None = None
         self._apps: Apps | None = None
         self._api_keys: ApiKeys | None = None
         self._organizations: Organizations | None = None
@@ -110,6 +112,13 @@ class Transcodely:
         if self._origins is None:
             self._origins = Origins(self._transport)
         return self._origins
+
+    @property
+    def ingest_rules(self) -> IngestRules:
+        """Ingest rules: watch a bucket, transcode what lands in it."""
+        if self._ingest_rules is None:
+            self._ingest_rules = IngestRules(self._transport)
+        return self._ingest_rules
 
     @property
     def apps(self) -> Apps:
