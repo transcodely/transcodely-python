@@ -120,6 +120,7 @@ client.jobs            # create / get / list / cancel / confirm / watch
 client.videos          # upload helpers, multipart, create_from_url, get / list / update / delete / watch, get_stats / list_top_videos
 client.presets         # create / get / get_by_slug / list / update / duplicate / archive
 client.origins         # create / get / list / update / validate / archive
+client.ingest_rules    # create / get / list / update / delete / list_events / test / replay_event
 client.apps            # create / get / list / update / archive / enable_hosting
 client.api_keys        # create / get / list / revoke
 client.organizations   # create / get / list / update / check_slug
@@ -269,6 +270,72 @@ r2 = {
 ```
 
 Provide either `account_id` or `endpoint`, never both. `jurisdiction` only applies when `account_id` is set.
+
+## Ingest rules
+
+An ingest rule is a standing instruction on one readable origin: *when an object
+matching these filters lands, create this job for it*. Your storage provider
+posts its object-created events to the rule's endpoint, and no server of yours
+is in the path. Amazon S3 via SNS, Google Cloud Storage via a Pub/Sub push
+subscription, Supabase Storage via a database webhook, and a generic shape for
+anything else are all recognised from the payload.
+
+```python
+created = client.ingest_rules.create(
+    origin_id="ori_a1b2c3d4e5f6",
+    name="Watch uploads/",
+    filters={
+        "prefix": "uploads/",
+        "suffixes": [".mp4", ".mov"],
+        "min_bytes": 1024,  # ignore the zero-byte placeholder some clients write first
+    },
+    action={
+        "outputs": [{"preset": "web_1080p_standard"}],
+        "managed": True,  # host and deliver the result; use output_origin_id for your own bucket
+        "priority": "standard",
+    },
+)
+
+print("point your bucket notifications at", created.rule.endpoint_url)
+print("secret (shown once):", created.secret)
+```
+
+`created.secret` is the **only** time the inbound secret is readable — store it
+wherever the event sender will read it from. A later `get` returns just
+`secret_prefix` and `secret_hint`. Lost it? `update` with `rotate_secret=True`
+issues a new one, and the previous one keeps working for 24 hours so the sender
+can be changed without dropping an event.
+
+Every delivery is recorded, whether or not it became a job:
+
+```python
+for event in client.ingest_rules.list_events(rule_id=created.rule.id).auto_paging_iter():
+    print(event.id, event.object_key, event.status, event.reason)
+```
+
+A `skipped` event names why in `reason` — `filter_prefix`, `filter_suffix`,
+`filter_content_type`, `filter_size`, `bucket_mismatch`, `rule_disabled`, or
+`duplicate`. A `failed` one carries the API error code that refused the job,
+such as `limit_exceeded`. Narrow the log to either with the simplified status
+string: `list_events(status="skipped")`.
+
+Deduplication is permanent: an object is identified by (rule, bucket, key,
+etag), so re-sending the event or re-uploading the same bytes produces nothing.
+To give an object another pass — one that arrived while the rule was paused, or
+was refused while the account was over its cap — replay it:
+
+```python
+replayed = client.ingest_rules.replay_event("sev_a1b2c3d4e5f6g7")
+print(replayed.id, "is back in", StorageEventStatus.Name(replayed.status))
+```
+
+Only `skipped` and `failed` events can be replayed. When an `update` switches a
+paused rule back on, the response reports how large that backlog is in
+`events_skipped_while_disabled`.
+
+Before wiring the provider up, dry-run a key against the rule with
+`client.ingest_rules.test(...)`: it reports whether the filters match and, when
+they do, the exact job request the rule would submit. Nothing is stored.
 
 ## Billing
 
