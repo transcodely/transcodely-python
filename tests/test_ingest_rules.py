@@ -279,6 +279,24 @@ def test_update_surfaces_the_rotated_secret_and_the_backlog() -> None:
     assert t.calls[0][2].rotate_secret is True
 
 
+def test_update_carries_the_clear_flags() -> None:
+    """Update merges, so removing a filter or part of an action takes an
+    explicit flag rather than an empty value. Both flags have to survive
+    fill_from_dict and reach the request."""
+    t = FakeTransport({"Update": ingest_rule_pb2.UpdateIngestRuleResponse()})
+    IngestRules(t).update(  # type: ignore[arg-type]
+        id="ing_a1b2c3d4e5f6",
+        clear_filters=True,
+        clear_action=True,
+        action={"managed": True, "outputs": [{"type": "hls"}]},
+    )
+
+    req = t.calls[0][2]
+    assert req.clear_filters is True
+    assert req.clear_action is True
+    assert req.action.managed is True
+
+
 def test_get_delete_and_replay_unwrap_to_the_bare_message() -> None:
     t = FakeTransport(
         {

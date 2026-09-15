@@ -126,12 +126,22 @@ class WebhookEndpoints:
     def list(
         self,
         *,
-        app_id: str,
+        app_id: str | None = None,
         limit: int | None = None,
         opts: CallOptions | None = None,
     ) -> Page[webhook_pb2.WebhookEndpoint]:
+        """List webhook endpoints, newest first.
+
+        ``app_id`` is an optional filter. An API-key caller may omit it and get
+        their key's own app; passing a different app's ID is refused with
+        ``permission_denied``. A portal user who omits it gets the endpoints of
+        every app in the organization.
+        """
+
         def fetch(cursor: str | None) -> PageContents[webhook_pb2.WebhookEndpoint]:
-            req = webhook_pb2.ListWebhookEndpointsRequest(app_id=app_id)
+            req = webhook_pb2.ListWebhookEndpointsRequest()
+            if app_id is not None:
+                req.app_id = app_id
             pagination = common_pb2.PaginationRequest()
             if limit is not None:
                 pagination.limit = limit

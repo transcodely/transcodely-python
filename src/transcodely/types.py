@@ -140,12 +140,23 @@ from transcodely.v1.common_pb2 import (
     VideoCodec,
 )
 
-# Content-aware encoding is currently unavailable: the API rejects any job
-# create request that sets ``content_aware`` (per-title or auto-ABR) on an
-# output with InvalidArgument — rule ``parameter_unsupported`` on
-# ``outputs[i].content_aware`` — until worker support ships. These types stay
-# re-exported for forward compatibility.
+# ``ContentAwareConfig`` turns on per-title encoding for one output: the worker
+# finds the CRF this source needs to reach the VMAF target and encodes the
+# declared ladder at it, priced at 1.5x. The ladder is unchanged, so the price
+# quoted at create still holds, and what the search decided comes back on
+# ``report.content_aware``.
+#
+# ``ContentAwareMode.CONTENT_AWARE_MODE_PER_TITLE`` is accepted.
+# ``CONTENT_AWARE_MODE_AUTO_ABR`` is still rejected at create with
+# InvalidArgument — rule ``parameter_unsupported`` on
+# ``outputs[i].content_aware`` — because it would change the number of
+# renditions after the job was quoted per rendition. ``AutoABRConfig`` is
+# re-exported for that mode and has no effect until it ships.
 # See https://github.com/transcodely/api/issues/167.
+#
+# Per-title also needs at least one video rendition that is not pinned to an
+# explicit bitrate (``parameter_incompatible`` at create) and a source of at
+# least 120 seconds (``per_title_source_too_short``, at probe).
 from transcodely.v1.content_aware_pb2 import (
     AutoABRConfig,
     ContentAnalysis,

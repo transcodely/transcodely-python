@@ -205,20 +205,24 @@ class ListIngestRulesResponse(_message.Message):
     def __init__(self, rules: _Optional[_Iterable[_Union[IngestRule, _Mapping]]] = ..., pagination: _Optional[_Union[_common_pb2.PaginationResponse, _Mapping]] = ...) -> None: ...
 
 class UpdateIngestRuleRequest(_message.Message):
-    __slots__ = ("id", "name", "enabled", "filters", "action", "rotate_secret")
+    __slots__ = ("id", "name", "enabled", "filters", "action", "rotate_secret", "clear_filters", "clear_action")
     ID_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
     ENABLED_FIELD_NUMBER: _ClassVar[int]
     FILTERS_FIELD_NUMBER: _ClassVar[int]
     ACTION_FIELD_NUMBER: _ClassVar[int]
     ROTATE_SECRET_FIELD_NUMBER: _ClassVar[int]
+    CLEAR_FILTERS_FIELD_NUMBER: _ClassVar[int]
+    CLEAR_ACTION_FIELD_NUMBER: _ClassVar[int]
     id: str
     name: str
     enabled: bool
     filters: IngestRuleFilters
     action: IngestRuleAction
     rotate_secret: bool
-    def __init__(self, id: _Optional[str] = ..., name: _Optional[str] = ..., enabled: bool = ..., filters: _Optional[_Union[IngestRuleFilters, _Mapping]] = ..., action: _Optional[_Union[IngestRuleAction, _Mapping]] = ..., rotate_secret: bool = ...) -> None: ...
+    clear_filters: bool
+    clear_action: bool
+    def __init__(self, id: _Optional[str] = ..., name: _Optional[str] = ..., enabled: bool = ..., filters: _Optional[_Union[IngestRuleFilters, _Mapping]] = ..., action: _Optional[_Union[IngestRuleAction, _Mapping]] = ..., rotate_secret: bool = ..., clear_filters: bool = ..., clear_action: bool = ...) -> None: ...
 
 class UpdateIngestRuleResponse(_message.Message):
     __slots__ = ("rule", "secret", "events_skipped_while_disabled")
