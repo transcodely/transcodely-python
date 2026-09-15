@@ -4,6 +4,16 @@ All notable changes to the Transcodely Python SDK will be documented in this fil
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Breaking changes are allowed on minor bumps until 1.0.0.
 
+## [0.3.9](https://github.com/transcodely/transcodely-python/compare/v0.3.8...v0.3.9) (2026-09-15)
+
+
+### Features
+
+* **proto:** sync content-analysis report (per-title) ([#57](https://github.com/transcodely/transcodely-python/issues/57)) ([122b950](https://github.com/transcodely/transcodely-python/commit/122b950ff551f5930ea6771dc008a2454bb9410e))
+* **proto:** sync IngestRuleService (ingest rules) ([#56](https://github.com/transcodely/transcodely-python/issues/56)) ([fe21ca4](https://github.com/transcodely/transcodely-python/commit/fe21ca4ac91564cc492e26523a32d60e5865b7f3))
+* **proto:** sync OutputReport (job output facts + verdict) ([#54](https://github.com/transcodely/transcodely-python/issues/54)) ([088c6d1](https://github.com/transcodely/transcodely-python/commit/088c6d1c7c638b70375e017aeeaadc94a47052d4))
+* **proto:** sync protos to api 5.21.0 — optional app_id, per-title accepted, rule clear flags ([#58](https://github.com/transcodely/transcodely-python/issues/58)) ([410919c](https://github.com/transcodely/transcodely-python/commit/410919c4ee19e17761bbacf5f4ec9beefcc4f289))
+
 ## [0.3.8](https://github.com/transcodely/transcodely-python/compare/v0.3.7...v0.3.8) (2026-08-16)
 
 
