@@ -52,15 +52,25 @@ class Events:
     def list(
         self,
         *,
-        app_id: str,
+        app_id: str | None = None,
         type: str | None = None,
         created_after: datetime | None = None,
         created_before: datetime | None = None,
         limit: int | None = None,
         opts: CallOptions | None = None,
     ) -> Page[Event]:
+        """List events, newest first.
+
+        ``app_id`` is an optional filter. An API-key caller may omit it and get
+        their key's own app; passing a different app's ID is refused with
+        ``permission_denied``. A portal user who omits it gets the events of
+        every app in the organization.
+        """
+
         def fetch(cursor: str | None) -> PageContents[Event]:
-            req = webhook_pb2.ListEventsRequest(app_id=app_id)
+            req = webhook_pb2.ListEventsRequest()
+            if app_id is not None:
+                req.app_id = app_id
             if type is not None:
                 req.type = type
             if created_after is not None:

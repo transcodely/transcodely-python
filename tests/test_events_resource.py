@@ -108,6 +108,15 @@ def test_events_list_auto_paginates() -> None:
     assert t.calls[0][1].app_id == "app_1"
 
 
+def test_events_list_without_app_id_sends_no_filter() -> None:
+    """An API-key caller need not name an app: the key's own app is used, and a
+    portal user who omits it gets every app in the org. The field must therefore
+    go out unset rather than being required by the signature."""
+    t = FakeTransport({"ListEvents": webhook_pb2.ListEventsResponse()})
+    list(Events(t).list().auto_paging_iter())  # type: ignore[arg-type]
+    assert t.calls[0][1].app_id == ""
+
+
 def test_events_resend_sets_endpoint_ids() -> None:
     resp = webhook_pb2.ResendEventResponse(
         deliveries=[
@@ -149,6 +158,14 @@ def test_endpoints_create_builds_request_and_unwraps_endpoint() -> None:
     assert req.app_id == "app_1"
     assert list(req.enabled_events) == ["job.succeeded", "video.uploaded"]
     assert req.metadata["team"] == "media"
+
+
+def test_endpoints_list_without_app_id_sends_no_filter() -> None:
+    """Same optional filter as ListEvents: omitted means the key's own app for
+    an API-key caller, and every app in the org for a portal user."""
+    t = FakeTransport({"ListWebhookEndpoints": webhook_pb2.ListWebhookEndpointsResponse()})
+    list(WebhookEndpoints(t).list().auto_paging_iter())  # type: ignore[arg-type]
+    assert t.calls[0][1].app_id == ""
 
 
 def test_endpoints_rotate_secret_returns_new_secret() -> None:

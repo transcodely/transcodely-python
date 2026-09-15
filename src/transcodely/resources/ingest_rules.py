@@ -84,6 +84,21 @@ class IngestRules:
     def update(self, **kwargs: Any) -> ingest_rule_pb2.UpdateIngestRuleResponse:
         """Update name, enabled state, filters or action, optionally rotating the secret.
 
+        The update MERGES: it applies only what it carries, down to the
+        individual filters and the individual parts of the action. Narrowing a
+        rule to a new prefix is ``filters={"prefix": "raw/"}`` and nothing else
+        — the suffix, content-type and size filters are untouched.
+
+        Removing something rather than changing it takes the two clear flags.
+        ``clear_filters=True`` empties the filter set before ``filters`` is
+        applied, so on its own it widens the rule to everything in the bucket.
+        ``clear_action=True`` replaces the action outright, and ``action`` must
+        then be complete — at least one output and exactly one destination.
+        That is the only way to drop an action's thumbnails or metadata, since
+        a repeated or map field sent empty reads as "not sent". For the same
+        reason ``managed=False`` does not turn managed storage off; it leaves
+        the destination alone, so send ``output_origin_id`` instead.
+
         The whole response is returned: a rotation puts the new secret on it
         (once, and the previous secret keeps working for 24 hours), and
         switching a paused rule back on reports how many deliveries it declined
