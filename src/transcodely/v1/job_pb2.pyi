@@ -338,16 +338,32 @@ class OutputReport(_message.Message):
     def __init__(self, container: _Optional[str] = ..., video: _Optional[_Union[OutputReportVideo, _Mapping]] = ..., audio: _Optional[_Iterable[_Union[OutputReportAudio, _Mapping]]] = ..., duration_seconds: _Optional[float] = ..., verdict: _Optional[_Union[OutputReportVerdict, _Mapping]] = ..., checked_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., content_aware: _Optional[_Union[OutputReportContentAware, _Mapping]] = ...) -> None: ...
 
 class OutputReportContentAware(_message.Message):
-    __slots__ = ("mode", "vmaf_target", "vmaf_achieved", "crf_chosen")
+    __slots__ = ("mode", "vmaf_target", "vmaf_achieved", "crf_chosen", "seed_crf", "met_target", "probes")
     MODE_FIELD_NUMBER: _ClassVar[int]
     VMAF_TARGET_FIELD_NUMBER: _ClassVar[int]
     VMAF_ACHIEVED_FIELD_NUMBER: _ClassVar[int]
     CRF_CHOSEN_FIELD_NUMBER: _ClassVar[int]
+    SEED_CRF_FIELD_NUMBER: _ClassVar[int]
+    MET_TARGET_FIELD_NUMBER: _ClassVar[int]
+    PROBES_FIELD_NUMBER: _ClassVar[int]
     mode: str
     vmaf_target: float
     vmaf_achieved: float
     crf_chosen: int
-    def __init__(self, mode: _Optional[str] = ..., vmaf_target: _Optional[float] = ..., vmaf_achieved: _Optional[float] = ..., crf_chosen: _Optional[int] = ...) -> None: ...
+    seed_crf: int
+    met_target: bool
+    probes: _containers.RepeatedCompositeFieldContainer[OutputReportContentAwareProbe]
+    def __init__(self, mode: _Optional[str] = ..., vmaf_target: _Optional[float] = ..., vmaf_achieved: _Optional[float] = ..., crf_chosen: _Optional[int] = ..., seed_crf: _Optional[int] = ..., met_target: bool = ..., probes: _Optional[_Iterable[_Union[OutputReportContentAwareProbe, _Mapping]]] = ...) -> None: ...
+
+class OutputReportContentAwareProbe(_message.Message):
+    __slots__ = ("crf", "vmaf", "bitrate_kbps")
+    CRF_FIELD_NUMBER: _ClassVar[int]
+    VMAF_FIELD_NUMBER: _ClassVar[int]
+    BITRATE_KBPS_FIELD_NUMBER: _ClassVar[int]
+    crf: int
+    vmaf: float
+    bitrate_kbps: float
+    def __init__(self, crf: _Optional[int] = ..., vmaf: _Optional[float] = ..., bitrate_kbps: _Optional[float] = ...) -> None: ...
 
 class OutputReportVideo(_message.Message):
     __slots__ = ("codec", "profile", "level", "pix_fmt", "width", "height", "frame_rate", "bitrate_kbps", "color", "hdr_format")

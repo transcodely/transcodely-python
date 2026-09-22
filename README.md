@@ -78,10 +78,22 @@ same one the verdict judges; per-rendition detail stays in `variant_results`.
 
 An output encoded with per-title content-aware analysis also carries
 `report.content_aware`: the VMAF target the search aimed at, the score it reached
-on its samples, and the CRF it chose. It describes the SEARCH, not the delivered
-file — `vmaf_achieved` scores short samples taken before the real encode, which
-is never scored itself. Check `report.HasField("content_aware")`; an ordinary
-output has none.
+on its samples, the CRF it chose, and — since API 5.23.0 — the whole curve the
+search measured to get there: `seed_crf` (what the rung would have used without
+the search), `met_target` (whether any probe reached the VMAF target), and
+`probes` (every sample point, in order, each with `crf`, `vmaf`, and
+`bitrate_kbps`). It describes the SEARCH, not the delivered file — every number
+is measured on short samples cut from the source, and the delivered file is
+never itself scored. Check `report.HasField("content_aware")`; an ordinary
+output has none. `probes` and `met_target` are empty/absent for workers older
+than 1.29.0, which ran the search but didn't report its curve.
+
+A probe's `bitrate_kbps` is derived from a sample encoded **video-only** — the
+search's cuts drop audio, subtitles and data — so it's the sample's video
+bitrate, not a muxed file's rate. The only defensible saving is the ratio
+between the `seed_crf` probe's bitrate and the `crf_chosen` probe's: same cut,
+same settings, only the CRF differs. Comparing a probe's bitrate against the
+delivered output's `average_bitrate_kbps` compares two different things.
 
 ## AI captions
 
