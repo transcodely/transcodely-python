@@ -82,6 +82,7 @@ def test_report_types_are_reexported_from_the_facade() -> None:
         "OutputReportVerdict",
         "OutputReportMismatch",
         "OutputReportContentAware",
+        "OutputReportContentAwareProbe",
     ):
         assert name in types.__all__, f"{name} missing from transcodely.types.__all__"
         assert getattr(types, name) is getattr(job_pb2, name)
@@ -139,6 +140,12 @@ def test_report_carries_what_the_per_title_search_decided() -> None:
                                 "vmaf_target": 95,
                                 "vmaf_achieved": 95.4,
                                 "crf_chosen": 24,
+                                "seed_crf": 28,
+                                "met_target": True,
+                                "probes": [
+                                    {"crf": 28, "vmaf": 91.2, "bitrate_kbps": 3400.0},
+                                    {"crf": 24, "vmaf": 95.4, "bitrate_kbps": 4800.5},
+                                ],
                             },
                         },
                     }
@@ -153,6 +160,44 @@ def test_report_carries_what_the_per_title_search_decided() -> None:
     assert report.content_aware.vmaf_target == 95
     assert report.content_aware.vmaf_achieved == 95.4
     assert report.content_aware.crf_chosen == 24
+    assert report.content_aware.seed_crf == 28
+    assert report.content_aware.met_target is True
+    assert len(report.content_aware.probes) == 2
+    assert report.content_aware.probes[0].crf == 28
+    assert report.content_aware.probes[0].vmaf == 91.2
+    assert report.content_aware.probes[0].bitrate_kbps == 3400.0
+    assert report.content_aware.probes[1].crf == 24
+    assert report.content_aware.probes[1].bitrate_kbps == 4800.5
+
+
+def test_report_content_aware_curve_absent_on_older_workers() -> None:
+    """Workers before 1.29.0 report the decision but not the curve."""
+    resp = _decode(
+        {
+            "job": {
+                "id": "job_abc123def456",
+                "outputs": [
+                    {
+                        "id": "out_abc123def4567",
+                        "report": {
+                            "container": "mp4",
+                            "content_aware": {
+                                "mode": "per_title",
+                                "vmaf_target": 95,
+                                "vmaf_achieved": 95.4,
+                                "crf_chosen": 24,
+                            },
+                        },
+                    }
+                ],
+            }
+        }
+    )
+
+    content_aware = resp.job.outputs[0].report.content_aware
+    assert not content_aware.HasField("seed_crf")
+    assert not content_aware.HasField("met_target")
+    assert len(content_aware.probes) == 0
 
 
 def test_an_ordinary_output_reports_no_content_aware_block() -> None:
