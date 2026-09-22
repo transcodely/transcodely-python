@@ -4,6 +4,13 @@ All notable changes to the Transcodely Python SDK will be documented in this fil
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Breaking changes are allowed on minor bumps until 1.0.0.
 
+## [0.3.10](https://github.com/transcodely/transcodely-python/compare/v0.3.9...v0.3.10) (2026-09-22)
+
+
+### Features
+
+* **proto:** per-title search curve — seed_crf, met_target, probes (api 5.23.0) ([#59](https://github.com/transcodely/transcodely-python/issues/59)) ([bfeb995](https://github.com/transcodely/transcodely-python/commit/bfeb995554cb99231de9da67a22bffdcefede163))
+
 ## [0.3.9](https://github.com/transcodely/transcodely-python/compare/v0.3.8...v0.3.9) (2026-09-15)
 
 
