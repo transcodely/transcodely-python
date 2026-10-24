@@ -152,3 +152,20 @@ class Videos:
         """
         req = fill_from_dict(video_pb2.ListTopVideosRequest(), kwargs)
         return self._t.unary(_SERVICE, "ListTopVideos", req, video_pb2.ListTopVideosResponse())
+
+    def get_seo_markup(self, **kwargs: Any) -> video_pb2.GetSeoMarkupResponse:
+        """Ready-to-paste SEO markup for a hosted video, built for YOUR watch page.
+
+        Pass ``video_id`` and ``watch_url`` (required; the absolute ``https://``
+        URL of the page that shows the video), plus optional ``deep_link_param``
+        (query parameter your page reads to start at a time, default ``"t"``)
+        and ``language`` (ISO 639-2, when the video has several transcripts).
+        Returns the full ``GetSeoMarkupResponse``: ``.json_ld`` (schema.org
+        VideoObject, with chapter Clip key moments when insights are ready),
+        ``.sitemap_entry`` (a video-sitemap ``<url>`` entry) and
+        ``.html_fragment`` (server-renderable summary, key points, chapter links
+        and the full transcript). Every string is escaped for its context;
+        paste it as-is.
+        """
+        req = fill_from_dict(video_pb2.GetSeoMarkupRequest(), kwargs)
+        return self._t.unary(_SERVICE, "GetSeoMarkup", req, video_pb2.GetSeoMarkupResponse())

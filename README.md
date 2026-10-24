@@ -124,6 +124,49 @@ for fee in job.fees:
     print(fee.fee_type, fee.amount, fee.currency)  # "captions" 0.51 "eur"
 ```
 
+## Transcripts and insights
+
+Every `generate` track also writes the transcript as `json`, `txt` and `md`. Ask for the opt-in insights pass (summary, key points, chapters, questions, terms, highlights) on the same track:
+
+```python
+import urllib.request
+
+from transcodely.types import InsightsStatus, TranscriptFormat
+
+client.jobs.create(
+    input_video_id="vid_a1b2c3d4e5f6g7",
+    outputs=[{"subtitle_tracks": [{
+        "operation": "generate",
+        "transcript": {"style": "clean"},  # default; "literal" keeps fillers
+        "insights": {"enabled": True, "hint": "conference talk for developers"},
+    }]}],
+)
+
+# On a hosted video each rendition carries a short-lived signed_url, re-issued on
+# every read, so fetch the video right before downloading.
+video = client.videos.get("vid_a1b2c3d4e5f6g7")
+for track in video.text_tracks:
+    for r in track.transcript_renditions:
+        if r.format == TranscriptFormat.TRANSCRIPT_FORMAT_TXT and r.signed_url:
+            with urllib.request.urlopen(r.signed_url) as resp:
+                print(resp.read().decode("utf-8"))
+
+for ins in video.insights:
+    if ins.status == InsightsStatus.INSIGHTS_STATUS_READY:
+        print(ins.summary, list(ins.key_points))
+        for ch in ins.chapters:
+            print(ch.start_seconds, ch.title)
+
+# Ready-to-paste JSON-LD, video-sitemap entry and HTML fragment for your own page.
+kit = client.videos.get_seo_markup(
+    video_id="vid_a1b2c3d4e5f6g7",
+    watch_url="https://example.com/watch/42",
+)
+print(kit.json_ld, kit.sitemap_entry, kit.html_fragment)
+```
+
+Jobs carry the same data on `job.subtitle_results[i].transcript_renditions` and `job.insights`. The `job.insights.ready` and `job.insights.failed` webhook events tell you when an insights pass finishes.
+
 ## Authentication
 
 ```python
@@ -136,7 +179,7 @@ API keys are opaque `ak_`-prefixed secrets — pass the full value shown once at
 
 ```python
 client.jobs            # create / get / list / cancel / confirm / watch
-client.videos          # upload helpers, multipart, create_from_url, get / list / update / delete / watch, get_stats / list_top_videos
+client.videos          # upload helpers, multipart, create_from_url, get / list / update / delete / watch, get_stats / list_top_videos / get_seo_markup
 client.presets         # create / get / get_by_slug / list / update / duplicate / archive
 client.origins         # create / get / list / update / validate / archive
 client.ingest_rules    # create / get / list / update / delete / list_events / test / replay_event
