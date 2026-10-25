@@ -27,6 +27,8 @@ CANONICAL_EVENT_TYPES = {
     "job.failed",
     "job.canceled",
     "job.progress",
+    "job.insights.ready",
+    "job.insights.failed",
     "output.created",
     "output.ready",
     "output.failed",
@@ -55,11 +57,11 @@ def test_event_type_literal_matches_api_catalog() -> None:
     assert set(get_args(EventType)) == CANONICAL_EVENT_TYPES
 
 
-def test_catalog_has_exactly_18_types() -> None:
+def test_catalog_has_exactly_20_types() -> None:
     types = get_args(EventType)
-    assert len(types) == 18
+    assert len(types) == 20
     # No accidental duplicates in the literal.
-    assert len(set(types)) == 18
+    assert len(set(types)) == 20
 
 
 def test_job_updated_is_not_in_catalog() -> None:

@@ -249,3 +249,27 @@ class TestVideosListTopVideos:
         t = FakeTransport({"ListTopVideos": video_pb2.ListTopVideosResponse()})
         Videos(t).list_top_videos(app_id="app_k1l2m3n4o5")  # type: ignore[arg-type]
         assert t.calls[0][0] == "ListTopVideos"
+
+
+class TestVideosGetSeoMarkup:
+    def test_sends_request_and_returns_full_response(self) -> None:
+        resp = video_pb2.GetSeoMarkupResponse(
+            json_ld='{"@type":"VideoObject"}',
+            sitemap_entry="<url><loc>https://example.com/watch/42</loc></url>",
+            html_fragment='<section class="tx-insights"></section>',
+        )
+        t = FakeTransport({"GetSeoMarkup": resp})
+        out = Videos(t).get_seo_markup(  # type: ignore[arg-type]
+            video_id="vid_a1b2c3d4e5f6g7",
+            watch_url="https://example.com/watch/42",
+            deep_link_param="start",
+        )
+        method, req = t.calls[0]
+        assert method == "GetSeoMarkup"
+        assert req.video_id == "vid_a1b2c3d4e5f6g7"
+        assert req.watch_url == "https://example.com/watch/42"
+        assert req.deep_link_param == "start"
+        assert not req.HasField("language")
+        assert isinstance(out, video_pb2.GetSeoMarkupResponse)
+        assert out.json_ld == '{"@type":"VideoObject"}'
+        assert "tx-insights" in out.html_fragment

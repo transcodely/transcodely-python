@@ -1,5 +1,6 @@
 from buf.validate import validate_pb2 as _validate_pb2
 from google.protobuf import timestamp_pb2 as _timestamp_pb2
+from transcodely.v1 import subtitles_pb2 as _subtitles_pb2
 from google.protobuf.internal import containers as _containers
 from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
 from google.protobuf import descriptor as _descriptor
@@ -37,7 +38,7 @@ VIDEO_VISIBILITY_UNLISTED: VideoVisibility
 VIDEO_VISIBILITY_PRIVATE: VideoVisibility
 
 class Video(_message.Message):
-    __slots__ = ("id", "app_id", "source", "status", "visibility", "title", "description", "tags", "input_size_bytes", "input_content_type", "job_id", "preset", "playback_url", "embed_url", "embed_code", "poster_url", "duration_seconds", "hover_preview_url", "hover_preview_mp4_url", "renditions", "text_tracks", "output_size_bytes", "encoding_cost", "captions_cost", "total_cost", "error_message", "created_at", "updated_at", "ready_at", "source_pinned", "source_scheduled_for_deletion_at", "source_deleted_at", "object")
+    __slots__ = ("id", "app_id", "source", "status", "visibility", "title", "description", "tags", "input_size_bytes", "input_content_type", "job_id", "preset", "playback_url", "embed_url", "embed_code", "poster_url", "duration_seconds", "hover_preview_url", "hover_preview_mp4_url", "renditions", "text_tracks", "insights", "output_size_bytes", "encoding_cost", "captions_cost", "total_cost", "error_message", "created_at", "updated_at", "ready_at", "source_pinned", "source_scheduled_for_deletion_at", "source_deleted_at", "object")
     ID_FIELD_NUMBER: _ClassVar[int]
     APP_ID_FIELD_NUMBER: _ClassVar[int]
     SOURCE_FIELD_NUMBER: _ClassVar[int]
@@ -59,6 +60,7 @@ class Video(_message.Message):
     HOVER_PREVIEW_MP4_URL_FIELD_NUMBER: _ClassVar[int]
     RENDITIONS_FIELD_NUMBER: _ClassVar[int]
     TEXT_TRACKS_FIELD_NUMBER: _ClassVar[int]
+    INSIGHTS_FIELD_NUMBER: _ClassVar[int]
     OUTPUT_SIZE_BYTES_FIELD_NUMBER: _ClassVar[int]
     ENCODING_COST_FIELD_NUMBER: _ClassVar[int]
     CAPTIONS_COST_FIELD_NUMBER: _ClassVar[int]
@@ -92,6 +94,7 @@ class Video(_message.Message):
     hover_preview_mp4_url: str
     renditions: _containers.RepeatedCompositeFieldContainer[VideoRendition]
     text_tracks: _containers.RepeatedCompositeFieldContainer[VideoTextTrack]
+    insights: _containers.RepeatedCompositeFieldContainer[_subtitles_pb2.TranscriptInsights]
     output_size_bytes: int
     encoding_cost: float
     captions_cost: float
@@ -104,7 +107,7 @@ class Video(_message.Message):
     source_scheduled_for_deletion_at: _timestamp_pb2.Timestamp
     source_deleted_at: _timestamp_pb2.Timestamp
     object: str
-    def __init__(self, id: _Optional[str] = ..., app_id: _Optional[str] = ..., source: _Optional[str] = ..., status: _Optional[str] = ..., visibility: _Optional[str] = ..., title: _Optional[str] = ..., description: _Optional[str] = ..., tags: _Optional[_Iterable[str]] = ..., input_size_bytes: _Optional[int] = ..., input_content_type: _Optional[str] = ..., job_id: _Optional[str] = ..., preset: _Optional[str] = ..., playback_url: _Optional[str] = ..., embed_url: _Optional[str] = ..., embed_code: _Optional[str] = ..., poster_url: _Optional[str] = ..., duration_seconds: _Optional[float] = ..., hover_preview_url: _Optional[str] = ..., hover_preview_mp4_url: _Optional[str] = ..., renditions: _Optional[_Iterable[_Union[VideoRendition, _Mapping]]] = ..., text_tracks: _Optional[_Iterable[_Union[VideoTextTrack, _Mapping]]] = ..., output_size_bytes: _Optional[int] = ..., encoding_cost: _Optional[float] = ..., captions_cost: _Optional[float] = ..., total_cost: _Optional[float] = ..., error_message: _Optional[str] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., ready_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., source_pinned: bool = ..., source_scheduled_for_deletion_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., source_deleted_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., object: _Optional[str] = ...) -> None: ...
+    def __init__(self, id: _Optional[str] = ..., app_id: _Optional[str] = ..., source: _Optional[str] = ..., status: _Optional[str] = ..., visibility: _Optional[str] = ..., title: _Optional[str] = ..., description: _Optional[str] = ..., tags: _Optional[_Iterable[str]] = ..., input_size_bytes: _Optional[int] = ..., input_content_type: _Optional[str] = ..., job_id: _Optional[str] = ..., preset: _Optional[str] = ..., playback_url: _Optional[str] = ..., embed_url: _Optional[str] = ..., embed_code: _Optional[str] = ..., poster_url: _Optional[str] = ..., duration_seconds: _Optional[float] = ..., hover_preview_url: _Optional[str] = ..., hover_preview_mp4_url: _Optional[str] = ..., renditions: _Optional[_Iterable[_Union[VideoRendition, _Mapping]]] = ..., text_tracks: _Optional[_Iterable[_Union[VideoTextTrack, _Mapping]]] = ..., insights: _Optional[_Iterable[_Union[_subtitles_pb2.TranscriptInsights, _Mapping]]] = ..., output_size_bytes: _Optional[int] = ..., encoding_cost: _Optional[float] = ..., captions_cost: _Optional[float] = ..., total_cost: _Optional[float] = ..., error_message: _Optional[str] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., ready_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., source_pinned: bool = ..., source_scheduled_for_deletion_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., source_deleted_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., object: _Optional[str] = ...) -> None: ...
 
 class VideoRendition(_message.Message):
     __slots__ = ("id", "resolution", "codec", "bitrate_kbps", "width", "height", "size_bytes")
@@ -125,7 +128,7 @@ class VideoRendition(_message.Message):
     def __init__(self, id: _Optional[str] = ..., resolution: _Optional[str] = ..., codec: _Optional[str] = ..., bitrate_kbps: _Optional[int] = ..., width: _Optional[int] = ..., height: _Optional[int] = ..., size_bytes: _Optional[int] = ...) -> None: ...
 
 class VideoTextTrack(_message.Message):
-    __slots__ = ("id", "kind", "language", "label", "format", "auto_generated", "in_manifest", "url", "created_at")
+    __slots__ = ("id", "kind", "language", "label", "format", "auto_generated", "in_manifest", "url", "created_at", "transcript_renditions")
     ID_FIELD_NUMBER: _ClassVar[int]
     KIND_FIELD_NUMBER: _ClassVar[int]
     LANGUAGE_FIELD_NUMBER: _ClassVar[int]
@@ -135,6 +138,7 @@ class VideoTextTrack(_message.Message):
     IN_MANIFEST_FIELD_NUMBER: _ClassVar[int]
     URL_FIELD_NUMBER: _ClassVar[int]
     CREATED_AT_FIELD_NUMBER: _ClassVar[int]
+    TRANSCRIPT_RENDITIONS_FIELD_NUMBER: _ClassVar[int]
     id: str
     kind: str
     language: str
@@ -144,7 +148,8 @@ class VideoTextTrack(_message.Message):
     in_manifest: bool
     url: str
     created_at: _timestamp_pb2.Timestamp
-    def __init__(self, id: _Optional[str] = ..., kind: _Optional[str] = ..., language: _Optional[str] = ..., label: _Optional[str] = ..., format: _Optional[str] = ..., auto_generated: bool = ..., in_manifest: bool = ..., url: _Optional[str] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+    transcript_renditions: _containers.RepeatedCompositeFieldContainer[_subtitles_pb2.TranscriptRendition]
+    def __init__(self, id: _Optional[str] = ..., kind: _Optional[str] = ..., language: _Optional[str] = ..., label: _Optional[str] = ..., format: _Optional[str] = ..., auto_generated: bool = ..., in_manifest: bool = ..., url: _Optional[str] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., transcript_renditions: _Optional[_Iterable[_Union[_subtitles_pb2.TranscriptRendition, _Mapping]]] = ...) -> None: ...
 
 class CreateUploadRequest(_message.Message):
     __slots__ = ("app_id", "filename", "content_type", "size_bytes", "title", "description", "tags", "visibility", "preset", "hover_previews", "auto_captions")
@@ -537,3 +542,25 @@ class TopVideo(_message.Message):
     watch_seconds: int
     unique_viewers: int
     def __init__(self, video_id: _Optional[str] = ..., title: _Optional[str] = ..., poster_url: _Optional[str] = ..., plays: _Optional[int] = ..., watch_seconds: _Optional[int] = ..., unique_viewers: _Optional[int] = ...) -> None: ...
+
+class GetSeoMarkupRequest(_message.Message):
+    __slots__ = ("video_id", "watch_url", "deep_link_param", "language")
+    VIDEO_ID_FIELD_NUMBER: _ClassVar[int]
+    WATCH_URL_FIELD_NUMBER: _ClassVar[int]
+    DEEP_LINK_PARAM_FIELD_NUMBER: _ClassVar[int]
+    LANGUAGE_FIELD_NUMBER: _ClassVar[int]
+    video_id: str
+    watch_url: str
+    deep_link_param: str
+    language: str
+    def __init__(self, video_id: _Optional[str] = ..., watch_url: _Optional[str] = ..., deep_link_param: _Optional[str] = ..., language: _Optional[str] = ...) -> None: ...
+
+class GetSeoMarkupResponse(_message.Message):
+    __slots__ = ("json_ld", "sitemap_entry", "html_fragment")
+    JSON_LD_FIELD_NUMBER: _ClassVar[int]
+    SITEMAP_ENTRY_FIELD_NUMBER: _ClassVar[int]
+    HTML_FRAGMENT_FIELD_NUMBER: _ClassVar[int]
+    json_ld: str
+    sitemap_entry: str
+    html_fragment: str
+    def __init__(self, json_ld: _Optional[str] = ..., sitemap_entry: _Optional[str] = ..., html_fragment: _Optional[str] = ...) -> None: ...
