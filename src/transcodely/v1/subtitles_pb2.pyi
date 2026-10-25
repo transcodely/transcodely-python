@@ -38,6 +38,12 @@ class TranscriptFormat(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     TRANSCRIPT_FORMAT_TXT: _ClassVar[TranscriptFormat]
     TRANSCRIPT_FORMAT_MD: _ClassVar[TranscriptFormat]
 
+class InsightsSource(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    INSIGHTS_SOURCE_UNSPECIFIED: _ClassVar[InsightsSource]
+    INSIGHTS_SOURCE_JOB: _ClassVar[InsightsSource]
+    INSIGHTS_SOURCE_VIDEO: _ClassVar[InsightsSource]
+
 class InsightsStatus(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
     INSIGHTS_STATUS_UNSPECIFIED: _ClassVar[InsightsStatus]
@@ -62,6 +68,9 @@ TRANSCRIPT_FORMAT_UNSPECIFIED: TranscriptFormat
 TRANSCRIPT_FORMAT_JSON: TranscriptFormat
 TRANSCRIPT_FORMAT_TXT: TranscriptFormat
 TRANSCRIPT_FORMAT_MD: TranscriptFormat
+INSIGHTS_SOURCE_UNSPECIFIED: InsightsSource
+INSIGHTS_SOURCE_JOB: InsightsSource
+INSIGHTS_SOURCE_VIDEO: InsightsSource
 INSIGHTS_STATUS_UNSPECIFIED: InsightsStatus
 INSIGHTS_STATUS_PENDING: InsightsStatus
 INSIGHTS_STATUS_READY: InsightsStatus
@@ -228,7 +237,7 @@ class InsightsHighlight(_message.Message):
     def __init__(self, text: _Optional[str] = ..., start_seconds: _Optional[float] = ..., end_seconds: _Optional[float] = ...) -> None: ...
 
 class TranscriptInsights(_message.Message):
-    __slots__ = ("output_id", "language", "status", "error_code", "title_suggestions", "summary", "key_points", "chapters", "questions", "terms", "highlights", "topics", "storage_key", "url", "signed_url", "chapters_storage_key", "chapters_url", "chapters_signed_url", "markdown_storage_key", "markdown_url", "markdown_signed_url", "generated_at", "hint")
+    __slots__ = ("output_id", "language", "status", "error_code", "title_suggestions", "summary", "key_points", "chapters", "questions", "terms", "highlights", "topics", "storage_key", "url", "signed_url", "chapters_storage_key", "chapters_url", "chapters_signed_url", "markdown_storage_key", "markdown_url", "markdown_signed_url", "generated_at", "hint", "id", "source", "video_id", "fee_eur")
     OUTPUT_ID_FIELD_NUMBER: _ClassVar[int]
     LANGUAGE_FIELD_NUMBER: _ClassVar[int]
     STATUS_FIELD_NUMBER: _ClassVar[int]
@@ -252,6 +261,10 @@ class TranscriptInsights(_message.Message):
     MARKDOWN_SIGNED_URL_FIELD_NUMBER: _ClassVar[int]
     GENERATED_AT_FIELD_NUMBER: _ClassVar[int]
     HINT_FIELD_NUMBER: _ClassVar[int]
+    ID_FIELD_NUMBER: _ClassVar[int]
+    SOURCE_FIELD_NUMBER: _ClassVar[int]
+    VIDEO_ID_FIELD_NUMBER: _ClassVar[int]
+    FEE_EUR_FIELD_NUMBER: _ClassVar[int]
     output_id: str
     language: str
     status: InsightsStatus
@@ -275,4 +288,8 @@ class TranscriptInsights(_message.Message):
     markdown_signed_url: str
     generated_at: _timestamp_pb2.Timestamp
     hint: str
-    def __init__(self, output_id: _Optional[str] = ..., language: _Optional[str] = ..., status: _Optional[_Union[InsightsStatus, str]] = ..., error_code: _Optional[str] = ..., title_suggestions: _Optional[_Iterable[str]] = ..., summary: _Optional[str] = ..., key_points: _Optional[_Iterable[str]] = ..., chapters: _Optional[_Iterable[_Union[ChapterPoint, _Mapping]]] = ..., questions: _Optional[_Iterable[_Union[InsightsQuestion, _Mapping]]] = ..., terms: _Optional[_Iterable[_Union[InsightsTerm, _Mapping]]] = ..., highlights: _Optional[_Iterable[_Union[InsightsHighlight, _Mapping]]] = ..., topics: _Optional[_Iterable[str]] = ..., storage_key: _Optional[str] = ..., url: _Optional[str] = ..., signed_url: _Optional[str] = ..., chapters_storage_key: _Optional[str] = ..., chapters_url: _Optional[str] = ..., chapters_signed_url: _Optional[str] = ..., markdown_storage_key: _Optional[str] = ..., markdown_url: _Optional[str] = ..., markdown_signed_url: _Optional[str] = ..., generated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., hint: _Optional[str] = ...) -> None: ...
+    id: str
+    source: InsightsSource
+    video_id: str
+    fee_eur: float
+    def __init__(self, output_id: _Optional[str] = ..., language: _Optional[str] = ..., status: _Optional[_Union[InsightsStatus, str]] = ..., error_code: _Optional[str] = ..., title_suggestions: _Optional[_Iterable[str]] = ..., summary: _Optional[str] = ..., key_points: _Optional[_Iterable[str]] = ..., chapters: _Optional[_Iterable[_Union[ChapterPoint, _Mapping]]] = ..., questions: _Optional[_Iterable[_Union[InsightsQuestion, _Mapping]]] = ..., terms: _Optional[_Iterable[_Union[InsightsTerm, _Mapping]]] = ..., highlights: _Optional[_Iterable[_Union[InsightsHighlight, _Mapping]]] = ..., topics: _Optional[_Iterable[str]] = ..., storage_key: _Optional[str] = ..., url: _Optional[str] = ..., signed_url: _Optional[str] = ..., chapters_storage_key: _Optional[str] = ..., chapters_url: _Optional[str] = ..., chapters_signed_url: _Optional[str] = ..., markdown_storage_key: _Optional[str] = ..., markdown_url: _Optional[str] = ..., markdown_signed_url: _Optional[str] = ..., generated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., hint: _Optional[str] = ..., id: _Optional[str] = ..., source: _Optional[_Union[InsightsSource, str]] = ..., video_id: _Optional[str] = ..., fee_eur: _Optional[float] = ...) -> None: ...

@@ -17,9 +17,9 @@ from typing import Any, Literal
 from google.protobuf.message import Message
 
 from ..resources._helpers import fill_from_dict
-from ..v1 import app_pb2, job_pb2, video_pb2
+from ..v1 import app_pb2, job_pb2, subtitles_pb2, video_pb2
 
-#: The 20 canonical event types the webhook system can emit, mirroring the API's
+#: The 22 canonical event types the webhook system can emit, mirroring the API's
 #: ``domain.WebhookEventTypes()``. The ``"*"`` wildcard is intentionally absent —
 #: it is a subscription value only, never the ``type`` of an emitted event. Used
 #: for annotations and documentation; the ``Event.type`` field is a plain ``str``
@@ -42,6 +42,8 @@ EventType = Literal[
     "video.failed",
     "video.deleted",
     "video.source_scheduled_for_deletion",
+    "video.insights.ready",
+    "video.insights.failed",
     "app.created",
     "app.updated",
     "app.spend_limit_warning",
@@ -67,7 +69,9 @@ class Event:
     ``data`` carries the decoded resource snapshot — a :class:`~transcodely.Job`,
     :class:`~transcodely.JobOutput`, :class:`~transcodely.Video`, or
     :class:`~transcodely.App` for a known resource ``type``, or the raw ``dict``
-    for an unrecognized one (forward compatibility).
+    for an unrecognized one (forward compatibility). ``video.insights.ready``
+    and ``video.insights.failed`` carry a :class:`~transcodely.TranscriptInsights`
+    entry (requested with ``videos.generate_insights``), not a ``Video``.
 
     The two spend-limit events (``app.spend_limit_warning`` and
     ``app.spend_limit_exceeded``) are the exception: they carry a notification
@@ -116,6 +120,15 @@ RESOURCE_DECODERS: list[tuple[str, Decoder]] = [
 #: rather than a resource snapshot. Their ``data`` is left as the raw ``dict``.
 _NOTIFICATION_EVENT_TYPES = frozenset({"app.spend_limit_warning", "app.spend_limit_exceeded"})
 
+#: Event types that share a resource prefix but carry a different resource:
+#: ``video.insights.ready`` / ``video.insights.failed`` deliver the
+#: ``TranscriptInsights`` entry requested with ``videos.generate_insights``, not
+#: a ``Video`` snapshot. Checked before the prefix table.
+EXACT_TYPE_DECODERS: dict[str, Decoder] = {
+    "video.insights.ready": lambda d: fill_from_dict(subtitles_pb2.TranscriptInsights(), d),
+    "video.insights.failed": lambda d: fill_from_dict(subtitles_pb2.TranscriptInsights(), d),
+}
+
 
 def decoder_for_type(type: str) -> Decoder | None:
     """Return a resource decoder for ``type``, or ``None`` if the type has none.
@@ -126,6 +139,9 @@ def decoder_for_type(type: str) -> Decoder | None:
     """
     if type in _NOTIFICATION_EVENT_TYPES:
         return None
+    exact = EXACT_TYPE_DECODERS.get(type)
+    if exact is not None:
+        return exact
     for prefix, decode in RESOURCE_DECODERS:
         if type.startswith(prefix):
             return decode
@@ -133,6 +149,7 @@ def decoder_for_type(type: str) -> Decoder | None:
 
 
 __all__ = [
+    "EXACT_TYPE_DECODERS",
     "RESOURCE_DECODERS",
     "Event",
     "EventRequest",

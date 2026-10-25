@@ -570,3 +570,21 @@ class GetSeoMarkupResponse(_message.Message):
     sitemap_entry: str
     html_fragment: str
     def __init__(self, json_ld: _Optional[str] = ..., sitemap_entry: _Optional[str] = ..., html_fragment: _Optional[str] = ...) -> None: ...
+
+class GenerateInsightsRequest(_message.Message):
+    __slots__ = ("id", "language", "hint", "app_id")
+    ID_FIELD_NUMBER: _ClassVar[int]
+    LANGUAGE_FIELD_NUMBER: _ClassVar[int]
+    HINT_FIELD_NUMBER: _ClassVar[int]
+    APP_ID_FIELD_NUMBER: _ClassVar[int]
+    id: str
+    language: str
+    hint: str
+    app_id: str
+    def __init__(self, id: _Optional[str] = ..., language: _Optional[str] = ..., hint: _Optional[str] = ..., app_id: _Optional[str] = ...) -> None: ...
+
+class GenerateInsightsResponse(_message.Message):
+    __slots__ = ("insights",)
+    INSIGHTS_FIELD_NUMBER: _ClassVar[int]
+    insights: _subtitles_pb2.TranscriptInsights
+    def __init__(self, insights: _Optional[_Union[_subtitles_pb2.TranscriptInsights, _Mapping]] = ...) -> None: ...
