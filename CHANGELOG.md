@@ -4,6 +4,13 @@ All notable changes to the Transcodely Python SDK will be documented in this fil
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Breaking changes are allowed on minor bumps until 1.0.0.
 
+## [0.3.12](https://github.com/transcodely/transcodely-python/compare/v0.3.11...v0.3.12) (2026-10-25)
+
+
+### Features
+
+* auto_insights upload option (api 5.25.0) ([#63](https://github.com/transcodely/transcodely-python/issues/63)) ([9ac0f65](https://github.com/transcodely/transcodely-python/commit/9ac0f65bf6019c2552742ea0f8d002972354f5eb))
+
 ## [0.3.11](https://github.com/transcodely/transcodely-python/compare/v0.3.10...v0.3.11) (2026-10-25)
 
 
