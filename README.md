@@ -142,6 +142,11 @@ client.jobs.create(
     }]}],
 )
 
+# Hosted upload or URL ingest: pass auto_captions=True, auto_insights=True to
+# videos.create_upload / create_multipart_upload / create_from_url instead
+# (auto_insights requires auto_captions; EUR 0.02 per video + EUR 0.005 per
+# source minute on top of captions).
+
 # On a hosted video each rendition carries a short-lived signed_url, re-issued on
 # every read, so fetch the video right before downloading.
 video = client.videos.get("vid_a1b2c3d4e5f6g7")
