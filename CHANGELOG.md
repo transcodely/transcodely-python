@@ -4,6 +4,13 @@ All notable changes to the Transcodely Python SDK will be documented in this fil
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Breaking changes are allowed on minor bumps until 1.0.0.
 
+## [0.3.13](https://github.com/transcodely/transcodely-python/compare/v0.3.12...v0.3.13) (2026-10-26)
+
+
+### Features
+
+* generate_insights from existing captions (api 5.26.0) ([#65](https://github.com/transcodely/transcodely-python/issues/65)) ([7f9b5a4](https://github.com/transcodely/transcodely-python/commit/7f9b5a4bd97afa54ee5ccb89d1d7b0952a4c7ed0))
+
 ## [0.3.12](https://github.com/transcodely/transcodely-python/compare/v0.3.11...v0.3.12) (2026-10-25)
 
 
