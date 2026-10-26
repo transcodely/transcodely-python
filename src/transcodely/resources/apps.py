@@ -114,3 +114,19 @@ class Apps:
         """
         req = app_pb2.GetSpendRequest(app_id=app_id)
         return self._t.unary(_SERVICE, "GetSpend", req, app_pb2.GetSpendResponse(), opts)
+
+    def get_pricing(
+        self, app_id: str | None = None, opts: CallOptions | None = None
+    ) -> app_pb2.GetPricingResponse:
+        """Get the prices an app pays.
+
+        Returns every chargeable item with its effective EUR rate, whether the
+        account has a custom rate for it (``custom``), and the public list price.
+        Leave ``app_id`` as ``None`` to price the API key's own app (dashboard
+        callers: the organization's first app). Prices are fixed when a job is
+        created, so a price change applies to jobs created after it.
+        """
+        req = app_pb2.GetPricingRequest()
+        if app_id is not None:
+            req.app_id = app_id
+        return self._t.unary(_SERVICE, "GetPricing", req, app_pb2.GetPricingResponse(), opts)

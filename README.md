@@ -462,6 +462,23 @@ Check `settlement_available` before offering a "pay now" action: settlement rais
 `billing_past_due` (a statement is unpaid) or `outstanding_balance_exceeded` (too much unbilled
 usage) — neither clears by retrying, so back-off is the wrong response to both.
 
+## Your prices
+
+`client.apps.get_pricing()` lists every chargeable item with the EUR rate your app pays,
+whether your account has a custom rate for it, and the public list price. Leave `app_id`
+out to price the API key's own app.
+
+```python
+pricing = client.apps.get_pricing()
+for entry in pricing.entries:
+    if entry.HasField("base_price"):
+        print(f"{entry.group_label} / {entry.label}: {entry.base_price} {pricing.currency} ({entry.unit})", "custom" if entry.custom else "")
+    if entry.HasField("multiplier"):
+        print(f"{entry.group_label} / {entry.label}: x{entry.multiplier}", "custom" if entry.custom else "")
+```
+
+Prices are fixed when a job is created, so a price change applies to jobs created after it.
+
 ## Errors
 
 All exceptions inherit from `TranscodelyError`:
