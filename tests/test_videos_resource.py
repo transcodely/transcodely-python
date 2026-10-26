@@ -12,7 +12,7 @@ from collections.abc import Callable
 from typing import Any
 
 from transcodely.resources.videos import Videos
-from transcodely.v1 import video_pb2
+from transcodely.v1 import subtitles_pb2, video_pb2
 
 
 class FakeTransport:
@@ -273,3 +273,33 @@ class TestVideosGetSeoMarkup:
         assert isinstance(out, video_pb2.GetSeoMarkupResponse)
         assert out.json_ld == '{"@type":"VideoObject"}'
         assert "tx-insights" in out.html_fragment
+
+
+class TestGenerateInsights:
+    def test_sends_request_and_returns_insights_entry(self) -> None:
+        resp = video_pb2.GenerateInsightsResponse(
+            insights=subtitles_pb2.TranscriptInsights(
+                id="ins_abc123",
+                source=subtitles_pb2.INSIGHTS_SOURCE_VIDEO,
+                video_id="vid_a1b2c3d4e5f6g7",
+                language="eng",
+                status=subtitles_pb2.INSIGHTS_STATUS_PENDING,
+            )
+        )
+        t = FakeTransport({"GenerateInsights": resp})
+        out = Videos(t).generate_insights(  # type: ignore[arg-type]
+            id="vid_a1b2c3d4e5f6g7",
+            language="eng",
+            hint="A cooking show for beginners",
+        )
+        method, req = t.calls[0]
+        assert method == "GenerateInsights"
+        assert isinstance(req, video_pb2.GenerateInsightsRequest)
+        assert req.id == "vid_a1b2c3d4e5f6g7"
+        assert req.language == "eng"
+        assert req.hint == "A cooking show for beginners"
+        assert not req.HasField("app_id")
+        assert isinstance(out, subtitles_pb2.TranscriptInsights)
+        assert out.id == "ins_abc123"
+        assert out.source == subtitles_pb2.INSIGHTS_SOURCE_VIDEO
+        assert out.status == subtitles_pb2.INSIGHTS_STATUS_PENDING

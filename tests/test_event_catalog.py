@@ -16,6 +16,7 @@ from __future__ import annotations
 from typing import get_args
 
 from transcodely import EventType
+from transcodely.types import TranscriptInsights, Video
 from transcodely.webhooks.types import RESOURCE_DECODERS, decoder_for_type
 
 # The canonical catalog, mirrored verbatim from the API's
@@ -38,6 +39,8 @@ CANONICAL_EVENT_TYPES = {
     "video.failed",
     "video.deleted",
     "video.source_scheduled_for_deletion",
+    "video.insights.ready",
+    "video.insights.failed",
     "app.created",
     "app.updated",
     "app.spend_limit_warning",
@@ -57,11 +60,11 @@ def test_event_type_literal_matches_api_catalog() -> None:
     assert set(get_args(EventType)) == CANONICAL_EVENT_TYPES
 
 
-def test_catalog_has_exactly_20_types() -> None:
+def test_catalog_has_exactly_22_types() -> None:
     types = get_args(EventType)
-    assert len(types) == 20
+    assert len(types) == 22
     # No accidental duplicates in the literal.
-    assert len(set(types)) == 20
+    assert len(set(types)) == 22
 
 
 def test_job_updated_is_not_in_catalog() -> None:
@@ -94,3 +97,15 @@ def test_notification_events_have_no_resource_decoder() -> None:
 def test_resource_decoder_prefixes_cover_the_catalog() -> None:
     prefixes = {prefix for prefix, _ in RESOURCE_DECODERS}
     assert prefixes == {"job.", "output.", "video.", "app."}
+
+
+def test_video_insights_events_decode_transcript_insights() -> None:
+    # video.insights.* share the "video." prefix but carry the TranscriptInsights
+    # entry requested with videos.generate_insights, not a Video snapshot.
+    for event_type in ("video.insights.ready", "video.insights.failed"):
+        decode = decoder_for_type(event_type)
+        assert decode is not None, event_type
+        assert isinstance(decode({"id": "ins_1"}), TranscriptInsights), event_type
+    video_decode = decoder_for_type("video.ready")
+    assert video_decode is not None
+    assert isinstance(video_decode({"id": "vid_1"}), Video)

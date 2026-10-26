@@ -8,7 +8,7 @@ from typing import Any
 from .._transport.transport import CallOptions, Transport
 from ..pagination import Page, PageContents
 from ..streaming import watch
-from ..v1 import video_pb2
+from ..v1 import subtitles_pb2, video_pb2
 from ._helpers import fill_from_dict
 
 _SERVICE = "transcodely.v1.VideoService"
@@ -169,3 +169,26 @@ class Videos:
         """
         req = fill_from_dict(video_pb2.GetSeoMarkupRequest(), kwargs)
         return self._t.unary(_SERVICE, "GetSeoMarkup", req, video_pb2.GetSeoMarkupResponse())
+
+    def generate_insights(self, **kwargs: Any) -> subtitles_pb2.TranscriptInsights:
+        """Generate AI insights from a hosted video's existing AI captions.
+
+        Runs the insights pass (title suggestions, summary, key points,
+        chapters, questions, key terms, highlights, topics) without
+        transcribing again. Pass ``id`` (the ``vid_...`` video, required), plus
+        optional ``language`` (ISO 639-2; needed only when the video has several
+        AI caption tracks), ``hint`` (free-text guidance, at most 300
+        characters) and ``app_id``. Returns the ``TranscriptInsights`` entry in
+        ``"pending"``; it also appears on ``video.insights``, and
+        ``video.insights.ready`` or ``video.insights.failed`` fires when it
+        finishes. Billed EUR 0.02 per video plus EUR 0.005 per minute of source,
+        charged only when the insights become ready.
+
+        While an entry for the same video and language is pending, the call
+        returns that entry and bills nothing new. A video without AI captions is
+        refused with failed_precondition (code ``captions_required``).
+        """
+        req = fill_from_dict(video_pb2.GenerateInsightsRequest(), kwargs)
+        return self._t.unary(
+            _SERVICE, "GenerateInsights", req, video_pb2.GenerateInsightsResponse()
+        ).insights

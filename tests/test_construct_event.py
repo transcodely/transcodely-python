@@ -15,7 +15,7 @@ from transcodely.errors import (
     WebhookSignatureError,
     WebhookTimestampError,
 )
-from transcodely.v1 import app_pb2, job_pb2, video_pb2
+from transcodely.v1 import app_pb2, job_pb2, subtitles_pb2, video_pb2
 
 SECRET = "whsec_test_12345678901234567890abcdef"
 TS = 1716480293
@@ -74,6 +74,44 @@ def test_video_uploaded_decodes_video() -> None:
     ev = construct(envelope("video.uploaded", {"id": "vid_1"}))
     assert isinstance(ev.data, video_pb2.Video)
     assert ev.data.id == "vid_1"
+
+
+def test_video_insights_events_decode_transcript_insights() -> None:
+    ev = construct(
+        envelope(
+            "video.insights.ready",
+            {
+                "id": "ins_abc123",
+                "source": "video",
+                "video_id": "vid_1",
+                "language": "eng",
+                "status": "ready",
+                "summary": "A talk.",
+                "fee_eur": 0.07,
+            },
+        )
+    )
+    assert ev.type == "video.insights.ready"
+    assert isinstance(ev.data, subtitles_pb2.TranscriptInsights)
+    assert not isinstance(ev.data, video_pb2.Video)
+    assert ev.data.id == "ins_abc123"
+    assert ev.data.source == subtitles_pb2.INSIGHTS_SOURCE_VIDEO
+    assert ev.data.video_id == "vid_1"
+    assert ev.data.language == "eng"
+    assert ev.data.status == subtitles_pb2.INSIGHTS_STATUS_READY
+    assert ev.data.summary == "A talk."
+    assert ev.data.HasField("fee_eur")
+    assert ev.data.fee_eur == pytest.approx(0.07)
+
+    failed = construct(
+        envelope(
+            "video.insights.failed",
+            {"id": "ins_2", "source": "video", "status": "failed", "error_code": "insights_failed"},
+        )
+    )
+    assert isinstance(failed.data, subtitles_pb2.TranscriptInsights)
+    assert failed.data.status == subtitles_pb2.INSIGHTS_STATUS_FAILED
+    assert failed.data.error_code == "insights_failed"
 
 
 def test_app_created_decodes_app() -> None:

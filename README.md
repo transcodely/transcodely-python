@@ -172,6 +172,16 @@ print(kit.json_ld, kit.sitemap_entry, kit.html_fragment)
 
 Jobs carry the same data on `job.subtitle_results[i].transcript_renditions` and `job.insights`. The `job.insights.ready` and `job.insights.failed` webhook events tell you when an insights pass finishes.
 
+A hosted video that already has AI captions can get insights without transcribing again (EUR 0.02 per video + EUR 0.005 per source minute, charged only when ready):
+
+```python
+# language= is needed only when the video has several AI caption tracks.
+ins = client.videos.generate_insights(id="vid_a1b2c3d4e5f6g7")
+print(ins.id, ins.status)  # ins_..., INSIGHTS_STATUS_PENDING
+```
+
+The entry also appears on `video.insights`. The `video.insights.ready` and `video.insights.failed` webhook events carry the entry itself as a `TranscriptInsights` in `event.data`.
+
 ## Authentication
 
 ```python
@@ -184,7 +194,7 @@ API keys are opaque `ak_`-prefixed secrets — pass the full value shown once at
 
 ```python
 client.jobs            # create / get / list / cancel / confirm / watch
-client.videos          # upload helpers, multipart, create_from_url, get / list / update / delete / watch, get_stats / list_top_videos / get_seo_markup
+client.videos          # upload helpers, multipart, create_from_url, get / list / update / delete / watch, get_stats / list_top_videos / get_seo_markup / generate_insights
 client.presets         # create / get / get_by_slug / list / update / duplicate / archive
 client.origins         # create / get / list / update / validate / archive
 client.ingest_rules    # create / get / list / update / delete / list_events / test / replay_event
