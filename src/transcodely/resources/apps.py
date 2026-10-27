@@ -123,7 +123,7 @@ class Apps:
         Returns every chargeable item with its effective EUR rate, whether the
         account has a custom rate for it (``custom``), and the public list price.
         Leave ``app_id`` as ``None`` to price the API key's own app (dashboard
-        callers: the organization's first app). Prices are fixed when a job is
+        callers: the organization's first active app). Prices are fixed when a job is
         created, so a price change applies to jobs created after it.
         """
         req = app_pb2.GetPricingRequest()
