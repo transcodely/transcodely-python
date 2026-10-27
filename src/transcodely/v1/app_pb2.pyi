@@ -253,3 +253,43 @@ class GetSpendResponse(_message.Message):
     warning_triggered: bool
     limit_reached: bool
     def __init__(self, period_start: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., period_end: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., spent_eur: _Optional[float] = ..., monthly_spend_limit_eur: _Optional[float] = ..., currency: _Optional[str] = ..., warning_triggered: bool = ..., limit_reached: bool = ...) -> None: ...
+
+class GetPricingRequest(_message.Message):
+    __slots__ = ("app_id",)
+    APP_ID_FIELD_NUMBER: _ClassVar[int]
+    app_id: str
+    def __init__(self, app_id: _Optional[str] = ...) -> None: ...
+
+class PricingEntry(_message.Message):
+    __slots__ = ("rule_type", "rule_key", "label", "group_label", "unit", "base_price", "multiplier", "custom", "list_base_price", "list_multiplier")
+    RULE_TYPE_FIELD_NUMBER: _ClassVar[int]
+    RULE_KEY_FIELD_NUMBER: _ClassVar[int]
+    LABEL_FIELD_NUMBER: _ClassVar[int]
+    GROUP_LABEL_FIELD_NUMBER: _ClassVar[int]
+    UNIT_FIELD_NUMBER: _ClassVar[int]
+    BASE_PRICE_FIELD_NUMBER: _ClassVar[int]
+    MULTIPLIER_FIELD_NUMBER: _ClassVar[int]
+    CUSTOM_FIELD_NUMBER: _ClassVar[int]
+    LIST_BASE_PRICE_FIELD_NUMBER: _ClassVar[int]
+    LIST_MULTIPLIER_FIELD_NUMBER: _ClassVar[int]
+    rule_type: str
+    rule_key: str
+    label: str
+    group_label: str
+    unit: str
+    base_price: float
+    multiplier: float
+    custom: bool
+    list_base_price: float
+    list_multiplier: float
+    def __init__(self, rule_type: _Optional[str] = ..., rule_key: _Optional[str] = ..., label: _Optional[str] = ..., group_label: _Optional[str] = ..., unit: _Optional[str] = ..., base_price: _Optional[float] = ..., multiplier: _Optional[float] = ..., custom: bool = ..., list_base_price: _Optional[float] = ..., list_multiplier: _Optional[float] = ...) -> None: ...
+
+class GetPricingResponse(_message.Message):
+    __slots__ = ("app_id", "currency", "entries")
+    APP_ID_FIELD_NUMBER: _ClassVar[int]
+    CURRENCY_FIELD_NUMBER: _ClassVar[int]
+    ENTRIES_FIELD_NUMBER: _ClassVar[int]
+    app_id: str
+    currency: str
+    entries: _containers.RepeatedCompositeFieldContainer[PricingEntry]
+    def __init__(self, app_id: _Optional[str] = ..., currency: _Optional[str] = ..., entries: _Optional[_Iterable[_Union[PricingEntry, _Mapping]]] = ...) -> None: ...

@@ -133,3 +133,40 @@ class TestAppsSpendLimit:
         assert out.spent_eur == 42.0
         assert out.currency == "EUR"
         assert out.monthly_spend_limit_eur == 100.0
+
+
+class TestGetPricing:
+    def test_get_pricing_sends_app_id_and_returns_entries(self) -> None:
+        resp = app_pb2.GetPricingResponse(
+            app_id="app_1",
+            currency="EUR",
+            entries=[
+                app_pb2.PricingEntry(
+                    rule_type="codec",
+                    rule_key="h264",
+                    label="H.264",
+                    group_label="Encoding",
+                    unit="eur_per_output_minute",
+                    base_price=0.004,
+                    custom=True,
+                    list_base_price=0.005,
+                )
+            ],
+        )
+        t = FakeTransport({"GetPricing": resp})
+        out = Apps(t).get_pricing("app_1")
+        method, req = t.calls[0]
+        assert method == "GetPricing"
+        assert req.HasField("app_id")
+        assert req.app_id == "app_1"
+        assert out.currency == "EUR"
+        entry = out.entries[0]
+        assert entry.base_price == 0.004
+        assert entry.custom is True
+        assert not entry.HasField("multiplier")
+
+    def test_get_pricing_without_app_id_leaves_field_absent(self) -> None:
+        t = FakeTransport({"GetPricing": app_pb2.GetPricingResponse(app_id="app_default")})
+        Apps(t).get_pricing()
+        _, req = t.calls[0]
+        assert not req.HasField("app_id")
