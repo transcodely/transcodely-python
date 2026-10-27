@@ -4,6 +4,14 @@ All notable changes to the Transcodely Python SDK will be documented in this fil
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Breaking changes are allowed on minor bumps until 1.0.0.
 
+## [0.3.14](https://github.com/transcodely/transcodely-python/compare/v0.3.13...v0.3.14) (2026-10-27)
+
+
+### Features
+
+* rate cards — GetPricing (your effective prices) and resynced protos ([df01665](https://github.com/transcodely/transcodely-python/commit/df01665703f013d7a91beaf8d54bd06752be2e4c))
+* sync protos for rate cards; add getPricing ([40eaf3c](https://github.com/transcodely/transcodely-python/commit/40eaf3c619fcb2f10c8e3e20228d60474f90cf66))
+
 ## [0.3.13](https://github.com/transcodely/transcodely-python/compare/v0.3.12...v0.3.13) (2026-10-26)
 
 
