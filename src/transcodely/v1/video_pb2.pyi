@@ -432,7 +432,7 @@ class GetUsageResponse(_message.Message):
     def __init__(self, usage: _Optional[_Union[UsageSummary, _Mapping]] = ...) -> None: ...
 
 class UsageSummary(_message.Message):
-    __slots__ = ("billing_month", "videos_encoded", "encoding_minutes", "encoding_cost", "storage_gb_avg", "storage_cost", "videos_hosted", "egress_gb", "egress_cost", "total_requests", "total_cost", "currency", "daily")
+    __slots__ = ("billing_month", "videos_encoded", "encoding_minutes", "encoding_cost", "storage_gb_avg", "storage_cost", "videos_hosted", "egress_gb", "egress_cost", "total_requests", "total_cost", "currency", "hosting_estimated_from", "daily")
     BILLING_MONTH_FIELD_NUMBER: _ClassVar[int]
     VIDEOS_ENCODED_FIELD_NUMBER: _ClassVar[int]
     ENCODING_MINUTES_FIELD_NUMBER: _ClassVar[int]
@@ -445,6 +445,7 @@ class UsageSummary(_message.Message):
     TOTAL_REQUESTS_FIELD_NUMBER: _ClassVar[int]
     TOTAL_COST_FIELD_NUMBER: _ClassVar[int]
     CURRENCY_FIELD_NUMBER: _ClassVar[int]
+    HOSTING_ESTIMATED_FROM_FIELD_NUMBER: _ClassVar[int]
     DAILY_FIELD_NUMBER: _ClassVar[int]
     billing_month: str
     videos_encoded: int
@@ -458,8 +459,9 @@ class UsageSummary(_message.Message):
     total_requests: int
     total_cost: float
     currency: str
+    hosting_estimated_from: str
     daily: _containers.RepeatedCompositeFieldContainer[DailyUsage]
-    def __init__(self, billing_month: _Optional[str] = ..., videos_encoded: _Optional[int] = ..., encoding_minutes: _Optional[float] = ..., encoding_cost: _Optional[float] = ..., storage_gb_avg: _Optional[float] = ..., storage_cost: _Optional[float] = ..., videos_hosted: _Optional[int] = ..., egress_gb: _Optional[float] = ..., egress_cost: _Optional[float] = ..., total_requests: _Optional[int] = ..., total_cost: _Optional[float] = ..., currency: _Optional[str] = ..., daily: _Optional[_Iterable[_Union[DailyUsage, _Mapping]]] = ...) -> None: ...
+    def __init__(self, billing_month: _Optional[str] = ..., videos_encoded: _Optional[int] = ..., encoding_minutes: _Optional[float] = ..., encoding_cost: _Optional[float] = ..., storage_gb_avg: _Optional[float] = ..., storage_cost: _Optional[float] = ..., videos_hosted: _Optional[int] = ..., egress_gb: _Optional[float] = ..., egress_cost: _Optional[float] = ..., total_requests: _Optional[int] = ..., total_cost: _Optional[float] = ..., currency: _Optional[str] = ..., hosting_estimated_from: _Optional[str] = ..., daily: _Optional[_Iterable[_Union[DailyUsage, _Mapping]]] = ...) -> None: ...
 
 class DailyUsage(_message.Message):
     __slots__ = ("date", "storage_bytes", "egress_bytes", "request_count", "encoding_cost")
