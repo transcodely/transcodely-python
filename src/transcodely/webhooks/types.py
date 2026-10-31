@@ -44,6 +44,8 @@ EventType = Literal[
     "video.source_scheduled_for_deletion",
     "video.insights.ready",
     "video.insights.failed",
+    "video.highlights.ready",
+    "video.highlights.failed",
     "app.created",
     "app.updated",
     "app.spend_limit_warning",

@@ -41,6 +41,8 @@ CANONICAL_EVENT_TYPES = {
     "video.source_scheduled_for_deletion",
     "video.insights.ready",
     "video.insights.failed",
+    "video.highlights.ready",
+    "video.highlights.failed",
     "app.created",
     "app.updated",
     "app.spend_limit_warning",
@@ -60,11 +62,11 @@ def test_event_type_literal_matches_api_catalog() -> None:
     assert set(get_args(EventType)) == CANONICAL_EVENT_TYPES
 
 
-def test_catalog_has_exactly_22_types() -> None:
+def test_catalog_has_exactly_24_types() -> None:
     types = get_args(EventType)
-    assert len(types) == 22
+    assert len(types) == 24
     # No accidental duplicates in the literal.
-    assert len(set(types)) == 22
+    assert len(set(types)) == 24
 
 
 def test_job_updated_is_not_in_catalog() -> None:
@@ -106,6 +108,11 @@ def test_video_insights_events_decode_transcript_insights() -> None:
         decode = decoder_for_type(event_type)
         assert decode is not None, event_type
         assert isinstance(decode({"id": "ins_1"}), TranscriptInsights), event_type
+    # video.highlights.* carry the Video snapshot, with its highlights.
+    for event_type in ("video.highlights.ready", "video.highlights.failed"):
+        decode = decoder_for_type(event_type)
+        assert decode is not None, event_type
+        assert isinstance(decode({"id": "vid_1"}), Video), event_type
     video_decode = decoder_for_type("video.ready")
     assert video_decode is not None
     assert isinstance(video_decode({"id": "vid_1"}), Video)

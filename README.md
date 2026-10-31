@@ -182,6 +182,25 @@ print(ins.id, ins.status)  # ins_..., INSIGHTS_STATUS_PENDING
 
 The entry also appears on `video.insights`. The `video.insights.ready` and `video.insights.failed` webhook events carry the entry itself as a `TranscriptInsights` in `event.data`.
 
+## Highlight clips
+
+A hosted video with ready insights can get short MP4 highlight clips cut around the quotes insights picked (default up to 5 clips of 8 to 60 seconds, padded 1.5 s each side). Each clip bills its rendered minutes at your encoding rate, with no processing fee:
+
+```python
+# `language` is needed only when the video has insights in several languages;
+# every `config` field is optional.
+highlights = client.videos.generate_highlights(
+    id="vid_a1b2c3d4e5f6g7",
+    config={"max_count": 3},
+)
+for h in highlights:
+    print(h.id, h.start_seconds, h.end_seconds, h.status)  # hl_..., VIDEO_HIGHLIGHT_STATUS_PENDING
+```
+
+Or ask for them at upload time with `highlights={"enabled": True}` next to `auto_insights=True` (on `videos.create_upload`, `videos.create_from_url` and the multipart create). The clips appear on `video.highlights`; once one is ready it carries a `playback_url` and a `poster_url`. The `video.highlights.ready` and `video.highlights.failed` webhook events fire once the whole set has finished and carry the `Video` in `event.data`.
+
+Each clip is rendered by an ordinary clip job, tagged with `transcodely_kind`, `transcodely_highlight_id` and `transcodely_video_id` metadata. Metadata keys starting with `transcodely_` are reserved for the platform: a job or ingest rule that sets one is refused with `parameter_invalid` on `metadata.<key>`.
+
 ## Authentication
 
 ```python
@@ -194,7 +213,7 @@ API keys are opaque `ak_`-prefixed secrets — pass the full value shown once at
 
 ```python
 client.jobs            # create / get / list / cancel / confirm / watch
-client.videos          # upload helpers, multipart, create_from_url, get / list / update / delete / watch, get_stats / list_top_videos / get_seo_markup / generate_insights
+client.videos          # upload helpers, multipart, create_from_url, get / list / update / delete / watch, get_stats / list_top_videos / get_seo_markup / generate_insights / generate_highlights
 client.presets         # create / get / get_by_slug / list / update / duplicate / archive
 client.origins         # create / get / list / update / validate / archive
 client.ingest_rules    # create / get / list / update / delete / list_events / test / replay_event

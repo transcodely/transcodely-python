@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import builtins
 from collections.abc import Generator
 from typing import Any
 
@@ -192,3 +193,30 @@ class Videos:
         return self._t.unary(
             _SERVICE, "GenerateInsights", req, video_pb2.GenerateInsightsResponse()
         ).insights
+
+    def generate_highlights(self, **kwargs: Any) -> builtins.list[video_pb2.VideoHighlight]:
+        """Cut highlight clips from a hosted video around its insights' quotes.
+
+        Pass ``id`` (the ``vid_...`` video, required), plus optional
+        ``language`` (ISO 639-2; needed only when the video has ready insights
+        in several languages), ``config`` (a dict or ``HighlightsConfig``:
+        ``max_count`` 1-10, default 5; ``min_seconds`` default 8;
+        ``max_seconds`` default 60; ``padding_seconds`` default 1.5) and
+        ``app_id``. Returns the highlights in ``"pending"``; they also appear on
+        ``video.highlights``, and ``video.highlights.ready`` (or
+        ``video.highlights.failed``, when none could be rendered) fires once
+        every one has finished.
+
+        Each clip is its own clip job on the video, billed as its rendered
+        (clipped) minutes at your effective encoding rate, with no processing
+        fee. While any highlight of the video is pending, the call returns the
+        current set and bills nothing new; once all are ready or failed, a new
+        call replaces them. A video without ready insights is refused with
+        failed_precondition (code ``highlights_require_insights``).
+        """
+        req = fill_from_dict(video_pb2.GenerateHighlightsRequest(), kwargs)
+        return list(
+            self._t.unary(
+                _SERVICE, "GenerateHighlights", req, video_pb2.GenerateHighlightsResponse()
+            ).highlights
+        )
