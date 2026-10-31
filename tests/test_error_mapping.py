@@ -107,6 +107,91 @@ class TestPayloadExtraction:
         err = _err(422, body=body)
         assert err.errors[0].field == "x"
 
+    def test_reads_a_protovalidate_refusal_exactly_as_the_api_sends_it(self) -> None:
+        # Every API validator (protovalidate schema, codec, feature) sends this
+        # one envelope: HTTP 400 invalid_argument, an ErrorDetails detail whose
+        # debug is protojson (camelCase), and violations reading "[<code>] <message>".
+        field = "outputs[0].content_aware.auto_abr.min_variants"
+        description = (
+            "[parameter_out_of_range] value must be greater than or equal to 1 "
+            "and less than or equal to 20"
+        )
+        body = {
+            "code": "invalid_argument",
+            "message": f"validation failed: {field}: value must be in range",
+            "details": [
+                {
+                    "type": "transcodely.v1.ErrorDetails",
+                    "value": "CghfdmFsaWRhdGlvbl9lcnJvcg",
+                    "debug": {
+                        "code": "validation_error",
+                        "message": "validation failed: ...",
+                        "fieldViolations": [{"field": field, "description": description}],
+                    },
+                }
+            ],
+        }
+        err = _err(400, body=body, headers={"x-request-id": "req_v"})
+        assert isinstance(err, InvalidRequestError)
+        assert err.type == "invalid_argument"
+        assert err.code == "validation_error"
+        assert err.request_id == "req_v"
+        assert [(v.field, v.description) for v in err.errors] == [(field, description)]
+
+    def test_reads_error_details_by_type_skipping_a_foreign_detail(self) -> None:
+        body = {
+            "code": "invalid_argument",
+            "message": "validation failed",
+            "details": [
+                {
+                    "type": "google.rpc.RetryInfo",
+                    "debug": {
+                        "code": "not_ours",
+                        "fieldViolations": [{"field": "x", "description": "y"}],
+                    },
+                },
+                {
+                    "type": "transcodely.v1.ErrorDetails",
+                    "debug": {
+                        "code": "validation_error",
+                        "fieldViolations": [
+                            {
+                                "field": "input_url",
+                                "description": "[parameter_required] value is required",
+                            }
+                        ],
+                    },
+                },
+            ],
+        }
+        err = _err(400, body=body)
+        assert err.code == "validation_error"
+        assert [(v.field, v.description) for v in err.errors] == [
+            ("input_url", "[parameter_required] value is required")
+        ]
+
+    def test_degrades_cleanly_when_no_detail_is_error_details(self) -> None:
+        body = {
+            "code": "invalid_argument",
+            "message": "validation failed",
+            "details": [
+                {
+                    "type": "google.rpc.RetryInfo",
+                    "debug": {
+                        "code": "not_ours",
+                        "fieldViolations": [{"field": "x", "description": "y"}],
+                    },
+                },
+                "not-an-object",
+            ],
+        }
+        err = _err(400, body=body)
+        assert isinstance(err, InvalidRequestError)
+        assert str(err) == "validation failed"
+        assert err.type == "invalid_argument"
+        assert err.code is None
+        assert err.errors == []
+
     def test_captures_request_id_from_headers(self) -> None:
         err = _err(500, headers={"x-request-id": "req_abc123"})
         assert err.request_id == "req_abc123"
