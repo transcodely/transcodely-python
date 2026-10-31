@@ -4,6 +4,14 @@ All notable changes to the Transcodely Python SDK will be documented in this fil
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Breaking changes are allowed on minor bumps until 1.0.0.
 
+## [0.3.17](https://github.com/transcodely/transcodely-python/compare/v0.3.16...v0.3.17) (2026-10-31)
+
+
+### Features
+
+* highlight clips — videos.generate_highlights, VideoHighlight, two webhook events ([3b49d18](https://github.com/transcodely/transcodely-python/commit/3b49d18794f226b79a941e7ef2a8e5d577197038))
+* resync protos for highlights (api v5.31.0) ([e7a5614](https://github.com/transcodely/transcodely-python/commit/e7a5614f635225379f8158f2ec6cbbb32916c7ed))
+
 ## [0.3.16](https://github.com/transcodely/transcodely-python/compare/v0.3.15...v0.3.16) (2026-10-31)
 
 
