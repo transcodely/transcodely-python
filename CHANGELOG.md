@@ -4,6 +4,24 @@ All notable changes to the Transcodely Python SDK will be documented in this fil
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Breaking changes are allowed on minor bumps until 1.0.0.
 
+## [0.3.16](https://github.com/transcodely/transcodely-python/compare/v0.3.15...v0.3.16) (2026-10-31)
+
+
+### Features
+
+* resync protos — auto_abr accepted, tone-mapping refusal rule, validation error envelope ([20e5236](https://github.com/transcodely/transcodely-python/commit/20e5236efe1e9d48d662b04d11035641c2b9fa6d))
+* resync protos — auto_abr accepted, tone-mapping refusal rule, validation error envelope ([27bd4fa](https://github.com/transcodely/transcodely-python/commit/27bd4fa4d9a3ecdb121086cb60076cce8d25bb54))
+
+
+### Bug Fixes
+
+* read the ErrorDetails detail by type and degrade cleanly without one ([0c1cafb](https://github.com/transcodely/transcodely-python/commit/0c1cafb7e22e2be6aaf35567e327e77473b425d3))
+
+
+### Documentation
+
+* describe the validation error envelope and pin it with a test ([a5dc2f6](https://github.com/transcodely/transcodely-python/commit/a5dc2f69a8ef767c7876e17e8a3c1c1c2c6f35b4))
+
 ## [0.3.15](https://github.com/transcodely/transcodely-python/compare/v0.3.14...v0.3.15) (2026-10-30)
 
 
