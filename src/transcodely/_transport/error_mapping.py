@@ -25,7 +25,7 @@ def map_http_error(*, status: int, body: Any, headers: Mapping[str, str]) -> Tra
     request_id = _header(headers, "x-request-id")
     parsed = _parse_body(body)
     message = parsed.get("message") or f"HTTP {status}"
-    detail = (parsed.get("details") or [{}])[0].get("debug") or {}
+    detail = _error_details(parsed.get("details"))
     code = detail.get("code")
     raw_violations = detail.get("field_violations") or detail.get("fieldViolations") or []
     violations = [
@@ -75,6 +75,33 @@ def connection_error(cause: BaseException, message: str | None = None) -> APICon
     err = APIConnectionError(msg)
     err.__cause__ = cause
     return err
+
+
+_ERROR_DETAILS_TYPE = "transcodely.v1.ErrorDetails"
+
+
+def _error_details(details: Any) -> dict[str, Any]:
+    """Return the debug payload of the first ErrorDetails detail, or ``{}``.
+
+    A detail is read when its type names ErrorDetails, or when it has no type
+    (bodies that omit it). A detail of any other type, or one that is not an
+    object, is skipped, so the error degrades to its message instead of taking
+    a foreign detail's fields.
+    """
+    if not isinstance(details, list):
+        return {}
+    for d in details:
+        if not isinstance(d, dict):
+            continue
+        typ = d.get("type")
+        if (
+            typ is None
+            or typ == _ERROR_DETAILS_TYPE
+            or str(typ).endswith("/" + _ERROR_DETAILS_TYPE)
+        ):
+            debug = d.get("debug")
+            return debug if isinstance(debug, dict) else {}
+    return {}
 
 
 def _parse_body(body: Any) -> dict[str, Any]:
