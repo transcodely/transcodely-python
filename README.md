@@ -201,6 +201,32 @@ Or ask for them at upload time with `highlights={"enabled": True}` next to `auto
 
 Each clip is rendered by an ordinary clip job, tagged with `transcodely_kind`, `transcodely_highlight_id` and `transcodely_video_id` metadata. Metadata keys starting with `transcodely_` are reserved for the platform: a job or ingest rule that sets one is refused with `parameter_invalid` on `metadata.<key>`.
 
+## Source retention
+
+Original source files of hosted videos are temporary. Each one is deleted when
+the app's retention window ends: 7 days after the video is ready by default, or
+the app's `delete_source_after_days` (1 to 3650). Renditions and playback are
+never affected. The video's `source_expires_at` says when its source will go,
+and the `video.source_scheduled_for_deletion` webhook fires at least 72 hours
+before.
+
+To keep a source, retain it. A retained source is kept until you release it or
+delete the video. It is billed as hosted storage at the standard storage rate
+and appears on the invoice as "Retained source videos". Sources inside their
+retention window are free.
+
+```python
+# At creation (also on videos.create_from_url and the multipart create).
+upload = client.videos.create_upload(filename="talk.mp4", source_pinned=True)
+
+# Or later.
+client.videos.update(id=upload.video.id, source_pinned=True)
+```
+
+`UsageSummary` reports retained sources as their own pair,
+`retained_source_gb_avg` and `retained_source_cost`. `storage_gb_avg` and
+`storage_cost` cover the deliverables only.
+
 ## Authentication
 
 ```python
