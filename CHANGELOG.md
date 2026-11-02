@@ -4,6 +4,14 @@ All notable changes to the Transcodely Python SDK will be documented in this fil
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Breaking changes are allowed on minor bumps until 1.0.0.
 
+## [0.3.18](https://github.com/transcodely/transcodely-python/compare/v0.3.17...v0.3.18) (2026-11-02)
+
+
+### Features
+
+* resync protos for source retention (api v5.33.0) ([9ebefb1](https://github.com/transcodely/transcodely-python/commit/9ebefb1ac0bf12a873701d9053b76662ebfb60bd))
+* source retention — source_pinned at creation, Video.source_expires_at, retained-source usage ([aac8e33](https://github.com/transcodely/transcodely-python/commit/aac8e33b4fa34b5698f71b6716f2f0818c36af48))
+
 ## [0.3.17](https://github.com/transcodely/transcodely-python/compare/v0.3.16...v0.3.17) (2026-10-31)
 
 
