@@ -91,7 +91,11 @@ class InvalidRequestError(TranscodelyError):
 
 
 class PreconditionError(TranscodelyError):
-    """412 — preconditions not met (e.g. job not cancelable in current state)."""
+    """Connect code ``failed_precondition`` (HTTP 400 on the wire).
+
+    The request is valid but the resource or account is in the wrong state, e.g. a
+    job that is not cancelable, or a billing refusal such as ``billing_past_due``.
+    """
 
 
 class WebhookError(TranscodelyError):

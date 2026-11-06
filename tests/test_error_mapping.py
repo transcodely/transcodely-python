@@ -46,6 +46,46 @@ def test_status_maps_to_typed_exception(status: int, exc: type[Exception]) -> No
     assert err.http_status == status
 
 
+# A recorded billing_past_due refusal as it arrives on the wire.
+_BILLING_PAST_DUE: dict[str, object] = {
+    "code": "failed_precondition",
+    "message": "billing past due: new jobs are paused until the overdue invoice is paid",
+    "details": [
+        {
+            "type": "transcodely.v1.ErrorDetails",
+            "value": "",
+            "debug": {
+                "code": "billing_past_due",
+                "message": (
+                    "billing past due: new jobs are paused until the overdue invoice is paid"
+                ),
+            },
+        }
+    ],
+}
+
+
+class TestFailedPrecondition:
+    """The API (connect-go v1.18.1) sends failed_precondition as HTTP 400, never 412."""
+
+    def test_failed_precondition_body_on_400_is_precondition_error(self) -> None:
+        err = _err(400, body=_BILLING_PAST_DUE, headers={"x-request-id": "req_abc"})
+        assert isinstance(err, PreconditionError)
+        assert err.http_status == 400
+        assert err.type == "failed_precondition"
+        assert err.code == "billing_past_due"
+        assert err.request_id == "req_abc"
+
+    def test_failed_precondition_bytes_body_is_precondition_error(self) -> None:
+        body = b'{"code": "failed_precondition", "message": "nothing outstanding"}'
+        assert isinstance(_err(400, body=body), PreconditionError)
+
+    def test_invalid_argument_body_on_400_stays_invalid_request(self) -> None:
+        err = _err(400, body={"code": "invalid_argument", "message": "bad crf"})
+        assert isinstance(err, InvalidRequestError)
+        assert not isinstance(err, PreconditionError)
+
+
 class TestRateLimitError:
     def test_429_maps_to_rate_limit_error(self) -> None:
         err = _err(429, headers={"retry-after": "5"})
