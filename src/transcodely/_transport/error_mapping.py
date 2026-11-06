@@ -42,6 +42,11 @@ def map_http_error(*, status: int, body: Any, headers: Mapping[str, str]) -> Tra
         "raw": body,
     }
 
+    # Precondition failures are classified on the Connect code in the body: the
+    # API's connect-go transport sends failed_precondition as HTTP 400, not 412.
+    # 412 stays as a fallback for bodies that carry no Connect code.
+    if parsed.get("code") == "failed_precondition":
+        return PreconditionError(message, **kwargs)
     if status == 401:
         return AuthenticationError(message, **kwargs)
     if status == 403:

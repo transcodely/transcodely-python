@@ -566,7 +566,7 @@ detail, so its code is empty. `type` holds the Connect code, `invalid_argument`.
 | `ConflictError` | 409 | Idempotency conflict, slug taken |
 | `RateLimitError` | 429 | Carries `retry_after_ms` |
 | `InvalidRequestError` | 400 | Carries `errors: list[FieldViolation]` |
-| `PreconditionError` | 412 | Wrong state (e.g. job not cancelable) |
+| `PreconditionError` | 400 (`failed_precondition`) | Wrong state (e.g. job not cancelable, `billing_past_due`) |
 
 Every error carries `request_id`, `code`, `http_status`, and `raw` for debugging.
 
