@@ -201,6 +201,34 @@ Or ask for them at upload time with `highlights={"enabled": True}` next to `auto
 
 Each clip is rendered by an ordinary clip job, tagged with `transcodely_kind`, `transcodely_highlight_id` and `transcodely_video_id` metadata. Metadata keys starting with `transcodely_` are reserved for the platform: a job or ingest rule that sets one is refused with `parameter_invalid` on `metadata.<key>`.
 
+## Caption translation
+
+A hosted video with AI captions can have them translated into other languages without transcribing again. One captions-only job writes, per target language, a caption track, its transcript renditions and (on HLS) a caption rendition in the manifest; ready insights in the source language are translated too unless `include_insights=False`. Billed as the `captions_translation` fee (EUR 0.12 per source minute per language, delivered languages only):
+
+```python
+# `source_language` is needed only when the video has several AI caption tracks.
+res = client.videos.translate_captions(
+    id="vid_a1b2c3d4e5f6g7",
+    target_languages=["ger", "spa"],  # ISO 639-2, up to 10
+)
+print(res.job_id, list(res.target_languages), res.estimated_fee_eur)
+for f in res.in_flight:
+    print("already translating:", f.language, f.job_id)  # not requested again
+```
+
+Or ask for it at upload time with `auto_translations=["ger"]` next to `auto_captions=True`, or on a captions job with `translations` on the `generate` subtitle track. Translated tracks carry `translated_from` (the source language); translated insights entries do too. Deployments without the feature refuse it with `parameter_unsupported`.
+
+## Guide page
+
+A public or unlisted hosted video with ready insights or a generated transcript can have a shareable guide page (player, insights and full transcript). `video.guide_page` is the video's own setting (`"default"` follows the app's `hosting_config.guide_pages_enabled`; `"on"` / `"off"` pin it), `video.guide_page_enabled` is the resulting effective value, and `video.guide_url` is set only when the page would render:
+
+```python
+video = client.videos.update(id="vid_a1b2c3d4e5f6g7", guide_page="on")
+print(video.guide_page_enabled, video.guide_url)
+```
+
+`guide_page_enabled` is absent in `video.*` webhook payloads, which do not resolve the app default (`video.HasField("guide_page_enabled")` is `False` there): read `guide_page`, or fetch the video for the effective value and URL.
+
 ## Source retention
 
 Original source files of hosted videos are temporary. Each one is deleted when
@@ -239,7 +267,7 @@ API keys are opaque `ak_`-prefixed secrets — pass the full value shown once at
 
 ```python
 client.jobs            # create / get / list / cancel / confirm / watch
-client.videos          # upload helpers, multipart, create_from_url, get / list / update / delete / watch, get_stats / list_top_videos / get_seo_markup / generate_insights / generate_highlights
+client.videos          # upload helpers, multipart, create_from_url, get / list / update / delete / watch, get_stats / list_top_videos / get_seo_markup / generate_insights / generate_highlights / translate_captions
 client.presets         # create / get / get_by_slug / list / update / duplicate / archive
 client.origins         # create / get / list / update / validate / archive
 client.ingest_rules    # create / get / list / update / delete / list_events / test / replay_event
