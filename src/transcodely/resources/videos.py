@@ -220,3 +220,30 @@ class Videos:
                 _SERVICE, "GenerateHighlights", req, video_pb2.GenerateHighlightsResponse()
             ).highlights
         )
+
+    def translate_captions(self, **kwargs: Any) -> video_pb2.TranslateCaptionsResponse:
+        """Translate a hosted video's existing AI captions into other languages.
+
+        Pass ``id`` (the ``vid_...`` video, required) and ``target_languages``
+        (ISO 639-2 codes, 1 to 10, distinct), plus optional ``source_language``
+        (needed only when the video has several AI caption tracks),
+        ``include_insights`` (default ``True``: ready insights in the source
+        language are translated too and appear as one more ``video.insights``
+        entry per language) and ``app_id``. Creates one captions-only job on
+        the video that writes, per target language, a caption track, its
+        transcript renditions and (on HLS) a caption rendition in the manifest,
+        without transcribing again.
+
+        The response names the job (``job_id``), the normalized
+        ``source_language`` and ``target_languages``, ``estimated_fee_eur`` and
+        ``in_flight``: targets an earlier, still-running job already carries,
+        which are not requested again. Billed as the ``captions_translation``
+        fee, EUR 0.12 per source minute per language, only for languages
+        actually delivered. A video without AI captions is refused with
+        failed_precondition (code ``captions_required``); deployments without
+        the feature refuse it with ``parameter_unsupported``.
+        """
+        req = fill_from_dict(video_pb2.TranslateCaptionsRequest(), kwargs)
+        return self._t.unary(
+            _SERVICE, "TranslateCaptions", req, video_pb2.TranslateCaptionsResponse()
+        )
