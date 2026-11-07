@@ -4,6 +4,22 @@ All notable changes to the Transcodely Python SDK will be documented in this fil
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Breaking changes are allowed on minor bumps until 1.0.0.
 
+## [0.3.19](https://github.com/transcodely/transcodely-python/compare/v0.3.18...v0.3.19) (2026-11-07)
+
+
+### Features
+
+* protos for api 5.38.0 (guide page, caption glossary, caption translation contract) ([bde52f1](https://github.com/transcodely/transcodely-python/commit/bde52f1d78f84d0cf7e811e20bf7ba5566970a85))
+* resync protos for api 5.38.0 — guide page, caption translation, glossary ([cf0c197](https://github.com/transcodely/transcodely-python/commit/cf0c197f017a7a1bbaf76df5e2b05e0fc69979ae))
+
+
+### Bug Fixes
+
+* **errors:** classify failed_precondition as PreconditionError ([edc86f5](https://github.com/transcodely/transcodely-python/commit/edc86f5e32744e20ab64023b8f2b9e0f4f69cb55))
+* **errors:** classify failed_precondition as PreconditionError ([8619245](https://github.com/transcodely/transcodely-python/commit/8619245e63a9391829f3fda76c2284abd19c5bbe)), closes [#52](https://github.com/transcodely/transcodely-python/issues/52)
+* **proto:** sync protos from api 3137f067 (label pattern, insights correction docs, highlights billing) ([99f26fb](https://github.com/transcodely/transcodely-python/commit/99f26fbc282670b1ba06c8d47a75cea804d2fa0e))
+* **proto:** sync protos from api 3137f067 (label pattern, insights correction docs, highlights billing) ([1ab288f](https://github.com/transcodely/transcodely-python/commit/1ab288fd8b1811b055c6f0d6cb33c0495f2c6d64))
+
 ## [0.3.18](https://github.com/transcodely/transcodely-python/compare/v0.3.17...v0.3.18) (2026-11-02)
 
 
