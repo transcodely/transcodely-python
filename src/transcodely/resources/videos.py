@@ -260,11 +260,14 @@ class Videos:
         so nothing is transcribed again; only their grouping into cues changes.
 
         Creates a captions-only job on the video (``job_id`` in the response,
-        with ``video_id``, the normalized ``language`` and the resolved
-        ``cue_style``). When it completes, the track's caption file, transcript
-        renditions and HLS caption rendition are replaced in place and
-        ``VideoTextTrack.cue_style`` shows the new style. Insights are kept;
-        translations of the track keep their old cues until translated again.
+        with ``video_id``, the normalized ``language``, the resolved
+        ``cue_style`` and its ``style_variant``). A language keeps one caption
+        track per style (``VideoTextTrack.style_variant``): when it has no
+        track in the requested style yet the job adds one next to the existing
+        styles (``adds_variant`` in the response), not the default unless
+        ``make_default=True``; otherwise that style's track is re-cut in place.
+        Insights are kept; translations keep their old cues until translated
+        again.
         Free: no captions, translation or processing fee. Refused with
         failed_precondition (code ``captions_required``,
         ``insights_transcript_unavailable`` or ``captions_job_in_flight``) when
@@ -273,3 +276,52 @@ class Videos:
         """
         req = fill_from_dict(video_pb2.RestyleCaptionsRequest(), kwargs)
         return self._t.unary(_SERVICE, "RestyleCaptions", req, video_pb2.RestyleCaptionsResponse())
+
+    def set_default_caption_style(self, **kwargs: Any) -> video_pb2.Video:
+        """Make another of a language's caption styles its default.
+
+        Pass ``id`` (the ``vid_...`` video), ``language`` (ISO 639-2) and
+        ``style_variant`` (``"compact"``, ``"standard"`` or ``"long"``), plus
+        optional ``app_id``. The default style is the one players select for
+        the language and the one labelled with the language name alone
+        (``VideoTextTrack.is_default``); the previous default stays available
+        under "<language> (<style>)". For a video that streams as HLS the
+        master playlist is rewritten and purged from the CDN. Translations of
+        the language become stale (``VideoTextTrack.stale``) until translated
+        again. Free. Returns the video with its text tracks as they are now.
+
+        Setting the current default again succeeds and changes nothing.
+        Refused with not_found when the video has no AI caption track of that
+        language in that style, with failed_precondition (code
+        ``captions_job_in_flight``) while a captions job of the language is
+        running, and with unavailable (code ``translation_busy`` or
+        ``caption_manifest_busy``) when the same request can be retried after
+        a few seconds.
+        """
+        req = fill_from_dict(video_pb2.SetDefaultCaptionStyleRequest(), kwargs)
+        return self._t.unary(
+            _SERVICE, "SetDefaultCaptionStyle", req, video_pb2.SetDefaultCaptionStyleResponse()
+        ).video
+
+    def delete_caption_style(self, **kwargs: Any) -> video_pb2.Video:
+        """Remove one style of a language's AI captions.
+
+        Pass ``id`` (the ``vid_...`` video), ``language`` (ISO 639-2) and
+        ``style_variant`` (``"compact"``, ``"standard"`` or ``"long"``), plus
+        optional ``app_id``. Removes the caption track, its entry in the
+        video's HLS master playlist (purged from the CDN) and its files. The
+        language's default style cannot be removed, which also keeps a
+        language's only style: make another style the default first with
+        ``set_default_caption_style``. Free. Returns the video with its text
+        tracks as they are now.
+
+        Refused with not_found when the video has no AI caption track of that
+        language in that style, with invalid_argument (code
+        ``parameter_invalid``) when that track is the language's default, and
+        with the same ``captions_job_in_flight``, ``translation_busy`` and
+        ``caption_manifest_busy`` refusals as ``set_default_caption_style``.
+        """
+        req = fill_from_dict(video_pb2.DeleteCaptionStyleRequest(), kwargs)
+        return self._t.unary(
+            _SERVICE, "DeleteCaptionStyle", req, video_pb2.DeleteCaptionStyleResponse()
+        ).video
