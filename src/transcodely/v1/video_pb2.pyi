@@ -170,7 +170,7 @@ class VideoRendition(_message.Message):
     def __init__(self, id: _Optional[str] = ..., resolution: _Optional[str] = ..., codec: _Optional[str] = ..., bitrate_kbps: _Optional[int] = ..., width: _Optional[int] = ..., height: _Optional[int] = ..., size_bytes: _Optional[int] = ...) -> None: ...
 
 class VideoTextTrack(_message.Message):
-    __slots__ = ("id", "kind", "language", "label", "format", "auto_generated", "in_manifest", "url", "created_at", "transcript_renditions", "translated_from", "updated_at", "cue_style")
+    __slots__ = ("id", "kind", "language", "label", "format", "auto_generated", "in_manifest", "url", "created_at", "transcript_renditions", "translated_from", "updated_at", "cue_style", "is_default", "style_variant", "stale")
     ID_FIELD_NUMBER: _ClassVar[int]
     KIND_FIELD_NUMBER: _ClassVar[int]
     LANGUAGE_FIELD_NUMBER: _ClassVar[int]
@@ -184,6 +184,9 @@ class VideoTextTrack(_message.Message):
     TRANSLATED_FROM_FIELD_NUMBER: _ClassVar[int]
     UPDATED_AT_FIELD_NUMBER: _ClassVar[int]
     CUE_STYLE_FIELD_NUMBER: _ClassVar[int]
+    IS_DEFAULT_FIELD_NUMBER: _ClassVar[int]
+    STYLE_VARIANT_FIELD_NUMBER: _ClassVar[int]
+    STALE_FIELD_NUMBER: _ClassVar[int]
     id: str
     kind: str
     language: str
@@ -197,7 +200,10 @@ class VideoTextTrack(_message.Message):
     translated_from: str
     updated_at: _timestamp_pb2.Timestamp
     cue_style: _subtitles_pb2.CueStyle
-    def __init__(self, id: _Optional[str] = ..., kind: _Optional[str] = ..., language: _Optional[str] = ..., label: _Optional[str] = ..., format: _Optional[str] = ..., auto_generated: bool = ..., in_manifest: bool = ..., url: _Optional[str] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., transcript_renditions: _Optional[_Iterable[_Union[_subtitles_pb2.TranscriptRendition, _Mapping]]] = ..., translated_from: _Optional[str] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., cue_style: _Optional[_Union[_subtitles_pb2.CueStyle, _Mapping]] = ...) -> None: ...
+    is_default: bool
+    style_variant: _subtitles_pb2.CueStylePreset
+    stale: bool
+    def __init__(self, id: _Optional[str] = ..., kind: _Optional[str] = ..., language: _Optional[str] = ..., label: _Optional[str] = ..., format: _Optional[str] = ..., auto_generated: bool = ..., in_manifest: bool = ..., url: _Optional[str] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., transcript_renditions: _Optional[_Iterable[_Union[_subtitles_pb2.TranscriptRendition, _Mapping]]] = ..., translated_from: _Optional[str] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., cue_style: _Optional[_Union[_subtitles_pb2.CueStyle, _Mapping]] = ..., is_default: bool = ..., style_variant: _Optional[_Union[_subtitles_pb2.CueStylePreset, str]] = ..., stale: bool = ...) -> None: ...
 
 class CreateUploadRequest(_message.Message):
     __slots__ = ("app_id", "filename", "content_type", "size_bytes", "title", "description", "tags", "visibility", "preset", "hover_previews", "auto_captions", "auto_insights", "highlights", "source_pinned", "auto_translations", "cue_style")
@@ -712,28 +718,70 @@ class TranslateCaptionsResponse(_message.Message):
     def __init__(self, job_id: _Optional[str] = ..., video_id: _Optional[str] = ..., source_language: _Optional[str] = ..., target_languages: _Optional[_Iterable[str]] = ..., in_flight: _Optional[_Iterable[_Union[TranslationInFlight, _Mapping]]] = ..., estimated_fee_eur: _Optional[float] = ..., insights_included: bool = ...) -> None: ...
 
 class RestyleCaptionsRequest(_message.Message):
-    __slots__ = ("id", "language", "cue_style", "app_id")
+    __slots__ = ("id", "language", "cue_style", "app_id", "make_default")
     ID_FIELD_NUMBER: _ClassVar[int]
     LANGUAGE_FIELD_NUMBER: _ClassVar[int]
     CUE_STYLE_FIELD_NUMBER: _ClassVar[int]
     APP_ID_FIELD_NUMBER: _ClassVar[int]
+    MAKE_DEFAULT_FIELD_NUMBER: _ClassVar[int]
     id: str
     language: str
     cue_style: _subtitles_pb2.CueStyle
     app_id: str
-    def __init__(self, id: _Optional[str] = ..., language: _Optional[str] = ..., cue_style: _Optional[_Union[_subtitles_pb2.CueStyle, _Mapping]] = ..., app_id: _Optional[str] = ...) -> None: ...
+    make_default: bool
+    def __init__(self, id: _Optional[str] = ..., language: _Optional[str] = ..., cue_style: _Optional[_Union[_subtitles_pb2.CueStyle, _Mapping]] = ..., app_id: _Optional[str] = ..., make_default: bool = ...) -> None: ...
 
 class RestyleCaptionsResponse(_message.Message):
-    __slots__ = ("job_id", "video_id", "language", "cue_style")
+    __slots__ = ("job_id", "video_id", "language", "cue_style", "style_variant", "adds_variant")
     JOB_ID_FIELD_NUMBER: _ClassVar[int]
     VIDEO_ID_FIELD_NUMBER: _ClassVar[int]
     LANGUAGE_FIELD_NUMBER: _ClassVar[int]
     CUE_STYLE_FIELD_NUMBER: _ClassVar[int]
+    STYLE_VARIANT_FIELD_NUMBER: _ClassVar[int]
+    ADDS_VARIANT_FIELD_NUMBER: _ClassVar[int]
     job_id: str
     video_id: str
     language: str
     cue_style: _subtitles_pb2.CueStyle
-    def __init__(self, job_id: _Optional[str] = ..., video_id: _Optional[str] = ..., language: _Optional[str] = ..., cue_style: _Optional[_Union[_subtitles_pb2.CueStyle, _Mapping]] = ...) -> None: ...
+    style_variant: _subtitles_pb2.CueStylePreset
+    adds_variant: bool
+    def __init__(self, job_id: _Optional[str] = ..., video_id: _Optional[str] = ..., language: _Optional[str] = ..., cue_style: _Optional[_Union[_subtitles_pb2.CueStyle, _Mapping]] = ..., style_variant: _Optional[_Union[_subtitles_pb2.CueStylePreset, str]] = ..., adds_variant: bool = ...) -> None: ...
+
+class SetDefaultCaptionStyleRequest(_message.Message):
+    __slots__ = ("id", "language", "style_variant", "app_id")
+    ID_FIELD_NUMBER: _ClassVar[int]
+    LANGUAGE_FIELD_NUMBER: _ClassVar[int]
+    STYLE_VARIANT_FIELD_NUMBER: _ClassVar[int]
+    APP_ID_FIELD_NUMBER: _ClassVar[int]
+    id: str
+    language: str
+    style_variant: _subtitles_pb2.CueStylePreset
+    app_id: str
+    def __init__(self, id: _Optional[str] = ..., language: _Optional[str] = ..., style_variant: _Optional[_Union[_subtitles_pb2.CueStylePreset, str]] = ..., app_id: _Optional[str] = ...) -> None: ...
+
+class SetDefaultCaptionStyleResponse(_message.Message):
+    __slots__ = ("video",)
+    VIDEO_FIELD_NUMBER: _ClassVar[int]
+    video: Video
+    def __init__(self, video: _Optional[_Union[Video, _Mapping]] = ...) -> None: ...
+
+class DeleteCaptionStyleRequest(_message.Message):
+    __slots__ = ("id", "language", "style_variant", "app_id")
+    ID_FIELD_NUMBER: _ClassVar[int]
+    LANGUAGE_FIELD_NUMBER: _ClassVar[int]
+    STYLE_VARIANT_FIELD_NUMBER: _ClassVar[int]
+    APP_ID_FIELD_NUMBER: _ClassVar[int]
+    id: str
+    language: str
+    style_variant: _subtitles_pb2.CueStylePreset
+    app_id: str
+    def __init__(self, id: _Optional[str] = ..., language: _Optional[str] = ..., style_variant: _Optional[_Union[_subtitles_pb2.CueStylePreset, str]] = ..., app_id: _Optional[str] = ...) -> None: ...
+
+class DeleteCaptionStyleResponse(_message.Message):
+    __slots__ = ("video",)
+    VIDEO_FIELD_NUMBER: _ClassVar[int]
+    video: Video
+    def __init__(self, video: _Optional[_Union[Video, _Mapping]] = ...) -> None: ...
 
 class HighlightsConfig(_message.Message):
     __slots__ = ("enabled", "max_count", "min_seconds", "max_seconds", "padding_seconds")
