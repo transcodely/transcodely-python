@@ -247,3 +247,29 @@ class Videos:
         return self._t.unary(
             _SERVICE, "TranslateCaptions", req, video_pb2.TranslateCaptionsResponse()
         )
+
+    def restyle_captions(self, **kwargs: Any) -> video_pb2.RestyleCaptionsResponse:
+        """Re-cut a hosted video's existing AI captions into a new cue style.
+
+        Pass ``id`` (the ``vid_...`` video, required), plus optional
+        ``language`` (needed only when the video has several AI caption
+        tracks), ``cue_style`` (a dict such as ``{"preset": "compact"}`` or
+        ``{"max_lines": 1}``; when absent, or for the limits it leaves unset,
+        the app's default cue style is used, else ``standard``) and ``app_id``.
+        The words and their timings come from the track's stored transcript,
+        so nothing is transcribed again; only their grouping into cues changes.
+
+        Creates a captions-only job on the video (``job_id`` in the response,
+        with ``video_id``, the normalized ``language`` and the resolved
+        ``cue_style``). When it completes, the track's caption file, transcript
+        renditions and HLS caption rendition are replaced in place and
+        ``VideoTextTrack.cue_style`` shows the new style. Insights are kept;
+        translations of the track keep their old cues until translated again.
+        Free: no captions, translation or processing fee. Refused with
+        failed_precondition (code ``captions_required``,
+        ``insights_transcript_unavailable`` or ``captions_job_in_flight``) when
+        there is nothing to restyle or a captions job of that language is still
+        running.
+        """
+        req = fill_from_dict(video_pb2.RestyleCaptionsRequest(), kwargs)
+        return self._t.unary(_SERVICE, "RestyleCaptions", req, video_pb2.RestyleCaptionsResponse())

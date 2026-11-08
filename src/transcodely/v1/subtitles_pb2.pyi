@@ -25,6 +25,13 @@ class SubtitleFormat(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     SUBTITLE_FORMAT_TTML: _ClassVar[SubtitleFormat]
     SUBTITLE_FORMAT_ASS: _ClassVar[SubtitleFormat]
 
+class CueStylePreset(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    CUE_STYLE_PRESET_UNSPECIFIED: _ClassVar[CueStylePreset]
+    CUE_STYLE_PRESET_COMPACT: _ClassVar[CueStylePreset]
+    CUE_STYLE_PRESET_STANDARD: _ClassVar[CueStylePreset]
+    CUE_STYLE_PRESET_LONG: _ClassVar[CueStylePreset]
+
 class TranscriptStyle(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
     TRANSCRIPT_STYLE_UNSPECIFIED: _ClassVar[TranscriptStyle]
@@ -61,6 +68,10 @@ SUBTITLE_FORMAT_SRT: SubtitleFormat
 SUBTITLE_FORMAT_WEBVTT: SubtitleFormat
 SUBTITLE_FORMAT_TTML: SubtitleFormat
 SUBTITLE_FORMAT_ASS: SubtitleFormat
+CUE_STYLE_PRESET_UNSPECIFIED: CueStylePreset
+CUE_STYLE_PRESET_COMPACT: CueStylePreset
+CUE_STYLE_PRESET_STANDARD: CueStylePreset
+CUE_STYLE_PRESET_LONG: CueStylePreset
 TRANSCRIPT_STYLE_UNSPECIFIED: TranscriptStyle
 TRANSCRIPT_STYLE_CLEAN: TranscriptStyle
 TRANSCRIPT_STYLE_LITERAL: TranscriptStyle
@@ -93,7 +104,7 @@ class BurnInStyle(_message.Message):
     def __init__(self, font_family: _Optional[str] = ..., font_size: _Optional[int] = ..., font_color: _Optional[str] = ..., outline_color: _Optional[str] = ..., outline_width: _Optional[int] = ..., margin_bottom: _Optional[int] = ...) -> None: ...
 
 class SubtitleTrack(_message.Message):
-    __slots__ = ("operation", "source_stream_index", "source_url", "input_format", "output_format", "language", "label", "is_default", "hearing_impaired", "forced", "burn_in_style", "generate_chapters", "transcript", "insights", "translations")
+    __slots__ = ("operation", "source_stream_index", "source_url", "input_format", "output_format", "language", "label", "is_default", "hearing_impaired", "forced", "burn_in_style", "generate_chapters", "transcript", "insights", "translations", "cue_style")
     OPERATION_FIELD_NUMBER: _ClassVar[int]
     SOURCE_STREAM_INDEX_FIELD_NUMBER: _ClassVar[int]
     SOURCE_URL_FIELD_NUMBER: _ClassVar[int]
@@ -109,6 +120,7 @@ class SubtitleTrack(_message.Message):
     TRANSCRIPT_FIELD_NUMBER: _ClassVar[int]
     INSIGHTS_FIELD_NUMBER: _ClassVar[int]
     TRANSLATIONS_FIELD_NUMBER: _ClassVar[int]
+    CUE_STYLE_FIELD_NUMBER: _ClassVar[int]
     operation: SubtitleOperation
     source_stream_index: int
     source_url: str
@@ -124,7 +136,20 @@ class SubtitleTrack(_message.Message):
     transcript: TranscriptOptions
     insights: InsightsOptions
     translations: _containers.RepeatedScalarFieldContainer[str]
-    def __init__(self, operation: _Optional[_Union[SubtitleOperation, str]] = ..., source_stream_index: _Optional[int] = ..., source_url: _Optional[str] = ..., input_format: _Optional[_Union[SubtitleFormat, str]] = ..., output_format: _Optional[_Union[SubtitleFormat, str]] = ..., language: _Optional[str] = ..., label: _Optional[str] = ..., is_default: bool = ..., hearing_impaired: bool = ..., forced: bool = ..., burn_in_style: _Optional[_Union[BurnInStyle, _Mapping]] = ..., generate_chapters: bool = ..., transcript: _Optional[_Union[TranscriptOptions, _Mapping]] = ..., insights: _Optional[_Union[InsightsOptions, _Mapping]] = ..., translations: _Optional[_Iterable[str]] = ...) -> None: ...
+    cue_style: CueStyle
+    def __init__(self, operation: _Optional[_Union[SubtitleOperation, str]] = ..., source_stream_index: _Optional[int] = ..., source_url: _Optional[str] = ..., input_format: _Optional[_Union[SubtitleFormat, str]] = ..., output_format: _Optional[_Union[SubtitleFormat, str]] = ..., language: _Optional[str] = ..., label: _Optional[str] = ..., is_default: bool = ..., hearing_impaired: bool = ..., forced: bool = ..., burn_in_style: _Optional[_Union[BurnInStyle, _Mapping]] = ..., generate_chapters: bool = ..., transcript: _Optional[_Union[TranscriptOptions, _Mapping]] = ..., insights: _Optional[_Union[InsightsOptions, _Mapping]] = ..., translations: _Optional[_Iterable[str]] = ..., cue_style: _Optional[_Union[CueStyle, _Mapping]] = ...) -> None: ...
+
+class CueStyle(_message.Message):
+    __slots__ = ("preset", "max_chars_per_line", "max_lines", "max_cue_duration_ms")
+    PRESET_FIELD_NUMBER: _ClassVar[int]
+    MAX_CHARS_PER_LINE_FIELD_NUMBER: _ClassVar[int]
+    MAX_LINES_FIELD_NUMBER: _ClassVar[int]
+    MAX_CUE_DURATION_MS_FIELD_NUMBER: _ClassVar[int]
+    preset: CueStylePreset
+    max_chars_per_line: int
+    max_lines: int
+    max_cue_duration_ms: int
+    def __init__(self, preset: _Optional[_Union[CueStylePreset, str]] = ..., max_chars_per_line: _Optional[int] = ..., max_lines: _Optional[int] = ..., max_cue_duration_ms: _Optional[int] = ...) -> None: ...
 
 class TranscriptOptions(_message.Message):
     __slots__ = ("style",)
@@ -243,7 +268,7 @@ class InsightsHighlight(_message.Message):
     def __init__(self, text: _Optional[str] = ..., start_seconds: _Optional[float] = ..., end_seconds: _Optional[float] = ...) -> None: ...
 
 class TranscriptInsights(_message.Message):
-    __slots__ = ("output_id", "language", "status", "error_code", "title_suggestions", "summary", "key_points", "chapters", "questions", "terms", "highlights", "topics", "storage_key", "url", "signed_url", "chapters_storage_key", "chapters_url", "chapters_signed_url", "markdown_storage_key", "markdown_url", "markdown_signed_url", "generated_at", "hint", "glossary", "id", "source", "video_id", "fee_eur", "translated_from")
+    __slots__ = ("output_id", "language", "status", "error_code", "title_suggestions", "summary", "key_points", "chapters", "questions", "terms", "highlights", "topics", "storage_key", "url", "signed_url", "chapters_storage_key", "chapters_url", "chapters_signed_url", "markdown_storage_key", "markdown_url", "markdown_signed_url", "generated_at", "hint", "glossary", "id", "source", "video_id", "fee_eur", "translated_from", "job_id")
     OUTPUT_ID_FIELD_NUMBER: _ClassVar[int]
     LANGUAGE_FIELD_NUMBER: _ClassVar[int]
     STATUS_FIELD_NUMBER: _ClassVar[int]
@@ -273,6 +298,7 @@ class TranscriptInsights(_message.Message):
     VIDEO_ID_FIELD_NUMBER: _ClassVar[int]
     FEE_EUR_FIELD_NUMBER: _ClassVar[int]
     TRANSLATED_FROM_FIELD_NUMBER: _ClassVar[int]
+    JOB_ID_FIELD_NUMBER: _ClassVar[int]
     output_id: str
     language: str
     status: InsightsStatus
@@ -302,4 +328,5 @@ class TranscriptInsights(_message.Message):
     video_id: str
     fee_eur: float
     translated_from: str
-    def __init__(self, output_id: _Optional[str] = ..., language: _Optional[str] = ..., status: _Optional[_Union[InsightsStatus, str]] = ..., error_code: _Optional[str] = ..., title_suggestions: _Optional[_Iterable[str]] = ..., summary: _Optional[str] = ..., key_points: _Optional[_Iterable[str]] = ..., chapters: _Optional[_Iterable[_Union[ChapterPoint, _Mapping]]] = ..., questions: _Optional[_Iterable[_Union[InsightsQuestion, _Mapping]]] = ..., terms: _Optional[_Iterable[_Union[InsightsTerm, _Mapping]]] = ..., highlights: _Optional[_Iterable[_Union[InsightsHighlight, _Mapping]]] = ..., topics: _Optional[_Iterable[str]] = ..., storage_key: _Optional[str] = ..., url: _Optional[str] = ..., signed_url: _Optional[str] = ..., chapters_storage_key: _Optional[str] = ..., chapters_url: _Optional[str] = ..., chapters_signed_url: _Optional[str] = ..., markdown_storage_key: _Optional[str] = ..., markdown_url: _Optional[str] = ..., markdown_signed_url: _Optional[str] = ..., generated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., hint: _Optional[str] = ..., glossary: _Optional[str] = ..., id: _Optional[str] = ..., source: _Optional[_Union[InsightsSource, str]] = ..., video_id: _Optional[str] = ..., fee_eur: _Optional[float] = ..., translated_from: _Optional[str] = ...) -> None: ...
+    job_id: str
+    def __init__(self, output_id: _Optional[str] = ..., language: _Optional[str] = ..., status: _Optional[_Union[InsightsStatus, str]] = ..., error_code: _Optional[str] = ..., title_suggestions: _Optional[_Iterable[str]] = ..., summary: _Optional[str] = ..., key_points: _Optional[_Iterable[str]] = ..., chapters: _Optional[_Iterable[_Union[ChapterPoint, _Mapping]]] = ..., questions: _Optional[_Iterable[_Union[InsightsQuestion, _Mapping]]] = ..., terms: _Optional[_Iterable[_Union[InsightsTerm, _Mapping]]] = ..., highlights: _Optional[_Iterable[_Union[InsightsHighlight, _Mapping]]] = ..., topics: _Optional[_Iterable[str]] = ..., storage_key: _Optional[str] = ..., url: _Optional[str] = ..., signed_url: _Optional[str] = ..., chapters_storage_key: _Optional[str] = ..., chapters_url: _Optional[str] = ..., chapters_signed_url: _Optional[str] = ..., markdown_storage_key: _Optional[str] = ..., markdown_url: _Optional[str] = ..., markdown_signed_url: _Optional[str] = ..., generated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., hint: _Optional[str] = ..., glossary: _Optional[str] = ..., id: _Optional[str] = ..., source: _Optional[_Union[InsightsSource, str]] = ..., video_id: _Optional[str] = ..., fee_eur: _Optional[float] = ..., translated_from: _Optional[str] = ..., job_id: _Optional[str] = ...) -> None: ...
