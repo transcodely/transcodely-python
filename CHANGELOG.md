@@ -4,6 +4,14 @@ All notable changes to the Transcodely Python SDK will be documented in this fil
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Breaking changes are allowed on minor bumps until 1.0.0.
 
+## [0.3.21](https://github.com/transcodely/transcodely-python/compare/v0.3.20...v0.3.21) (2026-11-08)
+
+
+### Features
+
+* caption style variants (SetDefaultCaptionStyle, DeleteCaptionStyle) ([478bc9d](https://github.com/transcodely/transcodely-python/commit/478bc9d9ba30dfbca27287c03daa7fc29d00a667))
+* caption style variants and videos.set_default_caption_style / delete_caption_style ([dda0bad](https://github.com/transcodely/transcodely-python/commit/dda0badeeb05dca4951184db5c53abe8ebccc7c6))
+
 ## [0.3.20](https://github.com/transcodely/transcodely-python/compare/v0.3.19...v0.3.20) (2026-11-08)
 
 
