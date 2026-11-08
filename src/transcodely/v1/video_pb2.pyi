@@ -59,8 +59,16 @@ VIDEO_HIGHLIGHT_STATUS_PENDING: VideoHighlightStatus
 VIDEO_HIGHLIGHT_STATUS_READY: VideoHighlightStatus
 VIDEO_HIGHLIGHT_STATUS_FAILED: VideoHighlightStatus
 
+class VideoCostLine(_message.Message):
+    __slots__ = ("kind", "amount")
+    KIND_FIELD_NUMBER: _ClassVar[int]
+    AMOUNT_FIELD_NUMBER: _ClassVar[int]
+    kind: str
+    amount: float
+    def __init__(self, kind: _Optional[str] = ..., amount: _Optional[float] = ...) -> None: ...
+
 class Video(_message.Message):
-    __slots__ = ("id", "app_id", "source", "status", "visibility", "title", "description", "tags", "input_size_bytes", "input_content_type", "job_id", "preset", "playback_url", "embed_url", "embed_code", "poster_url", "duration_seconds", "hover_preview_url", "hover_preview_mp4_url", "renditions", "text_tracks", "insights", "highlights", "output_size_bytes", "encoding_cost", "captions_cost", "total_cost", "error_message", "created_at", "updated_at", "ready_at", "source_pinned", "source_scheduled_for_deletion_at", "source_deleted_at", "source_expires_at", "guide_page_enabled", "guide_url", "guide_page", "object")
+    __slots__ = ("id", "app_id", "source", "status", "visibility", "title", "description", "tags", "input_size_bytes", "input_content_type", "job_id", "preset", "playback_url", "embed_url", "embed_code", "poster_url", "duration_seconds", "hover_preview_url", "hover_preview_mp4_url", "renditions", "text_tracks", "insights", "highlights", "output_size_bytes", "encoding_cost", "captions_cost", "total_cost", "cost_breakdown", "error_message", "created_at", "updated_at", "ready_at", "source_pinned", "source_scheduled_for_deletion_at", "source_deleted_at", "source_expires_at", "guide_page_enabled", "guide_url", "guide_page", "object")
     ID_FIELD_NUMBER: _ClassVar[int]
     APP_ID_FIELD_NUMBER: _ClassVar[int]
     SOURCE_FIELD_NUMBER: _ClassVar[int]
@@ -88,6 +96,7 @@ class Video(_message.Message):
     ENCODING_COST_FIELD_NUMBER: _ClassVar[int]
     CAPTIONS_COST_FIELD_NUMBER: _ClassVar[int]
     TOTAL_COST_FIELD_NUMBER: _ClassVar[int]
+    COST_BREAKDOWN_FIELD_NUMBER: _ClassVar[int]
     ERROR_MESSAGE_FIELD_NUMBER: _ClassVar[int]
     CREATED_AT_FIELD_NUMBER: _ClassVar[int]
     UPDATED_AT_FIELD_NUMBER: _ClassVar[int]
@@ -127,6 +136,7 @@ class Video(_message.Message):
     encoding_cost: float
     captions_cost: float
     total_cost: float
+    cost_breakdown: _containers.RepeatedCompositeFieldContainer[VideoCostLine]
     error_message: str
     created_at: _timestamp_pb2.Timestamp
     updated_at: _timestamp_pb2.Timestamp
@@ -139,7 +149,7 @@ class Video(_message.Message):
     guide_url: str
     guide_page: GuidePageSetting
     object: str
-    def __init__(self, id: _Optional[str] = ..., app_id: _Optional[str] = ..., source: _Optional[str] = ..., status: _Optional[str] = ..., visibility: _Optional[str] = ..., title: _Optional[str] = ..., description: _Optional[str] = ..., tags: _Optional[_Iterable[str]] = ..., input_size_bytes: _Optional[int] = ..., input_content_type: _Optional[str] = ..., job_id: _Optional[str] = ..., preset: _Optional[str] = ..., playback_url: _Optional[str] = ..., embed_url: _Optional[str] = ..., embed_code: _Optional[str] = ..., poster_url: _Optional[str] = ..., duration_seconds: _Optional[float] = ..., hover_preview_url: _Optional[str] = ..., hover_preview_mp4_url: _Optional[str] = ..., renditions: _Optional[_Iterable[_Union[VideoRendition, _Mapping]]] = ..., text_tracks: _Optional[_Iterable[_Union[VideoTextTrack, _Mapping]]] = ..., insights: _Optional[_Iterable[_Union[_subtitles_pb2.TranscriptInsights, _Mapping]]] = ..., highlights: _Optional[_Iterable[_Union[VideoHighlight, _Mapping]]] = ..., output_size_bytes: _Optional[int] = ..., encoding_cost: _Optional[float] = ..., captions_cost: _Optional[float] = ..., total_cost: _Optional[float] = ..., error_message: _Optional[str] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., ready_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., source_pinned: bool = ..., source_scheduled_for_deletion_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., source_deleted_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., source_expires_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., guide_page_enabled: bool = ..., guide_url: _Optional[str] = ..., guide_page: _Optional[_Union[GuidePageSetting, str]] = ..., object: _Optional[str] = ...) -> None: ...
+    def __init__(self, id: _Optional[str] = ..., app_id: _Optional[str] = ..., source: _Optional[str] = ..., status: _Optional[str] = ..., visibility: _Optional[str] = ..., title: _Optional[str] = ..., description: _Optional[str] = ..., tags: _Optional[_Iterable[str]] = ..., input_size_bytes: _Optional[int] = ..., input_content_type: _Optional[str] = ..., job_id: _Optional[str] = ..., preset: _Optional[str] = ..., playback_url: _Optional[str] = ..., embed_url: _Optional[str] = ..., embed_code: _Optional[str] = ..., poster_url: _Optional[str] = ..., duration_seconds: _Optional[float] = ..., hover_preview_url: _Optional[str] = ..., hover_preview_mp4_url: _Optional[str] = ..., renditions: _Optional[_Iterable[_Union[VideoRendition, _Mapping]]] = ..., text_tracks: _Optional[_Iterable[_Union[VideoTextTrack, _Mapping]]] = ..., insights: _Optional[_Iterable[_Union[_subtitles_pb2.TranscriptInsights, _Mapping]]] = ..., highlights: _Optional[_Iterable[_Union[VideoHighlight, _Mapping]]] = ..., output_size_bytes: _Optional[int] = ..., encoding_cost: _Optional[float] = ..., captions_cost: _Optional[float] = ..., total_cost: _Optional[float] = ..., cost_breakdown: _Optional[_Iterable[_Union[VideoCostLine, _Mapping]]] = ..., error_message: _Optional[str] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., ready_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., source_pinned: bool = ..., source_scheduled_for_deletion_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., source_deleted_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., source_expires_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., guide_page_enabled: bool = ..., guide_url: _Optional[str] = ..., guide_page: _Optional[_Union[GuidePageSetting, str]] = ..., object: _Optional[str] = ...) -> None: ...
 
 class VideoRendition(_message.Message):
     __slots__ = ("id", "resolution", "codec", "bitrate_kbps", "width", "height", "size_bytes")
@@ -160,7 +170,7 @@ class VideoRendition(_message.Message):
     def __init__(self, id: _Optional[str] = ..., resolution: _Optional[str] = ..., codec: _Optional[str] = ..., bitrate_kbps: _Optional[int] = ..., width: _Optional[int] = ..., height: _Optional[int] = ..., size_bytes: _Optional[int] = ...) -> None: ...
 
 class VideoTextTrack(_message.Message):
-    __slots__ = ("id", "kind", "language", "label", "format", "auto_generated", "in_manifest", "url", "created_at", "transcript_renditions", "translated_from")
+    __slots__ = ("id", "kind", "language", "label", "format", "auto_generated", "in_manifest", "url", "created_at", "transcript_renditions", "translated_from", "updated_at", "cue_style")
     ID_FIELD_NUMBER: _ClassVar[int]
     KIND_FIELD_NUMBER: _ClassVar[int]
     LANGUAGE_FIELD_NUMBER: _ClassVar[int]
@@ -172,6 +182,8 @@ class VideoTextTrack(_message.Message):
     CREATED_AT_FIELD_NUMBER: _ClassVar[int]
     TRANSCRIPT_RENDITIONS_FIELD_NUMBER: _ClassVar[int]
     TRANSLATED_FROM_FIELD_NUMBER: _ClassVar[int]
+    UPDATED_AT_FIELD_NUMBER: _ClassVar[int]
+    CUE_STYLE_FIELD_NUMBER: _ClassVar[int]
     id: str
     kind: str
     language: str
@@ -183,10 +195,12 @@ class VideoTextTrack(_message.Message):
     created_at: _timestamp_pb2.Timestamp
     transcript_renditions: _containers.RepeatedCompositeFieldContainer[_subtitles_pb2.TranscriptRendition]
     translated_from: str
-    def __init__(self, id: _Optional[str] = ..., kind: _Optional[str] = ..., language: _Optional[str] = ..., label: _Optional[str] = ..., format: _Optional[str] = ..., auto_generated: bool = ..., in_manifest: bool = ..., url: _Optional[str] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., transcript_renditions: _Optional[_Iterable[_Union[_subtitles_pb2.TranscriptRendition, _Mapping]]] = ..., translated_from: _Optional[str] = ...) -> None: ...
+    updated_at: _timestamp_pb2.Timestamp
+    cue_style: _subtitles_pb2.CueStyle
+    def __init__(self, id: _Optional[str] = ..., kind: _Optional[str] = ..., language: _Optional[str] = ..., label: _Optional[str] = ..., format: _Optional[str] = ..., auto_generated: bool = ..., in_manifest: bool = ..., url: _Optional[str] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., transcript_renditions: _Optional[_Iterable[_Union[_subtitles_pb2.TranscriptRendition, _Mapping]]] = ..., translated_from: _Optional[str] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., cue_style: _Optional[_Union[_subtitles_pb2.CueStyle, _Mapping]] = ...) -> None: ...
 
 class CreateUploadRequest(_message.Message):
-    __slots__ = ("app_id", "filename", "content_type", "size_bytes", "title", "description", "tags", "visibility", "preset", "hover_previews", "auto_captions", "auto_insights", "highlights", "source_pinned", "auto_translations")
+    __slots__ = ("app_id", "filename", "content_type", "size_bytes", "title", "description", "tags", "visibility", "preset", "hover_previews", "auto_captions", "auto_insights", "highlights", "source_pinned", "auto_translations", "cue_style")
     APP_ID_FIELD_NUMBER: _ClassVar[int]
     FILENAME_FIELD_NUMBER: _ClassVar[int]
     CONTENT_TYPE_FIELD_NUMBER: _ClassVar[int]
@@ -202,6 +216,7 @@ class CreateUploadRequest(_message.Message):
     HIGHLIGHTS_FIELD_NUMBER: _ClassVar[int]
     SOURCE_PINNED_FIELD_NUMBER: _ClassVar[int]
     AUTO_TRANSLATIONS_FIELD_NUMBER: _ClassVar[int]
+    CUE_STYLE_FIELD_NUMBER: _ClassVar[int]
     app_id: str
     filename: str
     content_type: str
@@ -217,7 +232,8 @@ class CreateUploadRequest(_message.Message):
     highlights: HighlightsConfig
     source_pinned: bool
     auto_translations: _containers.RepeatedScalarFieldContainer[str]
-    def __init__(self, app_id: _Optional[str] = ..., filename: _Optional[str] = ..., content_type: _Optional[str] = ..., size_bytes: _Optional[int] = ..., title: _Optional[str] = ..., description: _Optional[str] = ..., tags: _Optional[_Iterable[str]] = ..., visibility: _Optional[str] = ..., preset: _Optional[str] = ..., hover_previews: bool = ..., auto_captions: bool = ..., auto_insights: bool = ..., highlights: _Optional[_Union[HighlightsConfig, _Mapping]] = ..., source_pinned: bool = ..., auto_translations: _Optional[_Iterable[str]] = ...) -> None: ...
+    cue_style: _subtitles_pb2.CueStyle
+    def __init__(self, app_id: _Optional[str] = ..., filename: _Optional[str] = ..., content_type: _Optional[str] = ..., size_bytes: _Optional[int] = ..., title: _Optional[str] = ..., description: _Optional[str] = ..., tags: _Optional[_Iterable[str]] = ..., visibility: _Optional[str] = ..., preset: _Optional[str] = ..., hover_previews: bool = ..., auto_captions: bool = ..., auto_insights: bool = ..., highlights: _Optional[_Union[HighlightsConfig, _Mapping]] = ..., source_pinned: bool = ..., auto_translations: _Optional[_Iterable[str]] = ..., cue_style: _Optional[_Union[_subtitles_pb2.CueStyle, _Mapping]] = ...) -> None: ...
 
 class CreateUploadResponse(_message.Message):
     __slots__ = ("video", "upload_url", "upload_expires_at")
@@ -242,7 +258,7 @@ class CompleteUploadResponse(_message.Message):
     def __init__(self, video: _Optional[_Union[Video, _Mapping]] = ...) -> None: ...
 
 class CreateFromUrlRequest(_message.Message):
-    __slots__ = ("app_id", "url", "title", "description", "tags", "visibility", "preset", "hover_previews", "auto_captions", "auto_insights", "highlights", "source_pinned", "auto_translations")
+    __slots__ = ("app_id", "url", "title", "description", "tags", "visibility", "preset", "hover_previews", "auto_captions", "auto_insights", "highlights", "source_pinned", "auto_translations", "cue_style")
     APP_ID_FIELD_NUMBER: _ClassVar[int]
     URL_FIELD_NUMBER: _ClassVar[int]
     TITLE_FIELD_NUMBER: _ClassVar[int]
@@ -256,6 +272,7 @@ class CreateFromUrlRequest(_message.Message):
     HIGHLIGHTS_FIELD_NUMBER: _ClassVar[int]
     SOURCE_PINNED_FIELD_NUMBER: _ClassVar[int]
     AUTO_TRANSLATIONS_FIELD_NUMBER: _ClassVar[int]
+    CUE_STYLE_FIELD_NUMBER: _ClassVar[int]
     app_id: str
     url: str
     title: str
@@ -269,7 +286,8 @@ class CreateFromUrlRequest(_message.Message):
     highlights: HighlightsConfig
     source_pinned: bool
     auto_translations: _containers.RepeatedScalarFieldContainer[str]
-    def __init__(self, app_id: _Optional[str] = ..., url: _Optional[str] = ..., title: _Optional[str] = ..., description: _Optional[str] = ..., tags: _Optional[_Iterable[str]] = ..., visibility: _Optional[str] = ..., preset: _Optional[str] = ..., hover_previews: bool = ..., auto_captions: bool = ..., auto_insights: bool = ..., highlights: _Optional[_Union[HighlightsConfig, _Mapping]] = ..., source_pinned: bool = ..., auto_translations: _Optional[_Iterable[str]] = ...) -> None: ...
+    cue_style: _subtitles_pb2.CueStyle
+    def __init__(self, app_id: _Optional[str] = ..., url: _Optional[str] = ..., title: _Optional[str] = ..., description: _Optional[str] = ..., tags: _Optional[_Iterable[str]] = ..., visibility: _Optional[str] = ..., preset: _Optional[str] = ..., hover_previews: bool = ..., auto_captions: bool = ..., auto_insights: bool = ..., highlights: _Optional[_Union[HighlightsConfig, _Mapping]] = ..., source_pinned: bool = ..., auto_translations: _Optional[_Iterable[str]] = ..., cue_style: _Optional[_Union[_subtitles_pb2.CueStyle, _Mapping]] = ...) -> None: ...
 
 class CreateFromUrlResponse(_message.Message):
     __slots__ = ("video",)
@@ -294,7 +312,7 @@ class CompletedPart(_message.Message):
     def __init__(self, part_number: _Optional[int] = ..., etag: _Optional[str] = ...) -> None: ...
 
 class CreateMultipartUploadRequest(_message.Message):
-    __slots__ = ("app_id", "filename", "content_type", "size_bytes", "total_parts", "part_size_bytes", "title", "description", "tags", "visibility", "preset", "hover_previews", "auto_captions", "auto_insights", "highlights", "source_pinned", "auto_translations")
+    __slots__ = ("app_id", "filename", "content_type", "size_bytes", "total_parts", "part_size_bytes", "title", "description", "tags", "visibility", "preset", "hover_previews", "auto_captions", "auto_insights", "highlights", "source_pinned", "auto_translations", "cue_style")
     APP_ID_FIELD_NUMBER: _ClassVar[int]
     FILENAME_FIELD_NUMBER: _ClassVar[int]
     CONTENT_TYPE_FIELD_NUMBER: _ClassVar[int]
@@ -312,6 +330,7 @@ class CreateMultipartUploadRequest(_message.Message):
     HIGHLIGHTS_FIELD_NUMBER: _ClassVar[int]
     SOURCE_PINNED_FIELD_NUMBER: _ClassVar[int]
     AUTO_TRANSLATIONS_FIELD_NUMBER: _ClassVar[int]
+    CUE_STYLE_FIELD_NUMBER: _ClassVar[int]
     app_id: str
     filename: str
     content_type: str
@@ -329,7 +348,8 @@ class CreateMultipartUploadRequest(_message.Message):
     highlights: HighlightsConfig
     source_pinned: bool
     auto_translations: _containers.RepeatedScalarFieldContainer[str]
-    def __init__(self, app_id: _Optional[str] = ..., filename: _Optional[str] = ..., content_type: _Optional[str] = ..., size_bytes: _Optional[int] = ..., total_parts: _Optional[int] = ..., part_size_bytes: _Optional[int] = ..., title: _Optional[str] = ..., description: _Optional[str] = ..., tags: _Optional[_Iterable[str]] = ..., visibility: _Optional[str] = ..., preset: _Optional[str] = ..., hover_previews: bool = ..., auto_captions: bool = ..., auto_insights: bool = ..., highlights: _Optional[_Union[HighlightsConfig, _Mapping]] = ..., source_pinned: bool = ..., auto_translations: _Optional[_Iterable[str]] = ...) -> None: ...
+    cue_style: _subtitles_pb2.CueStyle
+    def __init__(self, app_id: _Optional[str] = ..., filename: _Optional[str] = ..., content_type: _Optional[str] = ..., size_bytes: _Optional[int] = ..., total_parts: _Optional[int] = ..., part_size_bytes: _Optional[int] = ..., title: _Optional[str] = ..., description: _Optional[str] = ..., tags: _Optional[_Iterable[str]] = ..., visibility: _Optional[str] = ..., preset: _Optional[str] = ..., hover_previews: bool = ..., auto_captions: bool = ..., auto_insights: bool = ..., highlights: _Optional[_Union[HighlightsConfig, _Mapping]] = ..., source_pinned: bool = ..., auto_translations: _Optional[_Iterable[str]] = ..., cue_style: _Optional[_Union[_subtitles_pb2.CueStyle, _Mapping]] = ...) -> None: ...
 
 class CreateMultipartUploadResponse(_message.Message):
     __slots__ = ("video", "upload_id", "parts", "urls_expire_at")
@@ -690,6 +710,30 @@ class TranslateCaptionsResponse(_message.Message):
     estimated_fee_eur: float
     insights_included: bool
     def __init__(self, job_id: _Optional[str] = ..., video_id: _Optional[str] = ..., source_language: _Optional[str] = ..., target_languages: _Optional[_Iterable[str]] = ..., in_flight: _Optional[_Iterable[_Union[TranslationInFlight, _Mapping]]] = ..., estimated_fee_eur: _Optional[float] = ..., insights_included: bool = ...) -> None: ...
+
+class RestyleCaptionsRequest(_message.Message):
+    __slots__ = ("id", "language", "cue_style", "app_id")
+    ID_FIELD_NUMBER: _ClassVar[int]
+    LANGUAGE_FIELD_NUMBER: _ClassVar[int]
+    CUE_STYLE_FIELD_NUMBER: _ClassVar[int]
+    APP_ID_FIELD_NUMBER: _ClassVar[int]
+    id: str
+    language: str
+    cue_style: _subtitles_pb2.CueStyle
+    app_id: str
+    def __init__(self, id: _Optional[str] = ..., language: _Optional[str] = ..., cue_style: _Optional[_Union[_subtitles_pb2.CueStyle, _Mapping]] = ..., app_id: _Optional[str] = ...) -> None: ...
+
+class RestyleCaptionsResponse(_message.Message):
+    __slots__ = ("job_id", "video_id", "language", "cue_style")
+    JOB_ID_FIELD_NUMBER: _ClassVar[int]
+    VIDEO_ID_FIELD_NUMBER: _ClassVar[int]
+    LANGUAGE_FIELD_NUMBER: _ClassVar[int]
+    CUE_STYLE_FIELD_NUMBER: _ClassVar[int]
+    job_id: str
+    video_id: str
+    language: str
+    cue_style: _subtitles_pb2.CueStyle
+    def __init__(self, job_id: _Optional[str] = ..., video_id: _Optional[str] = ..., language: _Optional[str] = ..., cue_style: _Optional[_Union[_subtitles_pb2.CueStyle, _Mapping]] = ...) -> None: ...
 
 class HighlightsConfig(_message.Message):
     __slots__ = ("enabled", "max_count", "min_seconds", "max_seconds", "padding_seconds")

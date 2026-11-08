@@ -1,6 +1,7 @@
 from buf.validate import validate_pb2 as _validate_pb2
 from google.protobuf import timestamp_pb2 as _timestamp_pb2
 from transcodely.v1 import common_pb2 as _common_pb2
+from transcodely.v1 import subtitles_pb2 as _subtitles_pb2
 from google.protobuf.internal import containers as _containers
 from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
 from google.protobuf import descriptor as _descriptor
@@ -21,7 +22,7 @@ APP_STATUS_ARCHIVED: AppStatus
 APP_STATUS_SUSPENDED: AppStatus
 
 class App(_message.Message):
-    __slots__ = ("id", "org_id", "name", "description", "status", "created_at", "updated_at", "archived_at", "hosting_enabled", "hosting_status", "cdn_hostname", "hosting_config", "object", "monthly_spend_limit_eur", "player_config", "caption_glossary")
+    __slots__ = ("id", "org_id", "name", "description", "status", "created_at", "updated_at", "archived_at", "hosting_enabled", "hosting_status", "cdn_hostname", "hosting_config", "object", "monthly_spend_limit_eur", "player_config", "caption_glossary", "cue_style")
     ID_FIELD_NUMBER: _ClassVar[int]
     ORG_ID_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
@@ -38,6 +39,7 @@ class App(_message.Message):
     MONTHLY_SPEND_LIMIT_EUR_FIELD_NUMBER: _ClassVar[int]
     PLAYER_CONFIG_FIELD_NUMBER: _ClassVar[int]
     CAPTION_GLOSSARY_FIELD_NUMBER: _ClassVar[int]
+    CUE_STYLE_FIELD_NUMBER: _ClassVar[int]
     id: str
     org_id: str
     name: str
@@ -54,7 +56,8 @@ class App(_message.Message):
     monthly_spend_limit_eur: float
     player_config: PlayerConfig
     caption_glossary: str
-    def __init__(self, id: _Optional[str] = ..., org_id: _Optional[str] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., status: _Optional[_Union[AppStatus, str]] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., archived_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., hosting_enabled: bool = ..., hosting_status: _Optional[str] = ..., cdn_hostname: _Optional[str] = ..., hosting_config: _Optional[_Union[HostingConfig, _Mapping]] = ..., object: _Optional[str] = ..., monthly_spend_limit_eur: _Optional[float] = ..., player_config: _Optional[_Union[PlayerConfig, _Mapping]] = ..., caption_glossary: _Optional[str] = ...) -> None: ...
+    cue_style: _subtitles_pb2.CueStyle
+    def __init__(self, id: _Optional[str] = ..., org_id: _Optional[str] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., status: _Optional[_Union[AppStatus, str]] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., archived_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., hosting_enabled: bool = ..., hosting_status: _Optional[str] = ..., cdn_hostname: _Optional[str] = ..., hosting_config: _Optional[_Union[HostingConfig, _Mapping]] = ..., object: _Optional[str] = ..., monthly_spend_limit_eur: _Optional[float] = ..., player_config: _Optional[_Union[PlayerConfig, _Mapping]] = ..., caption_glossary: _Optional[str] = ..., cue_style: _Optional[_Union[_subtitles_pb2.CueStyle, _Mapping]] = ...) -> None: ...
 
 class PlayerConfig(_message.Message):
     __slots__ = ("captions",)
@@ -119,16 +122,18 @@ class GetAppResponse(_message.Message):
     def __init__(self, app: _Optional[_Union[App, _Mapping]] = ...) -> None: ...
 
 class UpdateAppRequest(_message.Message):
-    __slots__ = ("id", "name", "description", "caption_glossary")
+    __slots__ = ("id", "name", "description", "caption_glossary", "cue_style")
     ID_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
     DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
     CAPTION_GLOSSARY_FIELD_NUMBER: _ClassVar[int]
+    CUE_STYLE_FIELD_NUMBER: _ClassVar[int]
     id: str
     name: str
     description: str
     caption_glossary: str
-    def __init__(self, id: _Optional[str] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., caption_glossary: _Optional[str] = ...) -> None: ...
+    cue_style: _subtitles_pb2.CueStyle
+    def __init__(self, id: _Optional[str] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., caption_glossary: _Optional[str] = ..., cue_style: _Optional[_Union[_subtitles_pb2.CueStyle, _Mapping]] = ...) -> None: ...
 
 class UpdateAppResponse(_message.Message):
     __slots__ = ("app",)
