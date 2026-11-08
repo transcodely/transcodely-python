@@ -4,6 +4,14 @@ All notable changes to the Transcodely Python SDK will be documented in this fil
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Breaking changes are allowed on minor bumps until 1.0.0.
 
+## [0.3.20](https://github.com/transcodely/transcodely-python/compare/v0.3.19...v0.3.20) (2026-11-08)
+
+
+### Features
+
+* caption cue styles and RestyleCaptions ([ab974a5](https://github.com/transcodely/transcodely-python/commit/ab974a5a31d6c7bfd3f8741982603655fdabbaf4))
+* caption cue styles and videos.restyle_captions ([dde1f70](https://github.com/transcodely/transcodely-python/commit/dde1f70c0d35300f89f69aa832f026f82b1d1cee))
+
 ## [0.3.19](https://github.com/transcodely/transcodely-python/compare/v0.3.18...v0.3.19) (2026-11-07)
 
 
