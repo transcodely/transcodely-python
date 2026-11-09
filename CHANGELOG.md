@@ -4,6 +4,14 @@ All notable changes to the Transcodely Python SDK will be documented in this fil
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Breaking changes are allowed on minor bumps until 1.0.0.
 
+## [0.3.22](https://github.com/transcodely/transcodely-python/compare/v0.3.21...v0.3.22) (2026-11-09)
+
+
+### Features
+
+* free captions trial (GetFreeTrial) ([ffcad73](https://github.com/transcodely/transcodely-python/commit/ffcad73547e3e34af74ebb5f3ef475141f283ec7))
+* free captions trial and videos.get_free_trial ([cea2184](https://github.com/transcodely/transcodely-python/commit/cea21846cfe953858c2aa0844a2d32779c704509))
+
 ## [0.3.21](https://github.com/transcodely/transcodely-python/compare/v0.3.20...v0.3.21) (2026-11-08)
 
 
