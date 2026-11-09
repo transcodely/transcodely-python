@@ -26,6 +26,21 @@ class VideoVisibility(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     VIDEO_VISIBILITY_UNLISTED: _ClassVar[VideoVisibility]
     VIDEO_VISIBILITY_PRIVATE: _ClassVar[VideoVisibility]
 
+class FreeTrialStatus(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    FREE_TRIAL_STATUS_UNSPECIFIED: _ClassVar[FreeTrialStatus]
+    FREE_TRIAL_STATUS_AVAILABLE: _ClassVar[FreeTrialStatus]
+    FREE_TRIAL_STATUS_USED: _ClassVar[FreeTrialStatus]
+    FREE_TRIAL_STATUS_UNAVAILABLE: _ClassVar[FreeTrialStatus]
+
+class FreeTrialUnavailableReason(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    FREE_TRIAL_UNAVAILABLE_REASON_UNSPECIFIED: _ClassVar[FreeTrialUnavailableReason]
+    FREE_TRIAL_UNAVAILABLE_REASON_DISABLED: _ClassVar[FreeTrialUnavailableReason]
+    FREE_TRIAL_UNAVAILABLE_REASON_EMAIL_NOT_VERIFIED: _ClassVar[FreeTrialUnavailableReason]
+    FREE_TRIAL_UNAVAILABLE_REASON_USER_REQUIRED: _ClassVar[FreeTrialUnavailableReason]
+    FREE_TRIAL_UNAVAILABLE_REASON_DAILY_LIMIT: _ClassVar[FreeTrialUnavailableReason]
+
 class GuidePageSetting(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
     GUIDE_PAGE_SETTING_UNSPECIFIED: _ClassVar[GuidePageSetting]
@@ -50,6 +65,15 @@ VIDEO_VISIBILITY_UNSPECIFIED: VideoVisibility
 VIDEO_VISIBILITY_PUBLIC: VideoVisibility
 VIDEO_VISIBILITY_UNLISTED: VideoVisibility
 VIDEO_VISIBILITY_PRIVATE: VideoVisibility
+FREE_TRIAL_STATUS_UNSPECIFIED: FreeTrialStatus
+FREE_TRIAL_STATUS_AVAILABLE: FreeTrialStatus
+FREE_TRIAL_STATUS_USED: FreeTrialStatus
+FREE_TRIAL_STATUS_UNAVAILABLE: FreeTrialStatus
+FREE_TRIAL_UNAVAILABLE_REASON_UNSPECIFIED: FreeTrialUnavailableReason
+FREE_TRIAL_UNAVAILABLE_REASON_DISABLED: FreeTrialUnavailableReason
+FREE_TRIAL_UNAVAILABLE_REASON_EMAIL_NOT_VERIFIED: FreeTrialUnavailableReason
+FREE_TRIAL_UNAVAILABLE_REASON_USER_REQUIRED: FreeTrialUnavailableReason
+FREE_TRIAL_UNAVAILABLE_REASON_DAILY_LIMIT: FreeTrialUnavailableReason
 GUIDE_PAGE_SETTING_UNSPECIFIED: GuidePageSetting
 GUIDE_PAGE_SETTING_DEFAULT: GuidePageSetting
 GUIDE_PAGE_SETTING_ON: GuidePageSetting
@@ -68,7 +92,7 @@ class VideoCostLine(_message.Message):
     def __init__(self, kind: _Optional[str] = ..., amount: _Optional[float] = ...) -> None: ...
 
 class Video(_message.Message):
-    __slots__ = ("id", "app_id", "source", "status", "visibility", "title", "description", "tags", "input_size_bytes", "input_content_type", "job_id", "preset", "playback_url", "embed_url", "embed_code", "poster_url", "duration_seconds", "hover_preview_url", "hover_preview_mp4_url", "renditions", "text_tracks", "insights", "highlights", "output_size_bytes", "encoding_cost", "captions_cost", "total_cost", "cost_breakdown", "error_message", "created_at", "updated_at", "ready_at", "source_pinned", "source_scheduled_for_deletion_at", "source_deleted_at", "source_expires_at", "guide_page_enabled", "guide_url", "guide_page", "object")
+    __slots__ = ("id", "app_id", "source", "status", "visibility", "title", "description", "tags", "input_size_bytes", "input_content_type", "job_id", "preset", "playback_url", "embed_url", "embed_code", "poster_url", "duration_seconds", "hover_preview_url", "hover_preview_mp4_url", "renditions", "text_tracks", "insights", "highlights", "output_size_bytes", "encoding_cost", "captions_cost", "total_cost", "cost_breakdown", "error_message", "created_at", "updated_at", "ready_at", "source_pinned", "source_scheduled_for_deletion_at", "source_deleted_at", "source_expires_at", "guide_page_enabled", "guide_url", "guide_page", "free_trial", "object")
     ID_FIELD_NUMBER: _ClassVar[int]
     APP_ID_FIELD_NUMBER: _ClassVar[int]
     SOURCE_FIELD_NUMBER: _ClassVar[int]
@@ -108,6 +132,7 @@ class Video(_message.Message):
     GUIDE_PAGE_ENABLED_FIELD_NUMBER: _ClassVar[int]
     GUIDE_URL_FIELD_NUMBER: _ClassVar[int]
     GUIDE_PAGE_FIELD_NUMBER: _ClassVar[int]
+    FREE_TRIAL_FIELD_NUMBER: _ClassVar[int]
     OBJECT_FIELD_NUMBER: _ClassVar[int]
     id: str
     app_id: str
@@ -148,8 +173,9 @@ class Video(_message.Message):
     guide_page_enabled: bool
     guide_url: str
     guide_page: GuidePageSetting
+    free_trial: VideoFreeTrial
     object: str
-    def __init__(self, id: _Optional[str] = ..., app_id: _Optional[str] = ..., source: _Optional[str] = ..., status: _Optional[str] = ..., visibility: _Optional[str] = ..., title: _Optional[str] = ..., description: _Optional[str] = ..., tags: _Optional[_Iterable[str]] = ..., input_size_bytes: _Optional[int] = ..., input_content_type: _Optional[str] = ..., job_id: _Optional[str] = ..., preset: _Optional[str] = ..., playback_url: _Optional[str] = ..., embed_url: _Optional[str] = ..., embed_code: _Optional[str] = ..., poster_url: _Optional[str] = ..., duration_seconds: _Optional[float] = ..., hover_preview_url: _Optional[str] = ..., hover_preview_mp4_url: _Optional[str] = ..., renditions: _Optional[_Iterable[_Union[VideoRendition, _Mapping]]] = ..., text_tracks: _Optional[_Iterable[_Union[VideoTextTrack, _Mapping]]] = ..., insights: _Optional[_Iterable[_Union[_subtitles_pb2.TranscriptInsights, _Mapping]]] = ..., highlights: _Optional[_Iterable[_Union[VideoHighlight, _Mapping]]] = ..., output_size_bytes: _Optional[int] = ..., encoding_cost: _Optional[float] = ..., captions_cost: _Optional[float] = ..., total_cost: _Optional[float] = ..., cost_breakdown: _Optional[_Iterable[_Union[VideoCostLine, _Mapping]]] = ..., error_message: _Optional[str] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., ready_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., source_pinned: bool = ..., source_scheduled_for_deletion_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., source_deleted_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., source_expires_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., guide_page_enabled: bool = ..., guide_url: _Optional[str] = ..., guide_page: _Optional[_Union[GuidePageSetting, str]] = ..., object: _Optional[str] = ...) -> None: ...
+    def __init__(self, id: _Optional[str] = ..., app_id: _Optional[str] = ..., source: _Optional[str] = ..., status: _Optional[str] = ..., visibility: _Optional[str] = ..., title: _Optional[str] = ..., description: _Optional[str] = ..., tags: _Optional[_Iterable[str]] = ..., input_size_bytes: _Optional[int] = ..., input_content_type: _Optional[str] = ..., job_id: _Optional[str] = ..., preset: _Optional[str] = ..., playback_url: _Optional[str] = ..., embed_url: _Optional[str] = ..., embed_code: _Optional[str] = ..., poster_url: _Optional[str] = ..., duration_seconds: _Optional[float] = ..., hover_preview_url: _Optional[str] = ..., hover_preview_mp4_url: _Optional[str] = ..., renditions: _Optional[_Iterable[_Union[VideoRendition, _Mapping]]] = ..., text_tracks: _Optional[_Iterable[_Union[VideoTextTrack, _Mapping]]] = ..., insights: _Optional[_Iterable[_Union[_subtitles_pb2.TranscriptInsights, _Mapping]]] = ..., highlights: _Optional[_Iterable[_Union[VideoHighlight, _Mapping]]] = ..., output_size_bytes: _Optional[int] = ..., encoding_cost: _Optional[float] = ..., captions_cost: _Optional[float] = ..., total_cost: _Optional[float] = ..., cost_breakdown: _Optional[_Iterable[_Union[VideoCostLine, _Mapping]]] = ..., error_message: _Optional[str] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., ready_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., source_pinned: bool = ..., source_scheduled_for_deletion_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., source_deleted_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., source_expires_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., guide_page_enabled: bool = ..., guide_url: _Optional[str] = ..., guide_page: _Optional[_Union[GuidePageSetting, str]] = ..., free_trial: _Optional[_Union[VideoFreeTrial, _Mapping]] = ..., object: _Optional[str] = ...) -> None: ...
 
 class VideoRendition(_message.Message):
     __slots__ = ("id", "resolution", "codec", "bitrate_kbps", "width", "height", "size_bytes")
@@ -206,7 +232,7 @@ class VideoTextTrack(_message.Message):
     def __init__(self, id: _Optional[str] = ..., kind: _Optional[str] = ..., language: _Optional[str] = ..., label: _Optional[str] = ..., format: _Optional[str] = ..., auto_generated: bool = ..., in_manifest: bool = ..., url: _Optional[str] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., transcript_renditions: _Optional[_Iterable[_Union[_subtitles_pb2.TranscriptRendition, _Mapping]]] = ..., translated_from: _Optional[str] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., cue_style: _Optional[_Union[_subtitles_pb2.CueStyle, _Mapping]] = ..., is_default: bool = ..., style_variant: _Optional[_Union[_subtitles_pb2.CueStylePreset, str]] = ..., stale: bool = ...) -> None: ...
 
 class CreateUploadRequest(_message.Message):
-    __slots__ = ("app_id", "filename", "content_type", "size_bytes", "title", "description", "tags", "visibility", "preset", "hover_previews", "auto_captions", "auto_insights", "highlights", "source_pinned", "auto_translations", "cue_style")
+    __slots__ = ("app_id", "filename", "content_type", "size_bytes", "title", "description", "tags", "visibility", "preset", "hover_previews", "auto_captions", "auto_insights", "highlights", "source_pinned", "auto_translations", "cue_style", "free_trial")
     APP_ID_FIELD_NUMBER: _ClassVar[int]
     FILENAME_FIELD_NUMBER: _ClassVar[int]
     CONTENT_TYPE_FIELD_NUMBER: _ClassVar[int]
@@ -223,6 +249,7 @@ class CreateUploadRequest(_message.Message):
     SOURCE_PINNED_FIELD_NUMBER: _ClassVar[int]
     AUTO_TRANSLATIONS_FIELD_NUMBER: _ClassVar[int]
     CUE_STYLE_FIELD_NUMBER: _ClassVar[int]
+    FREE_TRIAL_FIELD_NUMBER: _ClassVar[int]
     app_id: str
     filename: str
     content_type: str
@@ -239,7 +266,8 @@ class CreateUploadRequest(_message.Message):
     source_pinned: bool
     auto_translations: _containers.RepeatedScalarFieldContainer[str]
     cue_style: _subtitles_pb2.CueStyle
-    def __init__(self, app_id: _Optional[str] = ..., filename: _Optional[str] = ..., content_type: _Optional[str] = ..., size_bytes: _Optional[int] = ..., title: _Optional[str] = ..., description: _Optional[str] = ..., tags: _Optional[_Iterable[str]] = ..., visibility: _Optional[str] = ..., preset: _Optional[str] = ..., hover_previews: bool = ..., auto_captions: bool = ..., auto_insights: bool = ..., highlights: _Optional[_Union[HighlightsConfig, _Mapping]] = ..., source_pinned: bool = ..., auto_translations: _Optional[_Iterable[str]] = ..., cue_style: _Optional[_Union[_subtitles_pb2.CueStyle, _Mapping]] = ...) -> None: ...
+    free_trial: FreeTrialOptions
+    def __init__(self, app_id: _Optional[str] = ..., filename: _Optional[str] = ..., content_type: _Optional[str] = ..., size_bytes: _Optional[int] = ..., title: _Optional[str] = ..., description: _Optional[str] = ..., tags: _Optional[_Iterable[str]] = ..., visibility: _Optional[str] = ..., preset: _Optional[str] = ..., hover_previews: bool = ..., auto_captions: bool = ..., auto_insights: bool = ..., highlights: _Optional[_Union[HighlightsConfig, _Mapping]] = ..., source_pinned: bool = ..., auto_translations: _Optional[_Iterable[str]] = ..., cue_style: _Optional[_Union[_subtitles_pb2.CueStyle, _Mapping]] = ..., free_trial: _Optional[_Union[FreeTrialOptions, _Mapping]] = ...) -> None: ...
 
 class CreateUploadResponse(_message.Message):
     __slots__ = ("video", "upload_url", "upload_expires_at")
@@ -264,7 +292,7 @@ class CompleteUploadResponse(_message.Message):
     def __init__(self, video: _Optional[_Union[Video, _Mapping]] = ...) -> None: ...
 
 class CreateFromUrlRequest(_message.Message):
-    __slots__ = ("app_id", "url", "title", "description", "tags", "visibility", "preset", "hover_previews", "auto_captions", "auto_insights", "highlights", "source_pinned", "auto_translations", "cue_style")
+    __slots__ = ("app_id", "url", "title", "description", "tags", "visibility", "preset", "hover_previews", "auto_captions", "auto_insights", "highlights", "source_pinned", "auto_translations", "cue_style", "free_trial")
     APP_ID_FIELD_NUMBER: _ClassVar[int]
     URL_FIELD_NUMBER: _ClassVar[int]
     TITLE_FIELD_NUMBER: _ClassVar[int]
@@ -279,6 +307,7 @@ class CreateFromUrlRequest(_message.Message):
     SOURCE_PINNED_FIELD_NUMBER: _ClassVar[int]
     AUTO_TRANSLATIONS_FIELD_NUMBER: _ClassVar[int]
     CUE_STYLE_FIELD_NUMBER: _ClassVar[int]
+    FREE_TRIAL_FIELD_NUMBER: _ClassVar[int]
     app_id: str
     url: str
     title: str
@@ -293,13 +322,52 @@ class CreateFromUrlRequest(_message.Message):
     source_pinned: bool
     auto_translations: _containers.RepeatedScalarFieldContainer[str]
     cue_style: _subtitles_pb2.CueStyle
-    def __init__(self, app_id: _Optional[str] = ..., url: _Optional[str] = ..., title: _Optional[str] = ..., description: _Optional[str] = ..., tags: _Optional[_Iterable[str]] = ..., visibility: _Optional[str] = ..., preset: _Optional[str] = ..., hover_previews: bool = ..., auto_captions: bool = ..., auto_insights: bool = ..., highlights: _Optional[_Union[HighlightsConfig, _Mapping]] = ..., source_pinned: bool = ..., auto_translations: _Optional[_Iterable[str]] = ..., cue_style: _Optional[_Union[_subtitles_pb2.CueStyle, _Mapping]] = ...) -> None: ...
+    free_trial: FreeTrialOptions
+    def __init__(self, app_id: _Optional[str] = ..., url: _Optional[str] = ..., title: _Optional[str] = ..., description: _Optional[str] = ..., tags: _Optional[_Iterable[str]] = ..., visibility: _Optional[str] = ..., preset: _Optional[str] = ..., hover_previews: bool = ..., auto_captions: bool = ..., auto_insights: bool = ..., highlights: _Optional[_Union[HighlightsConfig, _Mapping]] = ..., source_pinned: bool = ..., auto_translations: _Optional[_Iterable[str]] = ..., cue_style: _Optional[_Union[_subtitles_pb2.CueStyle, _Mapping]] = ..., free_trial: _Optional[_Union[FreeTrialOptions, _Mapping]] = ...) -> None: ...
 
 class CreateFromUrlResponse(_message.Message):
     __slots__ = ("video",)
     VIDEO_FIELD_NUMBER: _ClassVar[int]
     video: Video
     def __init__(self, video: _Optional[_Union[Video, _Mapping]] = ...) -> None: ...
+
+class FreeTrialOptions(_message.Message):
+    __slots__ = ("source_duration_seconds",)
+    SOURCE_DURATION_SECONDS_FIELD_NUMBER: _ClassVar[int]
+    source_duration_seconds: float
+    def __init__(self, source_duration_seconds: _Optional[float] = ...) -> None: ...
+
+class VideoFreeTrial(_message.Message):
+    __slots__ = ("max_duration_seconds", "clipped")
+    MAX_DURATION_SECONDS_FIELD_NUMBER: _ClassVar[int]
+    CLIPPED_FIELD_NUMBER: _ClassVar[int]
+    max_duration_seconds: int
+    clipped: bool
+    def __init__(self, max_duration_seconds: _Optional[int] = ..., clipped: bool = ...) -> None: ...
+
+class GetFreeTrialRequest(_message.Message):
+    __slots__ = ()
+    def __init__(self) -> None: ...
+
+class GetFreeTrialResponse(_message.Message):
+    __slots__ = ("free_trial",)
+    FREE_TRIAL_FIELD_NUMBER: _ClassVar[int]
+    free_trial: FreeTrial
+    def __init__(self, free_trial: _Optional[_Union[FreeTrial, _Mapping]] = ...) -> None: ...
+
+class FreeTrial(_message.Message):
+    __slots__ = ("status", "unavailable_reason", "max_duration_seconds", "max_upload_bytes", "video_id")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    UNAVAILABLE_REASON_FIELD_NUMBER: _ClassVar[int]
+    MAX_DURATION_SECONDS_FIELD_NUMBER: _ClassVar[int]
+    MAX_UPLOAD_BYTES_FIELD_NUMBER: _ClassVar[int]
+    VIDEO_ID_FIELD_NUMBER: _ClassVar[int]
+    status: FreeTrialStatus
+    unavailable_reason: FreeTrialUnavailableReason
+    max_duration_seconds: int
+    max_upload_bytes: int
+    video_id: str
+    def __init__(self, status: _Optional[_Union[FreeTrialStatus, str]] = ..., unavailable_reason: _Optional[_Union[FreeTrialUnavailableReason, str]] = ..., max_duration_seconds: _Optional[int] = ..., max_upload_bytes: _Optional[int] = ..., video_id: _Optional[str] = ...) -> None: ...
 
 class UploadPart(_message.Message):
     __slots__ = ("part_number", "upload_url")
@@ -318,7 +386,7 @@ class CompletedPart(_message.Message):
     def __init__(self, part_number: _Optional[int] = ..., etag: _Optional[str] = ...) -> None: ...
 
 class CreateMultipartUploadRequest(_message.Message):
-    __slots__ = ("app_id", "filename", "content_type", "size_bytes", "total_parts", "part_size_bytes", "title", "description", "tags", "visibility", "preset", "hover_previews", "auto_captions", "auto_insights", "highlights", "source_pinned", "auto_translations", "cue_style")
+    __slots__ = ("app_id", "filename", "content_type", "size_bytes", "total_parts", "part_size_bytes", "title", "description", "tags", "visibility", "preset", "hover_previews", "auto_captions", "auto_insights", "highlights", "source_pinned", "auto_translations", "cue_style", "free_trial")
     APP_ID_FIELD_NUMBER: _ClassVar[int]
     FILENAME_FIELD_NUMBER: _ClassVar[int]
     CONTENT_TYPE_FIELD_NUMBER: _ClassVar[int]
@@ -337,6 +405,7 @@ class CreateMultipartUploadRequest(_message.Message):
     SOURCE_PINNED_FIELD_NUMBER: _ClassVar[int]
     AUTO_TRANSLATIONS_FIELD_NUMBER: _ClassVar[int]
     CUE_STYLE_FIELD_NUMBER: _ClassVar[int]
+    FREE_TRIAL_FIELD_NUMBER: _ClassVar[int]
     app_id: str
     filename: str
     content_type: str
@@ -355,7 +424,8 @@ class CreateMultipartUploadRequest(_message.Message):
     source_pinned: bool
     auto_translations: _containers.RepeatedScalarFieldContainer[str]
     cue_style: _subtitles_pb2.CueStyle
-    def __init__(self, app_id: _Optional[str] = ..., filename: _Optional[str] = ..., content_type: _Optional[str] = ..., size_bytes: _Optional[int] = ..., total_parts: _Optional[int] = ..., part_size_bytes: _Optional[int] = ..., title: _Optional[str] = ..., description: _Optional[str] = ..., tags: _Optional[_Iterable[str]] = ..., visibility: _Optional[str] = ..., preset: _Optional[str] = ..., hover_previews: bool = ..., auto_captions: bool = ..., auto_insights: bool = ..., highlights: _Optional[_Union[HighlightsConfig, _Mapping]] = ..., source_pinned: bool = ..., auto_translations: _Optional[_Iterable[str]] = ..., cue_style: _Optional[_Union[_subtitles_pb2.CueStyle, _Mapping]] = ...) -> None: ...
+    free_trial: FreeTrialOptions
+    def __init__(self, app_id: _Optional[str] = ..., filename: _Optional[str] = ..., content_type: _Optional[str] = ..., size_bytes: _Optional[int] = ..., total_parts: _Optional[int] = ..., part_size_bytes: _Optional[int] = ..., title: _Optional[str] = ..., description: _Optional[str] = ..., tags: _Optional[_Iterable[str]] = ..., visibility: _Optional[str] = ..., preset: _Optional[str] = ..., hover_previews: bool = ..., auto_captions: bool = ..., auto_insights: bool = ..., highlights: _Optional[_Union[HighlightsConfig, _Mapping]] = ..., source_pinned: bool = ..., auto_translations: _Optional[_Iterable[str]] = ..., cue_style: _Optional[_Union[_subtitles_pb2.CueStyle, _Mapping]] = ..., free_trial: _Optional[_Union[FreeTrialOptions, _Mapping]] = ...) -> None: ...
 
 class CreateMultipartUploadResponse(_message.Message):
     __slots__ = ("video", "upload_id", "parts", "urls_expire_at")
