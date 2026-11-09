@@ -325,3 +325,18 @@ class Videos:
         return self._t.unary(
             _SERVICE, "DeleteCaptionStyle", req, video_pb2.DeleteCaptionStyleResponse()
         ).video
+
+    def get_free_trial(self) -> video_pb2.FreeTrial:
+        """The caller's organization's free captions trial.
+
+        One video with AI captions and AI insights at no charge. ``status`` is
+        ``"available"`` when the next upload or URL-ingest with ``free_trial``
+        set will take it, ``"used"`` once a video has (``video_id``; a failed
+        trial video hands it back), or ``"unavailable"`` with
+        ``unavailable_reason`` saying why. ``max_duration_seconds`` and
+        ``max_upload_bytes`` give the trial's limits.
+        """
+        req = video_pb2.GetFreeTrialRequest()
+        return self._t.unary(
+            _SERVICE, "GetFreeTrial", req, video_pb2.GetFreeTrialResponse()
+        ).free_trial
