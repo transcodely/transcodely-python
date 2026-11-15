@@ -203,7 +203,7 @@ Each clip is rendered by an ordinary clip job, tagged with `transcodely_kind`, `
 
 ## Caption translation
 
-A hosted video with AI captions can have them translated into other languages without transcribing again. One captions-only job writes, per target language, a caption track, its transcript renditions and (on HLS) a caption rendition in the manifest; ready insights in the source language are translated too unless `include_insights=False`. Billed as the `captions_translation` fee (EUR 0.12 per source minute per language, delivered languages only):
+A hosted video with AI captions can have them translated into other languages without transcribing again. One captions-only job writes, per target language, a caption track, its transcript renditions and (on HLS) a caption rendition in the manifest; ready insights in the source language are translated too unless `include_insights=False`. Billed as the `captions_translation` fee (EUR 0.02 per source minute per language, at least EUR 0.05 per language, delivered languages only):
 
 ```python
 # `source_language` is needed only when the video has several AI caption tracks.
