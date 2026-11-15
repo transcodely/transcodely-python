@@ -589,7 +589,7 @@ class Job(_message.Message):
     def __init__(self, id: _Optional[str] = ..., app_id: _Optional[str] = ..., input_url: _Optional[str] = ..., input_origin: _Optional[_Union[_origin_pb2.OriginRef, _Mapping]] = ..., output_origin: _Optional[_Union[_origin_pb2.OriginRef, _Mapping]] = ..., status: _Optional[_Union[JobStatus, str]] = ..., progress: _Optional[int] = ..., priority: _Optional[_Union[JobPriority, str]] = ..., input_metadata: _Optional[_Union[_media_pb2.InputMetadata, _Mapping]] = ..., outputs: _Optional[_Iterable[_Union[JobOutput, _Mapping]]] = ..., total_estimated_cost: _Optional[float] = ..., total_actual_cost: _Optional[float] = ..., error_code: _Optional[str] = ..., error_message: _Optional[str] = ..., webhook_url: _Optional[str] = ..., metadata: _Optional[_Mapping[str, str]] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., probed_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., started_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., completed_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., delayed_start: bool = ..., confirmed_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., currency: _Optional[str] = ..., execution: _Optional[_Union[ExecutionTiming, _Mapping]] = ..., thumbnails: _Optional[_Iterable[_Union[_thumbnails_pb2.ThumbnailSpec, _Mapping]]] = ..., thumbnail_results: _Optional[_Iterable[_Union[_thumbnails_pb2.ThumbnailResult, _Mapping]]] = ..., subtitle_results: _Optional[_Iterable[_Union[_subtitles_pb2.SubtitleResult, _Mapping]]] = ..., output_path_template: _Optional[str] = ..., object: _Optional[str] = ..., minimum_charge_eur: _Optional[float] = ..., minimum_charge_applied: bool = ..., fees: _Optional[_Iterable[_Union[JobFee, _Mapping]]] = ..., input_video_id: _Optional[str] = ..., chapter_results: _Optional[_Iterable[_Union[_subtitles_pb2.ChapterResult, _Mapping]]] = ..., clip: _Optional[_Union[ClipConfig, _Mapping]] = ..., video_id: _Optional[str] = ..., cost_breakdown: _Optional[_Union[JobCostBreakdown, _Mapping]] = ..., insights: _Optional[_Iterable[_Union[_subtitles_pb2.TranscriptInsights, _Mapping]]] = ...) -> None: ...
 
 class JobFee(_message.Message):
-    __slots__ = ("fee_type", "description", "unit", "quantity", "rate", "amount", "currency", "id")
+    __slots__ = ("fee_type", "description", "unit", "quantity", "rate", "amount", "currency", "id", "minimum_per_language")
     FEE_TYPE_FIELD_NUMBER: _ClassVar[int]
     DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
     UNIT_FIELD_NUMBER: _ClassVar[int]
@@ -598,6 +598,7 @@ class JobFee(_message.Message):
     AMOUNT_FIELD_NUMBER: _ClassVar[int]
     CURRENCY_FIELD_NUMBER: _ClassVar[int]
     ID_FIELD_NUMBER: _ClassVar[int]
+    MINIMUM_PER_LANGUAGE_FIELD_NUMBER: _ClassVar[int]
     fee_type: str
     description: str
     unit: str
@@ -606,7 +607,8 @@ class JobFee(_message.Message):
     amount: float
     currency: str
     id: str
-    def __init__(self, fee_type: _Optional[str] = ..., description: _Optional[str] = ..., unit: _Optional[str] = ..., quantity: _Optional[float] = ..., rate: _Optional[float] = ..., amount: _Optional[float] = ..., currency: _Optional[str] = ..., id: _Optional[str] = ...) -> None: ...
+    minimum_per_language: float
+    def __init__(self, fee_type: _Optional[str] = ..., description: _Optional[str] = ..., unit: _Optional[str] = ..., quantity: _Optional[float] = ..., rate: _Optional[float] = ..., amount: _Optional[float] = ..., currency: _Optional[str] = ..., id: _Optional[str] = ..., minimum_per_language: _Optional[float] = ...) -> None: ...
 
 class JobCostLine(_message.Message):
     __slots__ = ("type", "reference_id", "description", "estimated_amount_eur", "actual_amount_eur")
