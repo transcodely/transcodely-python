@@ -582,7 +582,7 @@ class GetUsageResponse(_message.Message):
     def __init__(self, usage: _Optional[_Union[UsageSummary, _Mapping]] = ...) -> None: ...
 
 class UsageSummary(_message.Message):
-    __slots__ = ("billing_month", "videos_encoded", "encoding_minutes", "encoding_cost", "storage_gb_avg", "storage_cost", "videos_hosted", "retained_source_gb_avg", "retained_source_cost", "egress_gb", "egress_cost", "total_requests", "total_cost", "currency", "hosting_estimated_from", "daily")
+    __slots__ = ("billing_month", "videos_encoded", "encoding_minutes", "encoding_cost", "storage_gb_avg", "storage_cost", "videos_hosted", "retained_source_gb_avg", "retained_source_cost", "egress_gb", "egress_cost", "total_requests", "egress_by_region", "total_cost", "currency", "hosting_estimated_from", "daily")
     BILLING_MONTH_FIELD_NUMBER: _ClassVar[int]
     VIDEOS_ENCODED_FIELD_NUMBER: _ClassVar[int]
     ENCODING_MINUTES_FIELD_NUMBER: _ClassVar[int]
@@ -595,6 +595,7 @@ class UsageSummary(_message.Message):
     EGRESS_GB_FIELD_NUMBER: _ClassVar[int]
     EGRESS_COST_FIELD_NUMBER: _ClassVar[int]
     TOTAL_REQUESTS_FIELD_NUMBER: _ClassVar[int]
+    EGRESS_BY_REGION_FIELD_NUMBER: _ClassVar[int]
     TOTAL_COST_FIELD_NUMBER: _ClassVar[int]
     CURRENCY_FIELD_NUMBER: _ClassVar[int]
     HOSTING_ESTIMATED_FROM_FIELD_NUMBER: _ClassVar[int]
@@ -611,25 +612,48 @@ class UsageSummary(_message.Message):
     egress_gb: float
     egress_cost: float
     total_requests: int
+    egress_by_region: _containers.RepeatedCompositeFieldContainer[RegionEgressUsage]
     total_cost: float
     currency: str
     hosting_estimated_from: str
     daily: _containers.RepeatedCompositeFieldContainer[DailyUsage]
-    def __init__(self, billing_month: _Optional[str] = ..., videos_encoded: _Optional[int] = ..., encoding_minutes: _Optional[float] = ..., encoding_cost: _Optional[float] = ..., storage_gb_avg: _Optional[float] = ..., storage_cost: _Optional[float] = ..., videos_hosted: _Optional[int] = ..., retained_source_gb_avg: _Optional[float] = ..., retained_source_cost: _Optional[float] = ..., egress_gb: _Optional[float] = ..., egress_cost: _Optional[float] = ..., total_requests: _Optional[int] = ..., total_cost: _Optional[float] = ..., currency: _Optional[str] = ..., hosting_estimated_from: _Optional[str] = ..., daily: _Optional[_Iterable[_Union[DailyUsage, _Mapping]]] = ...) -> None: ...
+    def __init__(self, billing_month: _Optional[str] = ..., videos_encoded: _Optional[int] = ..., encoding_minutes: _Optional[float] = ..., encoding_cost: _Optional[float] = ..., storage_gb_avg: _Optional[float] = ..., storage_cost: _Optional[float] = ..., videos_hosted: _Optional[int] = ..., retained_source_gb_avg: _Optional[float] = ..., retained_source_cost: _Optional[float] = ..., egress_gb: _Optional[float] = ..., egress_cost: _Optional[float] = ..., total_requests: _Optional[int] = ..., egress_by_region: _Optional[_Iterable[_Union[RegionEgressUsage, _Mapping]]] = ..., total_cost: _Optional[float] = ..., currency: _Optional[str] = ..., hosting_estimated_from: _Optional[str] = ..., daily: _Optional[_Iterable[_Union[DailyUsage, _Mapping]]] = ...) -> None: ...
 
 class DailyUsage(_message.Message):
-    __slots__ = ("date", "storage_bytes", "egress_bytes", "request_count", "encoding_cost")
+    __slots__ = ("date", "storage_bytes", "egress_bytes", "request_count", "encoding_cost", "egress_by_region")
     DATE_FIELD_NUMBER: _ClassVar[int]
     STORAGE_BYTES_FIELD_NUMBER: _ClassVar[int]
     EGRESS_BYTES_FIELD_NUMBER: _ClassVar[int]
     REQUEST_COUNT_FIELD_NUMBER: _ClassVar[int]
     ENCODING_COST_FIELD_NUMBER: _ClassVar[int]
+    EGRESS_BY_REGION_FIELD_NUMBER: _ClassVar[int]
     date: str
     storage_bytes: int
     egress_bytes: int
     request_count: int
     encoding_cost: float
-    def __init__(self, date: _Optional[str] = ..., storage_bytes: _Optional[int] = ..., egress_bytes: _Optional[int] = ..., request_count: _Optional[int] = ..., encoding_cost: _Optional[float] = ...) -> None: ...
+    egress_by_region: _containers.RepeatedCompositeFieldContainer[RegionEgressBytes]
+    def __init__(self, date: _Optional[str] = ..., storage_bytes: _Optional[int] = ..., egress_bytes: _Optional[int] = ..., request_count: _Optional[int] = ..., encoding_cost: _Optional[float] = ..., egress_by_region: _Optional[_Iterable[_Union[RegionEgressBytes, _Mapping]]] = ...) -> None: ...
+
+class RegionEgressUsage(_message.Message):
+    __slots__ = ("region", "egress_bytes", "egress_gb", "egress_cost")
+    REGION_FIELD_NUMBER: _ClassVar[int]
+    EGRESS_BYTES_FIELD_NUMBER: _ClassVar[int]
+    EGRESS_GB_FIELD_NUMBER: _ClassVar[int]
+    EGRESS_COST_FIELD_NUMBER: _ClassVar[int]
+    region: str
+    egress_bytes: int
+    egress_gb: float
+    egress_cost: float
+    def __init__(self, region: _Optional[str] = ..., egress_bytes: _Optional[int] = ..., egress_gb: _Optional[float] = ..., egress_cost: _Optional[float] = ...) -> None: ...
+
+class RegionEgressBytes(_message.Message):
+    __slots__ = ("region", "egress_bytes")
+    REGION_FIELD_NUMBER: _ClassVar[int]
+    EGRESS_BYTES_FIELD_NUMBER: _ClassVar[int]
+    region: str
+    egress_bytes: int
+    def __init__(self, region: _Optional[str] = ..., egress_bytes: _Optional[int] = ...) -> None: ...
 
 class GetStatsRequest(_message.Message):
     __slots__ = ("video_id", "start_date", "end_date")
